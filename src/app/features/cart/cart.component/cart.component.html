@@ -1,0 +1,152 @@
+
+<!-- STEP BAR -->
+<div
+  style="background:#fff;border-bottom:1px solid var(--pink-100);padding:16px 48px;display:flex;align-items:center;justify-content:center;gap:0">
+  <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--pink-400)">
+    <div
+      style="width:28px;height:28px;border-radius:50%;border:2px solid var(--pink-400);background:var(--pink-100);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--pink-400)">
+      1</div>
+    Giỏ hàng
+  </div>
+</div>
+
+<div class="cart-layout">
+  <div>
+    <div class="cart-box">
+
+      <!-- EMPTY -->
+      <ng-container *ngIf="items.length === 0">
+        <div class="cart-box__head">
+          <div class="cart-box__title">Giỏ hàng của bạn</div>
+          <span style="font-size:13px;color:var(--text-muted)">0 sản phẩm</span>
+        </div>
+
+        <div class="cart-empty">
+          <div class="cart-empty__icon">🛒</div>
+          <p style="font-size:16px;color:var(--text-muted)">Giỏ hàng trống</p>
+          <a class="btn-primary" routerLink="/products">Mua sắm ngay</a>
+        </div>
+      </ng-container>
+
+      <!-- LIST -->
+      <ng-container *ngIf="items.length > 0">
+
+        <div class="cart-box__head">
+          <div class="cart-box__title">Giỏ hàng của bạn</div>
+          <span style="font-size:13px;color:var(--text-muted)">
+            {{ items.length }} sản phẩm
+          </span>
+        </div>
+
+        <div *ngFor="let item of items" class="cart-item">
+          <div class="cart-item__img">{{ item.emoji }}</div>
+
+          <div>
+            <div class="cart-item__brand">{{ item.brand }}</div>
+            <div class="cart-item__name">{{ item.name }}</div>
+
+            <div class="cart-item__color-row">
+              <div class="color-dot" [style.background]="item.colorHex"></div>
+              {{ item.color }}
+            </div>
+
+            <div class="qty-ctrl">
+              <button class="qty-btn" (click)="updateQty(item.id, item.color, -1)">−</button>
+              <span class="qty-val">{{ item.qty }}</span>
+              <button class="qty-btn" (click)="updateQty(item.id, item.color, 1)">+</button>
+            </div>
+          </div>
+
+          <div class="cart-item__right">
+            <button class="del-btn" (click)="removeItem(item.id, item.color)">🗑</button>
+
+            <div class="cart-item__price">
+              {{ formatPrice(item.price * item.qty) }}
+            </div>
+
+            <div *ngIf="item.originalPrice"
+              style="font-size:12px;color:var(--text-soft);text-decoration:line-through">
+              {{ formatPrice(item.originalPrice * item.qty) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- COUPON -->
+        <div class="coupon-row">
+          <input
+            class="coupon-input"
+            [(ngModel)]="couponCode"
+            placeholder="🎟 Nhập mã giảm giá..."
+          >
+          <button class="coupon-btn" (click)="applyCoupon()">Áp dụng</button>
+        </div>
+
+        <div
+          class="coupon-msg"
+          [class.success]="couponStatus === 'success'"
+          [class.error]="couponStatus === 'error'">
+          {{ couponMessage }}
+        </div>
+
+        <div class="cart-footer">
+          <button class="continue-btn" routerLink="/products">
+            ← Tiếp tục mua sắm
+          </button>
+          <span style="font-size:12px;color:var(--text-soft)">
+            Miễn phí ship đơn từ 299K ✓
+          </span>
+        </div>
+
+      </ng-container>
+
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div>
+    <div class="summary-box">
+      <div class="summary-box__title">Tóm tắt đơn hàng</div>
+
+      <div class="summary-row">
+        <span>Tạm tính</span>
+        <span>{{ formatPrice(subtotal) }}</span>
+      </div>
+
+      <div class="summary-row" *ngIf="discount > 0">
+        <span>Giảm giá</span>
+        <span style="color:var(--red);font-weight:600">
+          -{{ formatPrice(discount) }}
+        </span>
+      </div>
+
+      <div class="summary-row">
+        <span>Phí vận chuyển</span>
+        <span>
+          {{ shippingFee === 0 ? 'Miễn phí' : formatPrice(shippingFee) }}
+        </span>
+      </div>
+
+      <div class="summary-total">
+        <span class="summary-total__label">Tổng cộng</span>
+        <span class="summary-total__val">
+          {{ formatPrice(total) }}
+        </span>
+      </div>
+
+      <button class="btn-checkout" routerLink="/checkout">
+        Đặt hàng ngay →
+      </button>
+
+      <p class="secure-note">🔒 Thanh toán được bảo mật SSL</p>
+
+      <div class="pay-icons">
+        <span class="pay-icon">VISA</span>
+        <span class="pay-icon">Master</span>
+        <span class="pay-icon">MoMo</span>
+        <span class="pay-icon">ZaloPay</span>
+        <span class="pay-icon">COD</span>
+      </div>
+
+    </div>
+  </div>
+</div>
