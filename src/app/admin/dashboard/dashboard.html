@@ -1,0 +1,132 @@
+<div style="display:flex;min-height:100vh">
+  <div id="sidebar-wrap"></div>
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <div class="admin-topbar__title">Dashboard</div>
+        <div class="admin-topbar__sub">Xin chào, Kiều Biên · Thứ Tư, 18/03/2026</div>
+      </div>
+      <div class="admin-topbar__right">
+        <div class="admin-topbar__search"><span>🔍</span><input type="text" placeholder="Tìm kiếm..."></div>
+        <button class="admin-topbar__ic">🔔</button>
+        <button class="admin-topbar__ic">✉</button>
+        <div class="admin-topbar__user-av">KB</div>
+      </div>
+    </div>
+    <div class="admin-content">
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card__icon">💰</div><div class="stat-card__label">Doanh thu tháng</div><div class="stat-card__val">128.4M</div><div class="stat-card__change up">↑ 18.2% <span style="font-size:11px;color:var(--text-soft);font-weight:400">so với tháng trước</span></div></div>
+        <div class="stat-card"><div class="stat-card__icon">📦</div><div class="stat-card__label">Đơn hàng mới</div><div class="stat-card__val">342</div><div class="stat-card__change up">↑ 9.4% <span style="font-size:11px;color:var(--text-soft);font-weight:400">so với tháng trước</span></div></div>
+        <div class="stat-card"><div class="stat-card__icon">👥</div><div class="stat-card__label">Khách hàng mới</div><div class="stat-card__val">1,284</div><div class="stat-card__change up">↑ 24.1% <span style="font-size:11px;color:var(--text-soft);font-weight:400">so với tháng trước</span></div></div>
+        <div class="stat-card"><div class="stat-card__icon">💄</div><div class="stat-card__label">Sản phẩm đã bán</div><div class="stat-card__val">5,620</div><div class="stat-card__change down">↓ 3.2% <span style="font-size:11px;color:var(--text-soft);font-weight:400">so với tháng trước</span></div></div>
+      </div>
+
+      <!-- CHART + TOP -->
+      <div class="grid-2col">
+        <div class="box">
+          <div class="box__head">
+            <div class="box__title">Doanh thu theo tháng</div>
+            <select style="border:1px solid var(--admin-border);border-radius:8px;padding:5px 10px;font-size:12px;color:var(--text-muted);outline:none"><option>Năm 2026</option></select>
+          </div>
+          <div class="box__body">
+            <div class="chart-bars">
+              <div class="chart-bar"><div class="chart-bar__val">48M</div><div class="chart-bar__bar" style="height:80px;background:#C95E85"></div><div class="chart-bar__label">T1</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">62M</div><div class="chart-bar__bar" style="height:103px;background:#C95E85"></div><div class="chart-bar__label">T2</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">55M</div><div class="chart-bar__bar" style="height:92px;background:#C95E85"></div><div class="chart-bar__label">T3</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">78M</div><div class="chart-bar__bar" style="height:130px;background:#9B3060"></div><div class="chart-bar__label">T4</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">90M</div><div class="chart-bar__bar" style="height:150px;background:#9B3060"></div><div class="chart-bar__label">T5</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">85M</div><div class="chart-bar__bar" style="height:142px;background:#C95E85"></div><div class="chart-bar__label">T6</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">95M</div><div class="chart-bar__bar" style="height:158px;background:#9B3060"></div><div class="chart-bar__label">T7</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">110M</div><div class="chart-bar__bar" style="height:160px;background:#9B3060"></div><div class="chart-bar__label">T8</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">98M</div><div class="chart-bar__bar" style="height:155px;background:#C95E85"></div><div class="chart-bar__label">T9</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">115M</div><div class="chart-bar__bar" style="height:160px;background:#9B3060"></div><div class="chart-bar__label">T10</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">120M</div><div class="chart-bar__bar" style="height:160px;background:#9B3060"></div><div class="chart-bar__label">T11</div></div>
+              <div class="chart-bar"><div class="chart-bar__val">128M</div><div class="chart-bar__bar" style="height:160px;background:#C8963E"></div><div class="chart-bar__label">T12</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box__head"><div class="box__title">Top sản phẩm</div><button class="box__action" onclick="location.href='admin-products.html'">Xem tất cả</button></div>
+          <div class="box__body box__body--tight">
+            <div class="top-prod"><span class="top-prod__rank gold">1</span><span class="top-prod__emoji">💄</span><div class="top-prod__info"><div class="top-prod__name">MAC Ruby Woo</div><div class="top-prod__brand">MAC Cosmetics</div></div><div class="top-prod__right"><div class="top-prod__sold">2.8K đã bán</div><div class="top-prod__rev">1.34Bđ</div></div></div>
+            <div class="top-prod"><span class="top-prod__rank">2</span><span class="top-prod__emoji">🌹</span><div class="top-prod__info"><div class="top-prod__name">Dior Satin 999</div><div class="top-prod__brand">Dior Beauty</div></div><div class="top-prod__right"><div class="top-prod__sold">1.9K đã bán</div><div class="top-prod__rev">2.37Bđ</div></div></div>
+            <div class="top-prod"><span class="top-prod__rank">3</span><span class="top-prod__emoji">💋</span><div class="top-prod__info"><div class="top-prod__name">YSL Couture</div><div class="top-prod__brand">YSL Beauty</div></div><div class="top-prod__right"><div class="top-prod__sold">1.6K đã bán</div><div class="top-prod__rev">1.57Bđ</div></div></div>
+            <div class="top-prod"><span class="top-prod__rank">4</span><span class="top-prod__emoji">✨</span><div class="top-prod__info"><div class="top-prod__name">NARS Velvet</div><div class="top-prod__brand">NARS</div></div><div class="top-prod__right"><div class="top-prod__sold">1.2K đã bán</div><div class="top-prod__rev">864Mđ</div></div></div>
+            <div class="top-prod"><span class="top-prod__rank">5</span><span class="top-prod__emoji">🌷</span><div class="top-prod__info"><div class="top-prod__name">CT Pillow Talk</div><div class="top-prod__brand">Charlotte Tilbury</div></div><div class="top-prod__right"><div class="top-prod__sold">980 đã bán</div><div class="top-prod__rev">833Mđ</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDERS TABLE -->
+      <div class="box" style="margin-bottom:20px">
+        <div class="box__head"><div class="box__title">Đơn hàng gần đây</div><button class="box__action" onclick="location.href='admin-orders.html'">Xem tất cả</button></div>
+        <table>
+          <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Sản phẩm</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead>
+          <tbody id="orders-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- ACTIVITY + CATEGORY -->
+      <div class="grid-2col">
+        <div class="box">
+          <div class="box__head"><div class="box__title">Hoạt động gần đây</div></div>
+          <div class="box__body box__body--tight">
+            <div class="activity-item"><div class="activity-icon" style="background:#E1F5EE">📦</div><div><div class="activity-text">Đơn hàng <strong>#BB2601</strong> đã hoàn thành</div><div class="activity-time">5 phút trước</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#F9D5E5">👤</div><div><div class="activity-text"><strong>Phạm Hồng Nhung</strong> đăng ký tài khoản mới</div><div class="activity-time">12 phút trước</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#F5E6C8">⭐</div><div><div class="activity-text"><strong>Nguyễn Lan Anh</strong> đánh giá 5★ cho MAC Ruby Woo</div><div class="activity-time">28 phút trước</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#FCEBEB">⚠️</div><div><div class="activity-text">Sản phẩm <strong>MAC Ruby Woo</strong> sắp hết hàng (5 SP)</div><div class="activity-time">1 giờ trước</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#E6F1FB">🎟</div><div><div class="activity-text">Mã <strong>BLOOM10</strong> được dùng 24 lần hôm nay</div><div class="activity-time">2 giờ trước</div></div></div>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box__head"><div class="box__title">Doanh thu theo danh mục</div></div>
+          <div class="box__body">
+            <div class="cat-bar"><div class="cat-bar__head"><span class="cat-bar__name">💄 Son môi</span><span style="color:#C95E85;font-weight:600">58%</span></div><div class="cat-bar__track"><div class="cat-bar__fill" style="width:58%;background:#C95E85"></div></div></div>
+            <div class="cat-bar"><div class="cat-bar__head"><span class="cat-bar__name">✨ Phấn má</span><span style="color:#C8963E;font-weight:600">18%</span></div><div class="cat-bar__track"><div class="cat-bar__fill" style="width:18%;background:#C8963E"></div></div></div>
+            <div class="cat-bar"><div class="cat-bar__head"><span class="cat-bar__name">👁 Mắt</span><span style="color:#378ADD;font-weight:600">14%</span></div><div class="cat-bar__track"><div class="cat-bar__fill" style="width:14%;background:#378ADD"></div></div></div>
+            <div class="cat-bar"><div class="cat-bar__head"><span class="cat-bar__name">🌿 Dưỡng da</span><span style="color:#1D9E75;font-weight:600">10%</span></div><div class="cat-bar__track"><div class="cat-bar__fill" style="width:10%;background:#1D9E75"></div></div></div>
+            <div class="summary-mini">
+              <div class="summary-mini__card"><div class="summary-mini__val">4.87</div><div class="summary-mini__label">Đánh giá TB</div></div>
+              <div class="summary-mini__card"><div class="summary-mini__val" style="color:#1D9E75">94%</div><div class="summary-mini__label">Hài lòng</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="box">
+        <div class="box__head"><div class="box__title">Thao tác nhanh</div></div>
+        <div class="box__body">
+          <div class="quick-actions">
+            <button class="qa-btn" onclick="location.href='admin-products.html'"><span style="font-size:20px">➕</span>Thêm sản phẩm</button>
+            <button class="qa-btn"><span style="font-size:20px">🎟</span>Tạo mã giảm giá</button>
+            <button class="qa-btn"><span style="font-size:20px">📢</span>Đăng banner</button>
+            <button class="qa-btn"><span style="font-size:20px">📊</span>Xuất báo cáo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
