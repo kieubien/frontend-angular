@@ -1,0 +1,34 @@
+<footer class="footer">
+    <div class="footer__main">
+
+        <div class="footer__brand-col">
+            <div class="footer__logo" routerLink="/">Blush<span>&</span>Bloom</div>
+            <p class="footer__desc">
+                Cửa hàng mỹ phẩm cao cấp online hàng đầu Việt Nam.
+                Chuyên son môi & make-up chính hãng từ các thương hiệu nổi tiếng thế giới.
+            </p>
+            <div class="footer__socials">
+                <div class="footer__social-btn">f</div>
+                <div class="footer__social-btn">ig</div>
+                <div class="footer__social-btn">tt</div>
+                <div class="footer__social-btn">yt</div>
+            </div>
+        </div>
+
+        <div class="footer__link-col" *ngFor="let col of footerLinks">
+            <div class="footer__col-title">{{ col.title }}</div>
+            <div class="footer__links">
+                <a *ngFor="let link of col.links" [routerLink]="link.path">{{ link.label }}</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer__bottom">
+        <span class="footer__copy">© {{ currentYear }} Blush & Bloom. Bảo lưu mọi quyền.</span>
+        <span class="footer__contact">Hotline: <strong>1800 1234</strong> · contact@blushbloom.vn</span>
+        <div class="footer__payments">
+            <span class="footer__pay-badge" *ngFor="let p of paymentMethods">{{ p }}</span>
+        </div>
+    </div>
+</footer>

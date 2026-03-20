@@ -1,0 +1,115 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 52px;
+    background: rgba(255, 255, 255, .97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #F9D5E5;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    &__logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        font-weight: 600;
+        color: #C95E85;
+        cursor: pointer;
+        text-decoration: none;
+
+        span {
+            color: #C8963E;
+        }
+    }
+
+    &__links {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+
+        a {
+            font-size: 13px;
+            font-weight: 500;
+            color: #9B7080;
+            text-decoration: none;
+            letter-spacing: .3px;
+            transition: color .2s;
+
+            &:hover,
+            &.active {
+                color: #C95E85;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    &__icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid #F9D5E5;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #9B7080;
+        font-size: 16px;
+        position: relative;
+        transition: all .2s;
+
+        &:hover {
+            background: #F9D5E5;
+            color: #C95E85;
+        }
+    }
+
+    &__badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        background: #C95E85;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.btn-register {
+    background: #C95E85;
+    color: #fff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+
+    &:hover {
+        background: #9B3060;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 14px 20px;
+
+        &__links {
+            display: none;
+        }
+    }
+}
