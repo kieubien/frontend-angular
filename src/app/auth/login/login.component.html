@@ -1,0 +1,90 @@
+<div class="auth-wrap">
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+        <div class="auth-left__brand">Blush<span>&amp;</span>Bloom</div>
+        <p class="auth-left__tagline">
+            Chào mừng đến với thế giới làm đẹp —<br />
+            nơi mỗi sắc màu kể một câu chuyện
+        </p>
+        <div class="auth-left__perks">
+            <div class="auth-perk">🎁 Tặng voucher 50K khi đăng ký</div>
+            <div class="auth-perk">⭐ Tích điểm mỗi đơn hàng</div>
+            <div class="auth-perk">🔔 Nhận ưu đãi độc quyền thành viên</div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="auth-right">
+        <div class="auth-card">
+
+            <!-- TABS -->
+            <div class="auth-tabs">
+                <a class="auth-tab active" routerLink="/login">Đăng nhập</a>
+                <a class="auth-tab" routerLink="/register">Đăng ký</a>
+            </div>
+
+            <h2 class="auth-title">Chào mừng trở lại 👋</h2>
+            <p class="auth-sub">Đăng nhập để tiếp tục mua sắm nhé!</p>
+
+            <!-- SOCIAL BUTTONS -->
+            <div class="social-btns">
+                <button class="social-btn">
+                    <span class="social-icon">G</span> Google
+                </button>
+                <button class="social-btn">
+                    <span class="social-icon">f</span> Facebook
+                </button>
+            </div>
+
+            <!-- DIVIDER -->
+            <div class="divider">
+                <span class="divider__line"></span>
+                <span class="divider__text">hoặc đăng nhập với email</span>
+                <span class="divider__line"></span>
+            </div>
+
+            <!-- ERROR MESSAGE -->
+            <div class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+            <!-- FORM -->
+            <form [formGroup]="loginForm" (ngSubmit)="doLogin()">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input class="form-input" type="email" formControlName="email" placeholder="lananh@email.com" />
+                    <span class="error-msg" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                        Vui lòng nhập email hợp lệ.
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <div class="form-input-wrap">
+                        <input class="form-input" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                            placeholder="••••••••" />
+                        <button type="button" class="toggle-pw" (click)="togglePassword()">
+                            {{ showPassword ? '🙈' : '👁' }}
+                        </button>
+                    </div>
+                    <span class="error-msg"
+                        *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                        Vui lòng nhập mật khẩu.
+                    </span>
+                </div>
+
+                <div class="forgot-wrap">
+                    <a class="forgot-link" href="#">Quên mật khẩu?</a>
+                </div>
+
+                <button class="btn-submit" type="submit" [disabled]="loginForm.invalid">
+                    Đăng nhập →
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                Chưa có tài khoản?
+                <a routerLink="/register">Đăng ký ngay</a>
+            </p>
+
+        </div>
+    </div>
+</div>
