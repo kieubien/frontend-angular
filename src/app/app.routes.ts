@@ -4,18 +4,26 @@ import { HomeComponent } from './features/home/home';
 
 export const routes: Routes = [
   {
-    path: '', component: HomeComponent
+    path: '',
+    component: HomeComponent,
   },
   {
     path: 'products',
-    loadComponent: () => import('./features/products/product-list/product-list.component').then((m) => m.ProductListComponent)
+    loadComponent: () =>
+      import('./features/products/product-list/product-list.component').then(
+        (m) => m.ProductListComponent,
+      ),
   },
   {
     path: 'products/:id',
-    loadComponent: () => import('./features/products/product-detail/product-detail.component').then((m) => m.ProductDetailComponent)
+    loadComponent: () =>
+      import('./features/products/product-detail/product-detail.component').then(
+        (m) => m.ProductDetailComponent,
+      ),
   },
   {
-    path: 'cart', component: CartComponent
+    path: 'cart',
+    component: CartComponent,
   },
   {
     path: 'login',
@@ -23,6 +31,21 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () => import('./auth/register/register.component').then((m) => m.RegisterComponent),
+    loadComponent: () =>
+      import('./auth/register/register.component').then((m) => m.RegisterComponent),
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./admin/dashboard/dashboard').then((m) => m.DashboardComponent),
+  },
+  {
+    path: 'order-management',
+    loadComponent: () =>
+      import('./admin/order-management/order-management').then((m) => m.OrderManagementComponent),
+  },
+  {
+    path: 'product-management',
+    loadComponent: () =>
+      import('./admin/product-management/product-management').then((m) => m.ProductManagementComponent),
   },
 ];
