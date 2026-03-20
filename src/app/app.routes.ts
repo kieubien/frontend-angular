@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { CartComponent } from './features/cart/cart.component/cart.component';
 
 export const routes: Routes = [
+  { path: 'products', loadComponent: () => import('./features/products/product-list/product-list.component').then((m) => m.ProductListComponent) },
+  { path: 'products/:id', loadComponent: () => import('./features/products/product-detail/product-detail.component').then((m) => m.ProductDetailComponent) },
   { path: 'cart', component: CartComponent },
   // AUTH
   {
