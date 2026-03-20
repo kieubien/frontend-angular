@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { FooterComponent } from '../../../shared/components/footer/footer';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar';
 declare var Cart: any;
 
 @Component({
@@ -9,7 +10,7 @@ declare var Cart: any;
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'], 
   standalone: true,
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule, FooterComponent, NavbarComponent],
 })
 export class CartComponent implements OnInit {
 
