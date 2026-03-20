@@ -1,0 +1,22 @@
+<nav class="navbar">
+    <div class="navbar__logo" routerLink="/">Blush<span>&</span>Bloom</div>
+
+    <ul class="navbar__links">
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Trang chủ</a></li>
+        <li><a routerLink="/products" routerLinkActive="active">Son môi</a></li>
+        <li><a routerLink="/products" routerLinkActive="active">Mắt</a></li>
+        <li><a routerLink="/products" routerLinkActive="active">Má hồng</a></li>
+        <li><a routerLink="/products" routerLinkActive="active">Dưỡng da</a></li>
+        <li><a routerLink="/products">Thương hiệu</a></li>
+    </ul>
+
+    <div class="navbar__actions">
+        <button class="navbar__icon-btn" title="Tìm kiếm">🔍</button>
+        <button class="navbar__icon-btn" routerLink="/auth/login" title="Tài khoản">👤</button>
+        <button class="navbar__icon-btn" routerLink="/cart" title="Giỏ hàng" style="position:relative">
+            🛒
+            <span class="navbar__badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+        </button>
+        <button class="btn-register" routerLink="/auth/register">Đăng ký</button>
+    </div>
+</nav>
