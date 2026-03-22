@@ -1,4 +1,11 @@
 // ── HERO ──
+
+body,
+* {
+    font-family: 'Times New Roman', Times, serif !important;
+    font-variant-numeric: normal;
+}
+
 .hero {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -27,6 +34,10 @@
     text-transform: uppercase;
     margin-bottom: 24px;
     width: fit-content;
+
+    i {
+        font-size: 12px;
+    }
 }
 
 .hero__title {
@@ -87,19 +98,22 @@
 }
 
 .hero__illustration {
-    font-size: 140px;
+    font-size: 120px;
+    color: #C95E85;
+    opacity: .8;
     animation: float 3s ease-in-out infinite;
+    line-height: 1;
 }
 
 @keyframes float {
 
     0%,
     100% {
-        transform: translateY(0)
+        transform: translateY(0);
     }
 
     50% {
-        transform: translateY(-16px)
+        transform: translateY(-16px);
     }
 }
 
@@ -117,8 +131,9 @@
 }
 
 .hero__floating-card__icon {
-    font-size: 20px;
+    font-size: 22px;
     color: #C8963E;
+    line-height: 1;
 }
 
 .hero__floating-card__title {
@@ -151,18 +166,24 @@
     color: rgba(255, 255, 255, .9);
 }
 
+.marquee__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .marquee__dot {
     color: #F9D5E5;
-    margin: 0 4px;
+    font-size: 10px;
 }
 
 @keyframes marquee {
     0% {
-        transform: translateX(0)
+        transform: translateX(0);
     }
 
     100% {
-        transform: translateX(-50%)
+        transform: translateX(-50%);
     }
 }
 
@@ -185,6 +206,9 @@
     color: #C95E85;
     font-weight: 600;
     margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .section-title {
@@ -206,6 +230,9 @@
     padding-bottom: 2px;
     cursor: pointer;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 // ── CATEGORIES ──
@@ -217,20 +244,16 @@
 
 .cat-card {
     border-radius: 20px;
-    padding: 28px 16px;
+    padding: 24px 16px;
     text-align: center;
     cursor: pointer;
-    transition: transform .2s;
+    transition: 0.3s;
+    background: #FFF0F5;
 
     &:hover {
         transform: translateY(-4px);
+        background: #F9D5E5;
     }
-}
-
-.cat-card__icon {
-    font-size: 32px;
-    margin-bottom: 10px;
-    display: block;
 }
 
 .cat-card__name {
@@ -246,25 +269,7 @@
     color: #9B7080;
 }
 
-.cat--pink {
-    background: linear-gradient(160deg, #FFE4EE, #F9B8D0);
-}
 
-.cat--gold {
-    background: linear-gradient(160deg, #FFF0D8, #F5D9A8);
-}
-
-.cat--blue {
-    background: linear-gradient(160deg, #E8F0FF, #C5D5F8);
-}
-
-.cat--green {
-    background: linear-gradient(160deg, #E8F8EE, #B8E8C8);
-}
-
-.cat--purple {
-    background: linear-gradient(160deg, #F5E8FF, #DEB8F0);
-}
 
 // ── TABS ──
 .tabs {
@@ -287,6 +292,9 @@
     text-transform: uppercase;
     letter-spacing: .5px;
     transition: all .2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 
     &.active {
         color: #C95E85;
@@ -356,6 +364,9 @@
 
 .product-card__placeholder {
     font-size: 72px;
+    color: #C95E85;
+    opacity: .75;
+    line-height: 1;
 }
 
 .product-card__badge {
@@ -394,9 +405,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 14px;
     border: none;
     cursor: pointer;
+    color: #C95E85;
+    transition: background .2s;
+
+    &:hover {
+        background: #F9D5E5;
+    }
 }
 
 .product-card__body {
@@ -487,6 +504,7 @@
 .btn-primary {
     display: inline-flex;
     align-items: center;
+    gap: 8px;
     background: #C95E85;
     color: #fff;
     padding: 13px 28px;
@@ -506,6 +524,7 @@
 .btn-outline {
     display: inline-flex;
     align-items: center;
+    gap: 8px;
     background: transparent;
     color: #C95E85;
     border: 1.5px solid #F4B8D0;
@@ -569,6 +588,7 @@
     font-weight: 600;
     cursor: pointer;
     border: none;
+    transition: background .2s;
 
     &:hover {
         background: #F9D5E5;
@@ -604,7 +624,10 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: 4px;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
 // ── NEWSLETTER ──
@@ -661,12 +684,24 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    transition: background .2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+        background: #a87832;
+    }
 }
 
 .newsletter__note {
     font-size: 11px;
     color: rgba(255, 255, 255, .5);
     margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
 // ── RESPONSIVE ──

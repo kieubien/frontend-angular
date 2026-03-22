@@ -1,14 +1,15 @@
 <app-navbar></app-navbar>
+
 <!-- HERO -->
 <section class="hero">
     <div class="hero__left">
-        <div class="hero__pill">✦ Bộ sưu tập Xuân 2025</div>
+        <div class="hero__pill"><i class="bi bi-flower1"></i> Bộ sưu tập Xuân 2025</div>
         <h1 class="hero__title">Vẻ đẹp <em>ngọt ngào</em><br>của riêng bạn</h1>
         <p class="hero__desc">Khám phá hơn 500+ sản phẩm son & mỹ phẩm chính hãng. Từ màu hồng pastel dịu dàng đến đỏ
             kiêu sa — tìm màu của bạn.</p>
         <div class="hero__btns">
-            <a class="btn-primary" routerLink="/products">Mua sắm ngay →</a>
-            <a class="btn-outline" routerLink="/products">Xem bộ sưu tập</a>
+            <a class="btn-primary" routerLink="/products">Mua sắm ngay <i class="bi bi-arrow-right"></i></a>
+            <a class="btn-outline" routerLink="/products"><i class="bi bi-collection"></i> Xem bộ sưu tập</a>
         </div>
         <div class="hero__stats">
             <div *ngFor="let s of stats">
@@ -18,9 +19,9 @@
         </div>
     </div>
     <div class="hero__right">
-        <div class="hero__illustration">💄</div>
+        <div class="hero__illustration"><i class="bi bi-heart-fill"></i></div>
         <div class="hero__floating-card">
-            <div class="hero__floating-card__icon">★</div>
+            <div class="hero__floating-card__icon"><i class="bi bi-star-fill"></i></div>
             <div>
                 <div class="hero__floating-card__title">4.9 / 5.0</div>
                 <div class="hero__floating-card__sub">20.000+ đánh giá</div>
@@ -32,26 +33,33 @@
 <!-- MARQUEE -->
 <div class="marquee">
     <div class="marquee__inner">
-        <span *ngFor="let item of marqueeItems">
-            {{ item }}<span class="marquee__dot">✿</span>
+        <span *ngFor="let item of marqueeItems" class="marquee__item">
+            {{ item }}<i class="bi bi-flower2 marquee__dot"></i>
         </span>
     </div>
 </div>
+
 
 <!-- CATEGORIES -->
 <section class="section">
     <div class="section-header">
         <div>
-            <div class="section-label">✦ Khám phá</div>
+            <div class="section-label">
+                <i class="bi bi-compass"></i> Khám phá
+            </div>
             <h2 class="section-title">Danh mục <em>sản phẩm</em></h2>
         </div>
-        <a class="see-all" routerLink="/products">Xem tất cả →</a>
+        <a class="see-all" routerLink="/products">
+            Xem tất cả <i class="bi bi-arrow-right"></i>
+        </a>
     </div>
+
     <div class="cat-grid">
-        <div class="cat-card" *ngFor="let cat of categories" [ngClass]="cat.cls" (click)="goToProducts(cat.cat)">
-            <span class="cat-card__icon">{{ cat.icon }}</span>
+        <div class="cat-card" *ngFor="let cat of categories" (click)="goToProducts()">
+
             <div class="cat-card__name">{{ cat.name }}</div>
             <div class="cat-card__count">{{ cat.count }} sản phẩm</div>
+
         </div>
     </div>
 </section>
@@ -60,16 +68,15 @@
 <section class="section products-section">
     <div class="section-header">
         <div>
-            <div class="section-label">✦ Nổi bật</div>
+            <div class="section-label"><i class="bi bi-fire"></i> Nổi bật</div>
             <h2 class="section-title">Sản phẩm <em>bán chạy</em></h2>
         </div>
-        <a class="see-all" routerLink="/products">Xem tất cả →</a>
+        <a class="see-all" routerLink="/products">Xem tất cả <i class="bi bi-arrow-right"></i></a>
     </div>
 
     <div class="tabs">
         <button class="tab" *ngFor="let tab of tabs" [class.active]="activeTab === tab.key" (click)="setTab(tab.key)">
-            {{ tab.label }}
-        </button>
+            {{ tab.label }} </button>
     </div>
 
     <div class="loading" *ngIf="isLoading">
@@ -80,17 +87,20 @@
     <div class="product-grid" *ngIf="!isLoading">
         <div class="product-card" *ngFor="let p of featuredProducts">
             <div class="product-card__img-wrap">
-                <div class="product-card__placeholder">{{ p.emoji }}</div>
+                <div class="product-card__placeholder"><i class="bi" [ngClass]="p.icon"></i></div>
                 <span class="product-card__badge badge-sale" *ngIf="p.badge==='sale'">-{{ getDiscount(p) }}%</span>
                 <span class="product-card__badge badge-new" *ngIf="p.badge==='new'">Mới</span>
                 <span class="product-card__badge badge-hot" *ngIf="p.badge==='hot'">Hot</span>
-                <button class="product-card__wish">🤍</button>
+                <button class="product-card__wish"><i class="bi bi-heart"></i></button>
             </div>
             <div class="product-card__body">
                 <div class="product-card__brand">{{ p.brand }}</div>
                 <div class="product-card__name">{{ p.name }}</div>
                 <div>
-                    <span class="stars">★★★★★</span>
+                    <span class="stars">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
+                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </span>
                     <span class="review-count">({{ p.reviewCount }})</span>
                 </div>
                 <div class="product-card__colors">
@@ -101,7 +111,7 @@
                         <span class="price-current">{{ p.price | number }}đ</span>
                         <span class="price-old" *ngIf="p.originalPrice">{{ p.originalPrice | number }}đ</span>
                     </div>
-                    <button class="add-btn" (click)="addToCart(p, $event)">+</button>
+                    <button class="add-btn" (click)="addToCart(p, $event)"><i class="bi bi-plus"></i></button>
                 </div>
             </div>
         </div>
@@ -114,25 +124,34 @@
         <h2 class="sale-banner__title">Flash Sale <em>Cuối tuần</em></h2>
         <p class="sale-banner__desc">Hàng trăm sản phẩm son & mỹ phẩm chính hãng giảm giá sâu. Chỉ trong 48 giờ — số
             lượng có hạn!</p>
-        <button class="btn-white" routerLink="/products">Xem ưu đãi ngay →</button>
+        <button class="btn-white" routerLink="/products">
+            <i class="bi bi-lightning-charge-fill"></i> Xem ưu đãi ngay
+        </button>
     </div>
     <div class="sale-banner__right">
         <div class="discount-badge" *ngFor="let d of discounts">
             <span class="discount-badge__num">{{ d.value }}</span>
-            <span class="discount-badge__label">{{ d.label }}</span>
+            <span class="discount-badge__label">
+                {{ d.label }}
+            </span>
         </div>
     </div>
 </div>
 
 <!-- NEWSLETTER -->
 <div class="newsletter">
-    <div class="section-label" style="color:rgba(255,255,255,.7)">✦ Cộng đồng làm đẹp</div>
+    <div class="section-label" style="color:rgba(255,255,255,.7)">
+        <i class="bi bi-people-fill"></i> Cộng đồng làm đẹp
+    </div>
     <h2 class="newsletter__title">Nhận <em>ưu đãi độc quyền</em></h2>
     <p class="newsletter__desc">Đăng ký nhận bản tin để không bỏ lỡ deal hot, sản phẩm mới và mẹo làm đẹp.</p>
     <div class="newsletter__form">
         <input class="newsletter__input" type="email" placeholder="Nhập email của bạn..." [(ngModel)]="email">
-        <button class="newsletter__btn" (click)="subscribe()">Đăng ký ngay</button>
+        <button class="newsletter__btn" (click)="subscribe()">
+            <i class="bi bi-send-fill"></i> Đăng ký ngay
+        </button>
     </div>
-    <p class="newsletter__note">Không spam. Huỷ đăng ký bất kỳ lúc nào.</p>
+    <p class="newsletter__note"><i class="bi bi-shield-check"></i> Không spam. Huỷ đăng ký bất kỳ lúc nào.</p>
 </div>
+
 <app-footer></app-footer>
