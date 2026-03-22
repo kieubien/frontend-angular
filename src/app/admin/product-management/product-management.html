@@ -1,161 +1,167 @@
-<p>product-management works!</p>
-<div style="display:flex;min-height:100vh">
-  <div id="sidebar-wrap"></div>
-  <div class="admin-main">
-    <div class="admin-topbar">
+<div class="d-flex">
+  <app-sidebar></app-sidebar>
+
+  <div class="flex-grow-1 bg-light min-vh-100">
+
+    <!-- Topbar -->
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-white">
       <div>
-        <div class="admin-topbar__title">Quản lý sản phẩm</div>
-        <div class="admin-topbar__sub">Xin chào, Kiều Biên · <span id="total-count">6</span> sản phẩm</div>
+        <h5 class="fw-bold mb-0">Quản lý sản phẩm</h5>
+        <small class="text-muted">Xin chào, Kiều Biên · {{products.length}} sản phẩm</small>
       </div>
-      <div class="admin-topbar__right">
-        <div class="admin-topbar__search"><span>🔍</span><input type="text" id="search-input" placeholder="Tìm tên, SKU..." oninput="applyFilters()"></div>
-        <button class="admin-topbar__ic">🔔</button>
-        <button class="btn-add" onclick="openModal('add')">+ Thêm sản phẩm</button>
+
+      <div class="d-flex gap-2">
+        <input class="form-control form-control-sm"
+               placeholder="Tìm sản phẩm..."
+               [(ngModel)]="searchText">
+
+        <button class="btn btn-light">
+          <i class="bi bi-bell"></i>
+        </button>
+
+        <button class="btn btn-pink" (click)="openModal()">
+          <i class="bi bi-plus"></i> Thêm sản phẩm
+        </button>
       </div>
     </div>
-    <div class="admin-content">
-      <!-- MINI STATS -->
-      <div class="mini-stats">
-        <div class="ms"><div class="ms__icon" style="background:#F0FDF4">📦</div><div><div class="ms__label">Tổng sản phẩm</div><div class="ms__val" id="stat-total">6</div></div></div>
-        <div class="ms"><div class="ms__icon" style="background:#F0F9FF">✅</div><div><div class="ms__label">Đang bán</div><div class="ms__val" id="stat-active" style="color:var(--green)">5</div></div></div>
-        <div class="ms"><div class="ms__icon" style="background:#FFFBEB">⚠️</div><div><div class="ms__label">Sắp hết hàng</div><div class="ms__val" id="stat-low" style="color:var(--gold)">2</div></div></div>
-        <div class="ms"><div class="ms__icon" style="background:#FFF1F2">❌</div><div><div class="ms__label">Hết hàng</div><div class="ms__val" id="stat-out" style="color:var(--red)">0</div></div></div>
-      </div>
-      <!-- FILTER -->
-      <div class="filter-bar">
-        <span style="font-size:12px;font-weight:600;color:var(--text-muted)">Lọc:</span>
-        <select class="fsel" id="f-category" onchange="applyFilters()">
-          <option value="">Tất cả danh mục</option>
-          <option>Son môi</option><option>Phấn má</option><option>Mắt</option><option>Dưỡng da</option>
-        </select>
-        <select class="fsel" id="f-brand" onchange="applyFilters()">
-          <option value="">Tất cả thương hiệu</option>
-          <option>MAC Cosmetics</option><option>Dior Beauty</option><option>NARS Cosmetics</option>
-          <option>YSL Beauty</option><option>Chanel</option><option>Charlotte Tilbury</option>
-        </select>
-        <select class="fsel" id="f-status" onchange="applyFilters()">
-          <option value="">Tất cả trạng thái</option>
-          <option value="active">Đang bán</option><option value="hidden">Tạm ẩn</option>
-        </select>
-        <select class="fsel" id="f-sort" onchange="applyFilters()">
-          <option value="newest">Mới nhất</option>
-          <option value="bestseller">Bán chạy</option>
-          <option value="price_asc">Giá tăng</option>
-          <option value="price_desc">Giá giảm</option>
-          <option value="stock_asc">Tồn kho ít</option>
-        </select>
-        <div style="flex:1"></div>
-      </div>
-      <!-- TABLE -->
-      <div class="data-table">
-        <div class="data-table__head">
-          <span style="font-size:13px;color:var(--text-muted)">Đã chọn <strong id="selected-count">0</strong> sản phẩm</span>
-          <div class="bulk-actions">
-            <button class="bk-btn">Ẩn</button>
-            <button class="bk-btn">Xuất Excel</button>
-            <button class="bk-btn bk-btn--danger" onclick="bulkDelete()">Xóa đã chọn</button>
+
+    <!-- Content -->
+    <div class="p-3">
+
+      <!-- Stats -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-3">
+          <div class="card p-2 text-center">
+            <div class="fw-bold text-pink">{{products.length}}</div>
+            <small>Tổng sản phẩm</small>
           </div>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th style="width:36px"><input type="checkbox" id="check-all" onchange="toggleAll(this)"></th>
-              <th>Sản phẩm</th><th>Danh mục</th><th>Giá bán</th>
-              <th>Tồn kho</th><th>Đã bán</th><th>Trạng thái</th><th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody id="product-tbody"></tbody>
-        </table>
-        <div class="data-table__foot">
-          <span class="page-info" id="page-info"></span>
-          <div class="pagination2" id="pagination"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ADD/EDIT MODAL -->
-<div class="modal-overlay" id="prod-modal">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="mhead">
-      <div class="mtitle" id="modal-title">Thêm sản phẩm mới</div>
-      <div class="mclose" onclick="closeModal()">×</div>
-    </div>
-    <div class="mbody">
-      <div class="img-upload" onclick="showToast('Chọn ảnh từ máy tính...')">
-        <div style="font-size:26px;margin-bottom:6px">📸</div>
-        <div style="font-size:13px;color:var(--text-muted)">Kéo thả hoặc click để tải ảnh lên</div>
-        <div style="font-size:11px;color:var(--text-soft);margin-top:2px">PNG, JPG tối đa 5MB · Tối thiểu 800×800px</div>
-      </div>
-      <div class="modal-row">
-        <div class="mg"><label class="ml">Tên sản phẩm *</label><input class="mi" type="text" id="m-name" placeholder="VD: Lipstick Matte Ruby Woo"></div>
-        <div class="mg"><label class="ml">SKU *</label><input class="mi" type="text" id="m-sku" placeholder="VD: MAC001"></div>
-      </div>
-      <div class="modal-row">
-        <div class="mg"><label class="ml">Thương hiệu *</label>
-          <select class="ms2" id="m-brand">
-            <option value="">Chọn thương hiệu</option>
-            <option>MAC Cosmetics</option><option>Dior Beauty</option><option>NARS Cosmetics</option>
-            <option>YSL Beauty</option><option>Chanel</option><option>Charlotte Tilbury</option>
-          </select>
+        <div class="col-md-3">
+          <div class="card p-2 text-center">
+            <div class="fw-bold text-success">{{getActiveCount()}}</div>
+            <small>Đang bán</small>
+          </div>
         </div>
-        <div class="mg"><label class="ml">Danh mục *</label>
-          <select class="ms2" id="m-category">
-            <option value="">Chọn danh mục</option>
-            <option>Son môi</option><option>Phấn má</option><option>Mắt & Kẻ mắt</option><option>Dưỡng da</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-row">
-        <div class="mg"><label class="ml">Giá gốc (đ)</label><input class="mi" type="number" id="m-original-price" placeholder="600000"></div>
-        <div class="mg"><label class="ml">Giá bán (đ) *</label><input class="mi" type="number" id="m-price" placeholder="480000"></div>
-      </div>
-      <div class="modal-row">
-        <div class="mg"><label class="ml">Tồn kho *</label><input class="mi" type="number" id="m-stock" placeholder="100"></div>
-        <div class="mg"><label class="ml">Loại son</label>
-          <select class="ms2" id="m-type">
-            <option value="">Chọn loại</option>
-            <option>Son lì</option><option>Son bóng</option><option>Son dưỡng</option><option>Son kem</option>
-          </select>
-        </div>
-      </div>
-      <div class="mg"><label class="ml">Mô tả</label><textarea class="mta" id="m-desc" placeholder="Nhập mô tả chi tiết..."></textarea></div>
-      <div class="mg">
-        <label class="ml">Màu sắc có sẵn</label>
-        <div class="color-picker" id="color-picker">
-          <div class="cp-item selected" onclick="toggleCpColor(this)" data-color="Hồng"><div class="cp-dot" style="background:#C95E85"></div></div>
-          <div class="cp-item" onclick="toggleCpColor(this)" data-color="Đỏ"><div class="cp-dot" style="background:#E24B4A"></div></div>
-          <div class="cp-item" onclick="toggleCpColor(this)" data-color="Đỏ mận"><div class="cp-dot" style="background:#9B3060"></div></div>
-          <div class="cp-item" onclick="toggleCpColor(this)" data-color="Hồng phấn"><div class="cp-dot" style="background:#F4B8D0"></div></div>
-          <div class="cp-item" onclick="toggleCpColor(this)" data-color="Nude"><div class="cp-dot" style="background:#D2855A"></div></div>
-          <div class="cp-item" onclick="toggleCpColor(this)" data-color="Cam đất"><div class="cp-dot" style="background:#C8963E"></div></div>
-          <div class="cp-item" onclick="toggleCpColor(this)" data-color="Tím"><div class="cp-dot" style="background:#A060C0"></div></div>
-          <div class="cp-item" onclick="toggleCpColor(this)" data-color="Đen"><div class="cp-dot" style="background:#333"></div></div>
-        </div>
-      </div>
-      <div class="mg"><label class="ml">Badge</label>
-        <select class="ms2" id="m-badge"><option value="">Không có</option><option value="sale">Sale</option><option value="new">Mới</option><option value="hot">Hot</option></select>
-      </div>
-      <div class="toggle-row"><span class="toggle-label">Hiển thị sản phẩm</span><div class="toggle-sw on" id="toggle-visible" onclick="toggleSw(this)"></div></div>
-      <div class="toggle-row"><span class="toggle-label">Sản phẩm nổi bật</span><div class="toggle-sw off" id="toggle-featured" onclick="toggleSw(this)"></div></div>
-    </div>
-    <div class="mfoot">
-      <button class="btn-cancel2" onclick="closeModal()">Hủy bỏ</button>
-      <button class="btn-save2" onclick="saveProduct()">💾 Lưu sản phẩm</button>
-    </div>
-  </div>
-</div>
 
-<!-- DELETE MODAL -->
-<div class="modal-overlay" id="del-modal" onclick="closeDelModal()">
-  <div class="del-modal" onclick="event.stopPropagation()">
-    <div style="font-size:44px;margin-bottom:12px">🗑️</div>
-    <h3 style="font-family:var(--font-display);font-size:22px;color:var(--text-dark);margin-bottom:8px">Xóa sản phẩm?</h3>
-    <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:22px">Bạn có chắc muốn xóa <strong id="del-name"></strong>?<br>Hành động này không thể hoàn tác.</p>
-    <div style="display:flex;gap:10px;justify-content:center">
-      <button class="btn-cancel2" onclick="closeDelModal()">Hủy bỏ</button>
-      <button class="btn-delete" onclick="confirmDelete()">Xóa vĩnh viễn</button>
+        <div class="col-md-3">
+          <div class="card p-2 text-center">
+            <div class="fw-bold text-warning">{{getLowStock()}}</div>
+            <small>Sắp hết</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="card p-2 mb-3 d-flex gap-2 flex-wrap">
+        <select class="form-select form-select-sm w-auto"
+                [(ngModel)]="filterCategory">
+          <option value="">Danh mục</option>
+          <option>Son môi</option>
+          <option>Phấn má</option>
+        </select>
+
+        <select class="form-select form-select-sm w-auto"
+                [(ngModel)]="filterStatus">
+          <option value="">Trạng thái</option>
+          <option value="active">Đang bán</option>
+          <option value="hidden">Ẩn</option>
+        </select>
+
+        <button class="btn btn-outline-pink btn-sm" (click)="resetFilters()">
+          Reset
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tên</th>
+                <th>Danh mục</th>
+                <th>Giá</th>
+                <th>Tồn</th>
+                <th>Trạng thái</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let p of filteredProducts()">
+                <td>{{p.name}}</td>
+                <td>{{p.category}}</td>
+                <td>{{p.price}}</td>
+                <td>{{p.stock}}</td>
+
+                <td>
+                  <span class="badge"
+                    [ngClass]="p.status === 'active' ? 'bg-success' : 'bg-secondary'">
+                    {{p.status}}
+                  </span>
+                </td>
+
+                <td>
+                  <button class="btn btn-sm btn-outline-primary"
+                          (click)="editProduct(p)">
+                    Sửa
+                  </button>
+
+                  <button class="btn btn-sm btn-outline-danger"
+                          (click)="deleteProduct(p)">
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade show d-block" *ngIf="showModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title">{{editing ? 'Sửa' : 'Thêm'}} sản phẩm</h5>
+            <button class="btn-close" (click)="closeModal()"></button>
+          </div>
+
+          <div class="modal-body">
+
+            <input class="form-control mb-2"
+                   placeholder="Tên"
+                   [(ngModel)]="form.name">
+
+            <input class="form-control mb-2"
+                   placeholder="Giá"
+                   [(ngModel)]="form.price">
+
+            <input class="form-control mb-2"
+                   placeholder="Tồn kho"
+                   [(ngModel)]="form.stock">
+
+            <select class="form-select"
+                    [(ngModel)]="form.category">
+              <option>Son môi</option>
+              <option>Phấn má</option>
+            </select>
+
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModal()">Hủy</button>
+            <button class="btn btn-pink" (click)="saveProduct()">Lưu</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
