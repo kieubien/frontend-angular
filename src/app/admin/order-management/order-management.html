@@ -1,96 +1,134 @@
-<div style="display:flex;min-height:100vh">
-  <div id="sidebar-wrap"></div>
-  <div class="admin-main">
-    <div class="admin-topbar">
+<div class="d-flex">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main -->
+  <div class="flex-grow-1 bg-light min-vh-100">
+
+    <!-- Topbar -->
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-white">
       <div>
-        <div class="admin-topbar__title">Quản lý đơn hàng</div>
-        <div class="admin-topbar__sub">Xin chào, Kiều Biên · <span id="total-count">0</span> đơn hàng</div>
+        <h5 class="fw-bold mb-0">Quản lý đơn hàng</h5>
+        <small class="text-muted">Xin chào, Kiều Biên · {{orders.length}} đơn hàng</small>
       </div>
-      <div class="admin-topbar__right">
-        <div class="admin-topbar__search"><span>🔍</span><input type="text" id="search-inp" placeholder="Tìm mã đơn, tên KH..." oninput="applyFilters()"></div>
-        <button class="admin-topbar__ic">🔔</button>
-        <button class="btn-add" style="background:#378ADD" onclick="showToast('Xuất Excel thành công! 📊')">📊 Xuất Excel</button>
+
+      <div class="d-flex align-items-center gap-2">
+        <input type="text" class="form-control form-control-sm"
+               placeholder="Tìm kiếm..."
+               [(ngModel)]="searchText">
+
+        <button class="btn btn-light">
+          <i class="bi bi-bell"></i>
+        </button>
+
+        <button class="btn btn-pink" (click)="exportExcel()">
+          <i class="bi bi-file-earmark-excel"></i> Xuất Excel
+        </button>
       </div>
     </div>
-    <div class="admin-content">
-      <!-- STATUS STRIP -->
-      <div class="status-strip">
-        <div class="ss all" onclick="setStatusFilter('')"><div class="ss__icon" style="background:#F3F4F6">📋</div><div><div class="ss__num" id="cnt-all">0</div><div class="ss__lbl">Tất cả đơn</div></div></div>
-        <div class="ss pend" onclick="setStatusFilter('pending')"><div class="ss__icon" style="background:#FFFBEB">⏳</div><div><div class="ss__num" id="cnt-pend" style="color:var(--gold)">0</div><div class="ss__lbl">Chờ xử lý</div></div></div>
-        <div class="ss ship" onclick="setStatusFilter('shipping')"><div class="ss__icon" style="background:#EBF4FF">🚚</div><div><div class="ss__num" id="cnt-ship" style="color:var(--blue)">0</div><div class="ss__lbl">Đang giao</div></div></div>
-        <div class="ss done" onclick="setStatusFilter('done')"><div class="ss__icon" style="background:#E8F8F2">✅</div><div><div class="ss__num" id="cnt-done" style="color:var(--green)">0</div><div class="ss__lbl">Hoàn thành</div></div></div>
-        <div class="ss canc" onclick="setStatusFilter('cancelled')"><div class="ss__icon" style="background:#FEF2F2">❌</div><div><div class="ss__num" id="cnt-canc" style="color:var(--red)">0</div><div class="ss__lbl">Đã huỷ</div></div></div>
+
+    <!-- Content -->
+    <div class="p-3">
+
+      <!-- Status -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-2" *ngFor="let s of statusList">
+          <div class="card text-center p-2 cursor"
+               (click)="filterStatus = s.key">
+            <div class="fw-bold text-pink">{{getCountByStatus(s.key)}}</div>
+            <small class="text-muted">{{s.label}}</small>
+          </div>
+        </div>
       </div>
-      <!-- FILTER -->
-      <div class="filter-bar">
-        <span style="font-size:12px;font-weight:600;color:var(--text-muted)">Lọc:</span>
-        <select class="fsel" id="f-status" onchange="applyFilters()">
+
+      <!-- Filter -->
+      <div class="card p-2 mb-3 d-flex flex-row gap-2 flex-wrap">
+
+        <select class="form-select form-select-sm w-auto"
+                [(ngModel)]="filterStatus">
           <option value="">Tất cả trạng thái</option>
-          <option value="new">Mới đặt</option><option value="pending">Chờ xử lý</option>
-          <option value="shipping">Đang giao</option><option value="done">Hoàn thành</option>
+          <option value="pending">Chờ xử lý</option>
+          <option value="shipping">Đang giao</option>
+          <option value="done">Hoàn thành</option>
           <option value="cancelled">Đã huỷ</option>
         </select>
-        <select class="fsel" id="f-payment" onchange="applyFilters()">
-          <option value="">Thanh toán: Tất cả</option>
-          <option value="MoMo">MoMo</option><option value="VISA">VISA</option>
-          <option value="ZaloPay">ZaloPay</option><option value="COD">COD</option>
+
+        <select class="form-select form-select-sm w-auto"
+                [(ngModel)]="filterPayment">
+          <option value="">Thanh toán</option>
+          <option value="COD">COD</option>
+          <option value="VISA">VISA</option>
         </select>
-        <select class="fsel" id="f-sort" onchange="applyFilters()">
-          <option value="newest">Mới nhất</option><option value="oldest">Cũ nhất</option>
-          <option value="highest">Giá trị cao</option>
-        </select>
-        <button style="font-size:12px;color:var(--blue);font-weight:600;background:none;border:none;cursor:pointer" onclick="resetFilters()">↺ Đặt lại</button>
+
+        <button class="btn btn-outline-pink btn-sm" (click)="resetFilters()">
+          Reset
+        </button>
       </div>
-      <!-- TABLE -->
-      <div class="data-table">
-        <div class="data-table__head">
-          <span style="font-size:13px;color:var(--text-muted)">Hiển thị <strong id="shown-count">0</strong> đơn hàng</span>
-          <span style="font-size:11px;color:var(--text-soft)">Cập nhật lúc <span id="update-time"></span></span>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th style="width:32px"><input type="checkbox"></th>
-              <th>Mã đơn</th><th>Khách hàng</th><th>Sản phẩm</th>
-              <th>Tổng tiền</th><th>Thanh toán</th><th>Ngày đặt</th>
-              <th>Trạng thái</th><th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody id="orders-tbody"></tbody>
-        </table>
-        <div class="data-table__foot">
-          <span class="page-info" id="page-info"></span>
-          <div style="display:flex;gap:5px" id="pagination"></div>
+
+      <!-- Table -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Khách</th>
+                <th>Tổng</th>
+                <th>Thanh toán</th>
+                <th>Trạng thái</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let o of filteredOrders()">
+                <td>#{{o.id}}</td>
+                <td>{{o.customer}}</td>
+                <td>{{o.total}}</td>
+                <td>{{o.payment}}</td>
+                <td>
+                  <span class="badge"
+                    [ngClass]="getStatusClass(o.status)">
+                    {{o.status}}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary"
+                          (click)="selectOrder(o)">
+                    Xem
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
         </div>
       </div>
-      <!-- ORDER DETAIL -->
-      <div class="order-detail" id="order-detail" style="display:none">
-        <div class="det-head">
-          <div>
-            <div class="det-title" id="det-title">Chi tiết đơn hàng</div>
-            <div class="det-meta" id="det-meta"></div>
-          </div>
-          <div class="detail-badges" id="det-badges"></div>
+
+      <!-- Detail -->
+      <div class="card mt-3" *ngIf="selectedOrder">
+        <div class="card-header fw-bold">
+          Chi tiết đơn hàng #{{selectedOrder.id}}
         </div>
-        <div class="info-grid" id="det-info-grid"></div>
-        <div class="sec-sub">Sản phẩm đã đặt</div>
-        <div id="det-items"></div>
-        <div class="totals-box" id="det-totals"></div>
-        <div class="su-box">
-          <div class="sec-sub" style="margin-top:0">Cập nhật trạng thái</div>
-          <div class="su-row">
-            <select class="su-sel" id="new-status">
-              <option value="new">Mới đặt</option><option value="pending">Chờ xử lý</option>
-              <option value="packing">Đang đóng gói</option><option value="shipping">Đang giao</option>
-              <option value="done">Hoàn thành</option><option value="cancelled">Đã huỷ</option>
-            </select>
-            <button class="btn-update" onclick="updateOrderStatus()">Cập nhật</button>
-            <button class="btn-print" onclick="window.print()">🖨 In đơn</button>
-          </div>
+
+        <div class="card-body">
+          <p><strong>Khách:</strong> {{selectedOrder.customer}}</p>
+          <p><strong>Tổng:</strong> {{selectedOrder.total}}</p>
+
+          <select class="form-select w-auto"
+                  [(ngModel)]="selectedOrder.status">
+            <option value="pending">Chờ xử lý</option>
+            <option value="shipping">Đang giao</option>
+            <option value="done">Hoàn thành</option>
+            <option value="cancelled">Huỷ</option>
+          </select>
+
+          <button class="btn btn-pink mt-2" (click)="updateStatus()">
+            Cập nhật
+          </button>
         </div>
-        <div class="sec-sub">Lịch sử xử lý đơn hàng</div>
-        <div id="det-timeline"></div>
       </div>
+
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { CartComponent } from './features/cart/cart-page/cart.component';
 import { CheckoutComponent } from './features/cart/checkout/checkout.component';
+
 import { HomeComponent } from './features/home/home';
 
 export const routes: Routes = [
@@ -47,16 +48,16 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./admin/dashboard/dashboard').then((m) => m.DashboardComponent),
+    loadComponent: () => import('./admin/dashboard/dashboard').then((m) => m.Dashboard),
   },
   {
     path: 'order-management',
     loadComponent: () =>
-      import('./admin/order-management/order-management').then((m) => m.OrderManagementComponent),
+      import('./admin/order-management/order-management').then((m) => m.OrderManagement),
   },
   {
     path: 'product-management',
     loadComponent: () =>
-      import('./admin/product-management/product-management').then((m) => m.ProductManagementComponent),
+      import('./admin/product-management/product-management').then((m) => m.ProductManagement),
   },
 ];
