@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { CartComponent } from './features/cart/cart.component/cart.component';
+import { CartComponent } from './features/cart/cart-page/cart.component';
+import { CheckoutComponent } from './features/cart/checkout/checkout.component';
 import { HomeComponent } from './features/home/home';
 
 export const routes: Routes = [
@@ -23,7 +24,17 @@ export const routes: Routes = [
   },
   {
     path: 'cart',
-    component: CartComponent,
+    loadComponent: () =>
+      import('./features/cart/cart-page/cart.component').then(
+        (m) => m.CartComponent,
+      ),
+  },
+  {
+    path: 'checkout',
+    loadComponent: () =>
+      import('./features/cart/checkout/checkout.component').then(
+        (m) => m.CheckoutComponent,
+      ),
   },
   {
     path: 'login',

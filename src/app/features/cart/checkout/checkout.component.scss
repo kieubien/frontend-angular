@@ -1,0 +1,125 @@
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 28px;
+    padding: 24px 48px 100px;
+}
+
+.checkout-box {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--pink-100);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.checkout-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid var(--pink-200);
+}
+
+.row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.payment-method {
+    border: 1px solid var(--pink-200);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.payment-left {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.summary-box {
+    background: #fff;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--pink-100);
+    position: sticky;
+    top: 84px;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+.btn-place {
+    width: 100%;
+    padding: 14px;
+    background: var(--pink-400);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    margin-top: 16px;
+    cursor: pointer;
+}
+
+/* STEP BAR */
+.step-bar {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    background: #fff;
+    border-bottom: 1px solid var(--pink-100);
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle.active {
+    border-color: var(--pink-400);
+    color: var(--pink-400);
+}
+
+.circle.done {
+    background: var(--pink-100);
+    border-color: var(--pink-400);
+}
+
+.line {
+    width: 40px;
+    height: 1px;
+    background: var(--pink-100);
+    margin: 0 8px;
+}
+
+@media(max-width:1024px) {
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+}
