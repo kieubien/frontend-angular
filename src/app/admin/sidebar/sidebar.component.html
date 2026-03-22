@@ -1,7 +1,9 @@
 <aside class="admin-sidebar d-flex flex-column">
   <!-- Brand -->
   <div class="p-3 border-bottom">
-    <h5 class="mb-0 text-pink fw-bold">Blush<span class="text-dark">&</span>Bloom</h5>
+    <h5 class="mb-0 text-pink fw-bold">
+      Blush<span class="text-dark">&</span>Bloom
+    </h5>
     <small class="text-muted">Admin Dashboard</small>
   </div>
 
@@ -18,53 +20,63 @@
   <nav class="flex-grow-1 p-2">
 
     <div class="nav-section">Tổng quan</div>
-    <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active">
+
+    <a class="nav-link"
+       routerLink="/dashboard"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }">
       <i class="bi bi-speedometer2"></i> Dashboard
     </a>
 
     <a class="nav-link d-flex justify-content-between align-items-center"
-       routerLink="./admin/order-management.html"
+       routerLink="/order-management"
        routerLinkActive="active">
       <span><i class="bi bi-box-seam"></i> Đơn hàng</span>
       <span class="badge bg-danger">5</span>
     </a>
 
     <div class="nav-section">Quản lý</div>
-    <a class="nav-link" routerLink="./admin/product-management.html" routerLinkActive="active">
+
+    <a class="nav-link"
+       routerLink="/product-management"
+       routerLinkActive="active">
       <i class="bi bi-bag"></i> Sản phẩm
     </a>
 
-    <a class="nav-link" routerLink="./admin/categories">
+    <!-- chưa có route thì disable -->
+    <a class="nav-link disabled" href="javascript:void(0)">
       <i class="bi bi-grid"></i> Danh mục
     </a>
 
-    <a class="nav-link" routerLink="/admin/brands">
+    <a class="nav-link disabled" href="javascript:void(0)">
       <i class="bi bi-tag"></i> Thương hiệu
     </a>
 
-    <a class="nav-link" routerLink="/admin/coupons">
+    <a class="nav-link disabled" href="javascript:void(0)">
       <i class="bi bi-ticket"></i> Mã giảm giá
     </a>
 
-    <a class="nav-link" routerLink="/admin/customers">
+    <a class="nav-link disabled" href="javascript:void(0)">
       <i class="bi bi-people"></i> Khách hàng
     </a>
 
     <div class="nav-section">Nội dung</div>
-    <a class="nav-link" routerLink="/admin/reviews">
+
+    <a class="nav-link disabled" href="javascript:void(0)">
       <i class="bi bi-star"></i> Đánh giá
     </a>
 
-    <a class="nav-link" routerLink="/admin/banners">
+    <a class="nav-link disabled" href="javascript:void(0)">
       <i class="bi bi-image"></i> Banner
     </a>
 
     <div class="nav-section">Hệ thống</div>
-    <a class="nav-link" routerLink="/admin/reports">
+
+    <a class="nav-link disabled" href="javascript:void(0)">
       <i class="bi bi-bar-chart"></i> Báo cáo
     </a>
 
-    <a class="nav-link" routerLink="/admin/settings">
+    <a class="nav-link disabled" href="javascript:void(0)">
       <i class="bi bi-gear"></i> Cài đặt
     </a>
 
