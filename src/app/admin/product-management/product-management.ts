@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../core/services/product.service';
@@ -27,7 +27,8 @@ export class ProductManagement implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +39,7 @@ export class ProductManagement implements OnInit {
   loadProducts() {
     this.productService.getProducts().subscribe(res => {
       this.products = res;
+      this.cdr.detectChanges();
     });
   }
 
@@ -81,9 +83,20 @@ export class ProductManagement implements OnInit {
     this.showModal = true;
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.form.image = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   saveProduct() {
-     // Tự tạo slug nếu chưa có
-     if (!this.form.slug && this.form.name) {
+    // Tự tạo slug nếu chưa có
+    if (!this.form.slug && this.form.name) {
         // Simple Vietnamese slugify
         let slug = this.form.name.toLowerCase();
         slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Remove accents
@@ -94,8 +107,8 @@ export class ProductManagement implements OnInit {
     }
 
     if (!this.form.name || !this.form.price || !this.form.category_id) {
-      alert('Vui lòng điền đầy đủ các thông tin bắt buộc (*)');
-      return;
+        alert('Vui lòng điền đầy đủ các thông tin bắt buộc (*)');
+        return;
     }
 
     if (this.editing) {

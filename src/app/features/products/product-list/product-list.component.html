@@ -91,7 +91,18 @@
   <!-- MAIN CONTENT -->
   <div class="main">
     <div class="top-bar">
-      <div class="result-txt">Hiển thị <strong>128</strong> sản phẩm</div>
+      <div class="result-txt" *ngIf="products$ | async as products">
+        Hiển thị <strong>{{ products.length }}</strong> sản phẩm
+      </div>
+      <div class="search-wrap ms-md-auto me-3">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Tìm tên sản phẩm..." 
+                 [(ngModel)]="searchTerm" (keyup.enter)="applyFilters()">
+          <button class="btn btn-outline-secondary" (click)="applyFilters()">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
       <div class="sort-row">
         <span class="sort-label">Sắp xếp:</span>
         <select class="sort-sel">
@@ -108,48 +119,23 @@
       </div>
     </div>
 
-    <div class="active-filters">
+    <div class="active-filters" *ngIf="searchTerm || selectedCategory">
       <span class="af-label">Lọc theo:</span>
-      <div class="af-tag">Son lì <span class="af-x">×</span></div>
-      <div class="af-tag">MAC <span class="af-x">×</span></div>
-      <div class="af-tag">NARS <span class="af-x">×</span></div>
-      <div class="af-tag">★★★★★ <span class="af-x">×</span></div>
-      <span class="af-clear">Xóa tất cả</span>
+      <div class="af-tag" *ngIf="searchTerm">{{ searchTerm }} <span class="af-x" (click)="searchTerm=''; applyFilters()">×</span></div>
+      <div class="af-tag" *ngIf="selectedCategory">{{ selectedCategory.name }} <span class="af-x" [routerLink]="['/products']">×</span></div>
+      <span class="af-clear" [routerLink]="['/products']" (click)="searchTerm=''">Xóa tất cả</span>
     </div>
 
     <div class="prod-grid" *ngIf="products$ | async as products; else loadingItems">
-      <div class="pc" *ngFor="let p of products">
-        <div class="pc-img" [style.background]="'#fff'">
-          <!-- Nếu có ảnh từ DB thì hiện ảnh, nếu không thì hiện Placeholder -->
-          <img *ngIf="p.image" [src]="p.image" [alt]="p.name" class="img-fluid">
-          <svg *ngIf="!p.image" width="80" height="140" viewBox="0 0 80 140">
-            <rect x="22" y="18" width="36" height="90" rx="5" fill="#f5f5f5"/>
-            <text x="40" y="70" text-anchor="middle" fill="#ccc" font-size="10">No Image</text>
-          </svg>
-          
-          <span class="pc-badge sale-b" *ngIf="p.badge === 'sale'">Sale</span>
-          <span class="pc-badge new-b" *ngIf="p.badge === 'new'">Mới</span>
-          <span class="pc-badge hot-b" *ngIf="p.badge === 'hot'">Hot</span>
-          <div class="pc-wish">🤍</div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-brand">{{ p.brand }}</div>
-          <div class="pc-name">{{ p.name }}</div>
-          <div><span class="pc-stars">★★★★★</span><span class="pc-rev">({{ p.review_count || 0 }})</span></div>
-          <div class="pc-foot">
-            <div>
-              <span class="pc-price">{{ p.price | number }}đ</span>
-              <span class="pc-old" *ngIf="p.original_price">{{ p.original_price | number }}đ</span>
-            </div>
-            <button class="add-btn">+</button>
-          </div>
-        </div>
+      <div class="pc-col" *ngFor="let p of products">
+        <app-product-card [product]="p"></app-product-card>
       </div>
       
       <!-- Thông báo nếu không có sản phẩm -->
-      <div class="no-results" *ngIf="products.length === 0">
-        <i class="bi bi-search"></i>
-        <p>Không tìm thấy sản phẩm nào trong danh mục này.</p>
+      <div class="no-results py-5 text-center w-100" *ngIf="products.length === 0">
+        <i class="bi bi-search display-1 text-muted"></i>
+        <p class="mt-3 text-muted">Không tìm thấy sản phẩm nào khớp với tìm kiếm của bạn.</p>
+        <button class="btn btn-outline-primary" [routerLink]="['/products']" (click)="searchTerm=''">Xem tất cả sản phẩm</button>
       </div>
     </div>
 

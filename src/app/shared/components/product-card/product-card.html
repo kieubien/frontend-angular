@@ -1,0 +1,36 @@
+<div class="product-card" [routerLink]="['/products', product.id]">
+  <div class="card-img-wrap">
+    <img *ngIf="product.image" [src]="product.image" [alt]="product.name" class="product-img">
+    <div *ngIf="!product.image" class="no-img">
+        <i class="bi bi-image"></i>
+    </div>
+    
+    <div class="badges">
+        <span class="badge sale" *ngIf="product.badge === 'sale'">SALE</span>
+        <span class="badge new" *ngIf="product.badge === 'new'">NEW</span>
+        <span class="badge hot" *ngIf="product.badge === 'hot'">HOT</span>
+    </div>
+
+    <div class="hover-actions">
+        <button class="action-btn" title="Thêm vào giỏ" (click)="$event.stopPropagation(); addToCart()">
+            <i class="bi bi-bag-plus"></i>
+        </button>
+        <button class="action-btn" title="Yêu thích">
+            <i class="bi bi-heart"></i>
+        </button>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <div class="brand">{{ product.brand || 'Blush&Bloom' }}</div>
+    <h3 class="name">{{ product.name }}</h3>
+    <div class="rating">
+        <span class="stars">★★★★★</span>
+        <span class="review-count">({{ product.review_count || 0 }})</span>
+    </div>
+    <div class="price-row">
+      <span class="price">{{ product.price | number }}đ</span>
+      <span class="original-price" *ngIf="product.original_price">{{ product.original_price | number }}đ</span>
+    </div>
+  </div>
+</div>
