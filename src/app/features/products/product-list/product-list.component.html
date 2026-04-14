@@ -15,17 +15,16 @@
       <div class="sb-list">
         <!-- Option Tất cả -->
         <div class="sb-item">
-            <div class="sb-check">
-                <input type="radio" name="cat" id="cat-all" [checked]="!selectedCategory" [routerLink]="['/products']">
-                <label for="cat-all">Tất cả sản phẩm</label>
-            </div>
+          <div class="sb-check">
+            <input type="radio" name="cat" id="cat-all" [checked]="!selectedCategory" [routerLink]="['/products']">
+            <label for="cat-all">Tất cả sản phẩm</label>
+          </div>
         </div>
         <!-- Dynamic Categories -->
         <div class="sb-item" *ngFor="let cat of categories$ | async">
           <div class="sb-check">
-            <input type="radio" name="cat" [id]="'cat-'+cat.id" 
-                   [checked]="selectedCategory?.id === cat.id"
-                   [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
+            <input type="radio" name="cat" [id]="'cat-'+cat.id" [checked]="selectedCategory?.id === cat.id"
+              [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
             <label [for]="'cat-'+cat.id">{{ cat.name }}</label>
           </div>
           <span class="sb-count" *ngIf="cat.productCount">{{ cat.productCount }}</span>
@@ -36,7 +35,7 @@
     <div class="sb-section">
       <div class="sb-title">Khoảng giá</div>
       <div class="price-range">
-        <input type="range" min="0" max="2000" value="1200"/>
+        <input type="range" min="0" max="2000" value="1200" />
         <div class="price-vals"><span>0đ</span><span>1.200.000đ</span></div>
       </div>
     </div>
@@ -72,9 +71,18 @@
     <div class="sb-section">
       <div class="sb-title">Đánh giá</div>
       <div class="sb-list">
-        <div class="sb-item"><div class="sb-check"><input type="checkbox" id="r5" checked><label for="r5" style="color:var(--gold)">★★★★★</label></div></div>
-        <div class="sb-item"><div class="sb-check"><input type="checkbox" id="r4"><label for="r4" style="color:var(--gold)">★★★★☆</label></div></div>
-        <div class="sb-item"><div class="sb-check"><input type="checkbox" id="r3"><label for="r3" style="color:var(--gold)">★★★☆☆</label></div></div>
+        <div class="sb-item">
+          <div class="sb-check"><input type="checkbox" id="r5" checked><label for="r5"
+              style="color:var(--gold)">★★★★★</label></div>
+        </div>
+        <div class="sb-item">
+          <div class="sb-check"><input type="checkbox" id="r4"><label for="r4" style="color:var(--gold)">★★★★☆</label>
+          </div>
+        </div>
+        <div class="sb-item">
+          <div class="sb-check"><input type="checkbox" id="r3"><label for="r3" style="color:var(--gold)">★★★☆☆</label>
+          </div>
+        </div>
       </div>
     </div>
     <button class="sb-apply">Áp dụng bộ lọc</button>

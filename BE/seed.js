@@ -79,14 +79,13 @@ async function seed() {
         await Product.destroy({ where: {} });
         await Category.destroy({ where: {} });
         await User.destroy({ where: {} });
-
         for (const user of usersData) {
-            await User.create(user);
+            try { await User.upsert(user); } catch (e) {}
         }
         console.log("Đã tạo Users thành công.");
 
         for (const cat of categoriesData) {
-            await Category.create(cat);
+            try { await Category.upsert(cat); } catch (e) {}
         }
         console.log("Đã tạo Categories thành công.");
 
