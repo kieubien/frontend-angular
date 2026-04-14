@@ -56,7 +56,7 @@ export class LoginComponent {
         }));
 
         if (payload.role === 1 || payload.role === 'admin') {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/admin']);
         } else {
           this.router.navigate(['/']);
         }
