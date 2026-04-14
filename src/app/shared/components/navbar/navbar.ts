@@ -36,8 +36,16 @@ export class NavbarComponent implements OnInit {
     if (userJson) {
       const user = JSON.parse(userJson);
       this.isLoggedIn = true;
-      this.userRole = user.role;
-      this.userName = user.name;
+      this.userRole = user.role === 1 || user.role === 'admin' ? 'admin' : 'user';
+      
+      // Better Mojibake fix: only attempt if we see suspect characters
+      let decodedName = user.name;
+      if (decodedName && /[\u0080-\u00FF]/.test(decodedName)) {
+        try {
+          decodedName = decodeURIComponent(escape(decodedName));
+        } catch (e) { }
+      }
+      this.userName = decodedName;
     }
   }
 

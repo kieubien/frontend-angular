@@ -37,10 +37,15 @@
         </button>
 
         <ng-container *ngIf="isLoggedIn">
-            <span class="navbar__user-name d-none d-lg-inline me-2">{{ userName }}</span>
-            <button class="navbar__icon-btn" (click)="logout()" title="Đăng xuất">
-                <i class="bi bi-box-arrow-right"></i>
-            </button>
+            <div class="navbar__user">
+                <div class="navbar__user-info d-none d-lg-flex">
+                    <span class="navbar__user-name">{{ userName }}</span>
+                    <span class="navbar__user-role" *ngIf="userRole === 'admin'">(Quản trị viên)</span>
+                </div>
+                <button class="navbar__icon-btn ms-2" (click)="logout()" title="Đăng xuất">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </div>
         </ng-container>
 
         <button class="navbar__icon-btn" routerLink="/cart" title="Giỏ hàng" style="position:relative">
