@@ -31,7 +31,9 @@ class ProductController {
                 data: products
             });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error fetching products:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -43,7 +45,9 @@ class ProductController {
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
             res.status(200).json({ status: 200, data: product });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error fetching product by ID:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -52,7 +56,9 @@ class ProductController {
             const product = await ProductModel.create(req.body);
             res.status(201).json({ status: 201, message: 'Thêm sản phẩm thành công', data: product });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error creating product:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -63,7 +69,9 @@ class ProductController {
             await product.update(req.body);
             res.status(200).json({ status: 200, message: 'Cập nhật thành công', data: product });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error updating product:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -74,7 +82,9 @@ class ProductController {
             await product.destroy();
             res.status(200).json({ status: 200, message: 'Xoá thành công' });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error deleting product:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 }

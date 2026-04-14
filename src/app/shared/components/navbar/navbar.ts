@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.model';
 import { Observable, Subscription } from 'rxjs';
 import { CartService } from '../../../core/services/cart.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +17,7 @@ import { CartService } from '../../../core/services/cart.service';
 export class NavbarComponent implements OnInit, OnDestroy {
   cartCount = 0;
   categories$: Observable<Category[]>;
-  private cartSub!: Subscription;
+  private subs = new Subscription();
   
   isLoggedIn = false;
   userRole = '';
@@ -25,46 +26,46 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(
     private categoryService: CategoryService,
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {
     this.categories$ = this.categoryService.getCategories();
   }
 
   ngOnInit(): void {
-    this.checkUser();
-    this.cartSub = this.cartService.cartItems$.subscribe(items => {
-      this.cartCount = items.reduce((sum, item) => sum + item.qty, 0);
-    });
+    console.log('NavbarComponent: Subscription init');
+    // Theo dõi trạng thái đăng nhập
+    this.subs.add(
+      this.authService.currentUser$.subscribe(user => {
+        console.log('NavbarComponent: User state changed:', user);
+        if (user) {
+          this.isLoggedIn = true;
+          this.userName = user.name;
+          this.userRole = user.role;
+        } else {
+          this.isLoggedIn = false;
+          this.userName = '';
+          this.userRole = '';
+        }
+        this.cdr.detectChanges(); // Ép buộc cập nhật giao diện
+      })
+    );
+
+    // Theo dõi giỏ hàng
+    this.subs.add(
+      this.cartService.cartItems$.subscribe(items => {
+        this.cartCount = items.reduce((sum, item) => sum + item.qty, 0);
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    if (this.cartSub) this.cartSub.unsubscribe();
-  }
-
-  checkUser(): void {
-    const userJson = localStorage.getItem('bb_user');
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      this.isLoggedIn = true;
-      this.userRole = user.role === 1 || user.role === 'admin' ? 'admin' : 'user';
-      
-      // Better Mojibake fix: only attempt if we see suspect characters
-      let decodedName = user.name;
-      if (decodedName && /[\u0080-\u00FF]/.test(decodedName)) {
-        try {
-          decodedName = decodeURIComponent(escape(decodedName));
-        } catch (e) { }
-      }
-      this.userName = decodedName;
-    }
+    this.subs.unsubscribe();
   }
 
   logout(): void {
-    localStorage.removeItem('bb_user');
-    localStorage.removeItem('bb_token');
-    this.isLoggedIn = false;
-    this.userRole = '';
-    this.userName = '';
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 

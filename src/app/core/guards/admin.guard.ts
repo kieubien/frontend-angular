@@ -1,18 +1,16 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 export const adminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const userJson = localStorage.getItem('bb_user');
+  const authService = inject(AuthService);
 
-  if (userJson) {
-    const user = JSON.parse(userJson);
-    if (user.role === 'admin') {
-      return true;
-    }
+  if (authService.isAdmin()) {
+    return true;
   }
 
-  // Nếu chưa đăng nhập hoặc không phải admin thì đẩy về login
+  // Nếu không phải admin thì đẩy về login
   router.navigate(['/login']);
   return false;
 };

@@ -137,12 +137,12 @@
           <div class="modal-body p-4">
             <div class="row g-3">
               <div class="col-md-8">
-                <label class="form-label small fw-bold">Tên sản phẩm</label>
+                <label class="form-label small fw-bold">Tên sản phẩm (*)</label>
                 <input class="form-control mb-3" placeholder="Ví dụ: MAC Ruby Woo" [(ngModel)]="form.name">
-
+ 
                 <div class="row g-2">
                   <div class="col-md-6">
-                    <label class="form-label small fw-bold">Giá bán (VNĐ)</label>
+                    <label class="form-label small fw-bold">Giá bán (VNĐ) (*)</label>
                     <input type="number" class="form-control mb-3" [(ngModel)]="form.price">
                   </div>
                   <div class="col-md-6">
@@ -150,15 +150,16 @@
                     <input type="number" class="form-control mb-3" [(ngModel)]="form.original_price">
                   </div>
                 </div>
-
+ 
                 <div class="row g-2">
                   <div class="col-md-6">
                     <label class="form-label small fw-bold">Thương hiệu</label>
                     <input class="form-control mb-3" placeholder="MAC, Dior..." [(ngModel)]="form.brand">
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label small fw-bold">Danh mục</label>
+                    <label class="form-label small fw-bold">Danh mục (*)</label>
                     <select class="form-select mb-3" [(ngModel)]="form.category_id">
+                      <option [ngValue]="null">-- Chọn danh mục --</option>
                       <option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</option>
                     </select>
                   </div>

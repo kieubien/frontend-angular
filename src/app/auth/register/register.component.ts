@@ -82,12 +82,12 @@ export class RegisterComponent {
     };
 
     this.http.post<any>('http://localhost:3000/users/register', body).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         alert('Đăng ký thành công! Mời bạn đăng nhập.');
         this.router.navigate(['/login']);
       },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Đăng ký thất bại. Vui lòng thử lại.';
+      error: (err: any) => {
+        this.errorMessage = err.error?.error || err.error?.message || 'Đăng ký thất bại. Vui lòng thử lại.';
       }
     });
   }

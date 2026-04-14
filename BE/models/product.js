@@ -10,7 +10,11 @@ const Product = sequelize.define('Product', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: { msg: 'Tên sản phẩm không được để trống' },
+            notNull: { msg: 'Tên sản phẩm không được để trống' }
+        }
     },
     brand: {
         type: DataTypes.STRING,
@@ -19,19 +23,36 @@ const Product = sequelize.define('Product', {
     slug: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: { msg: 'Đường dẫn (slug) đã tồn tại' },
+        validate: {
+            notEmpty: { msg: 'Slug không được để trống' },
+            notNull: { msg: 'Slug không được để trống' }
+        }
     },
     price: {
         type: DataTypes.DECIMAL(15, 2),
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isDecimal: { msg: 'Giá sản phẩm phải là số' },
+            min: { args: [0], msg: 'Giá sản phẩm không được âm' },
+            notNull: { msg: 'Giá sản phẩm không được để trống' }
+        }
     },
     original_price: {
         type: DataTypes.DECIMAL(15, 2),
-        allowNull: true
+        allowNull: true,
+        validate: {
+            isDecimal: { msg: 'Giá gốc phải là số' },
+            min: { args: [0], msg: 'Giá gốc không được âm' }
+        }
     },
     stock: {
         type: DataTypes.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
+        validate: {
+            isInt: { msg: 'Số lượng tồn kho phải là số nguyên' },
+            min: { args: [0], msg: 'Số lượng không được âm' }
+        }
     },
     status: {
         type: DataTypes.ENUM('active', 'inactive'),
@@ -46,6 +67,9 @@ const Product = sequelize.define('Product', {
         references: {
             model: Category,
             key: 'id'
+        },
+        validate: {
+            notEmpty: { msg: 'Vui lòng chọn danh mục' }
         }
     },
     description: {

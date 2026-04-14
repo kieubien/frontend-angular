@@ -38,7 +38,9 @@ class OrderController {
             res.status(201).json({ status: 201, message: 'Đặt hàng thành công', order_id: order.id });
         } catch (error) {
             await transaction.rollback();
-            res.status(500).json({ error: error.message });
+            console.error('Error during checkout:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -50,7 +52,9 @@ class OrderController {
             });
             res.status(200).json({ status: 200, data: orders });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error fetching orders:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -62,7 +66,9 @@ class OrderController {
             if (!order) return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
             res.status(200).json({ status: 200, data: order });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error fetching order by ID:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -75,7 +81,9 @@ class OrderController {
             await order.save();
             res.status(200).json({ status: 200, message: 'Cập nhật trạng thái thành công' });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error updating order status:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 }

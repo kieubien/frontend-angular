@@ -11,7 +11,9 @@ class CategoryController {
                 "data": categories,  
             });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error fetching categories:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -29,7 +31,9 @@ class CategoryController {
                 "data": category
             });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error fetching category by ID:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -47,7 +51,9 @@ class CategoryController {
                 "data": category
             });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error fetching category by slug:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -61,7 +67,9 @@ class CategoryController {
                 category
             });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error creating category:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -89,7 +97,9 @@ class CategoryController {
                 category
             });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error updating category:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 
@@ -106,7 +116,9 @@ class CategoryController {
 
             res.status(200).json({ message: "Xóa thành công" });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error('Error deleting category:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
         }
     }
 }

@@ -39,6 +39,17 @@ export class CategoryManagement implements OnInit {
     return this.allCategories.find(c => c.id === id)?.name || '-';
   }
 
+  generateSlug() {
+    if (!this.form.name) return;
+    // Simple Vietnamese slugify
+    let slug = this.form.name.toLowerCase();
+    slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Remove accents
+    slug = slug.replace(/[đÐ]/g, 'd');
+    slug = slug.replace(/[^a-z0-9 ]/g, ''); // Remove special chars
+    slug = slug.trim().replace(/\s+/g, '-'); // Spaces to dashes
+    this.form.slug = slug;
+  }
+
   openModal() {
     this.form = { name: '', slug: '', icon: 'bi-bookmark', parent_id: null };
     this.editing = false;
@@ -58,15 +69,24 @@ export class CategoryManagement implements OnInit {
           this.loadCategories();
           this.closeModal();
         },
-        error: (err) => alert('Lỗi: ' + JSON.stringify(err))
+        error: (err) => {
+          const msg = err.error?.error || err.error?.message || 'Lỗi cập nhật danh mục';
+          alert('Lỗi: ' + msg);
+        }
       });
     } else {
+      if (!this.form.slug) {
+        this.generateSlug();
+      }
       this.categoryService.addCategory(this.form).subscribe({
         next: () => {
           this.loadCategories();
           this.closeModal();
         },
-        error: (err) => alert('Lỗi: ' + JSON.stringify(err))
+        error: (err) => {
+          const msg = err.error?.error || err.error?.message || 'Lỗi thêm mới danh mục';
+          alert('Lỗi: ' + msg);
+        }
       });
     }
   }

@@ -82,9 +82,20 @@ export class ProductManagement implements OnInit {
   }
 
   saveProduct() {
-    // Tự tạo slug nếu chưa có
-    if (!this.form.slug) {
-        this.form.slug = this.form.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+     // Tự tạo slug nếu chưa có
+     if (!this.form.slug && this.form.name) {
+        // Simple Vietnamese slugify
+        let slug = this.form.name.toLowerCase();
+        slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Remove accents
+        slug = slug.replace(/[đÐ]/g, 'd');
+        slug = slug.replace(/[^a-z0-9 ]/g, ''); // Remove special chars
+        slug = slug.trim().replace(/\s+/g, '-'); // Spaces to dashes
+        this.form.slug = slug;
+    }
+
+    if (!this.form.name || !this.form.price || !this.form.category_id) {
+      alert('Vui lòng điền đầy đủ các thông tin bắt buộc (*)');
+      return;
     }
 
     if (this.editing) {
@@ -94,7 +105,7 @@ export class ProductManagement implements OnInit {
           this.loadProducts();
           this.closeModal();
         },
-        error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')
+        error: (err) => alert(err.error?.error || err.error?.message || 'Có lỗi xảy ra')
       });
     } else {
       this.productService.addProduct(this.form).subscribe({
@@ -103,7 +114,7 @@ export class ProductManagement implements OnInit {
           this.loadProducts();
           this.closeModal();
         },
-        error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')
+        error: (err) => alert(err.error?.error || err.error?.message || 'Có lỗi xảy ra')
       });
     }
   }
@@ -115,7 +126,7 @@ export class ProductManagement implements OnInit {
           alert('Đã xoá thành công!');
           this.loadProducts();
         },
-        error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')
+        error: (err) => alert(err.error?.error || err.error?.message || 'Có lỗi xảy ra')
       });
     }
   }

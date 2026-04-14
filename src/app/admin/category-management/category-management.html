@@ -13,7 +13,6 @@
       <table class="table mb-0">
         <thead>
           <tr>
-            <th>Icon</th>
             <th>Tên danh mục</th>
             <th>Slug</th>
             <th>Danh mục cha</th>
@@ -23,15 +22,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let cat of categories$ | async">
-            <td>
-              <div class="category-icon">
-                <i class="bi" [ngClass]="cat.icon || 'bi-bookmark'"></i>
-              </div>
-            </td>
             <td><strong>{{ cat.name }}</strong></td>
             <td><code class="text-pink">{{ cat.slug }}</code></td>
-            <td><span class="badge bg-light text-dark border">{{ getCategoryName(cat.parentId) }}</span></td>
-            <td>{{ cat.productCount || 0 }}</td>
+            <td><span class="badge bg-light text-dark border">{{ getCategoryName(cat.parent_id) }}</span></td>
+            <td>{{ cat.product_count || 0 }}</td>
             <td class="text-end">
               <button class="btn btn-sm btn-outline-secondary me-2" (click)="editCategory(cat)">
                 <i class="bi bi-pencil"></i>
@@ -58,7 +52,7 @@
         <form #catForm="ngForm">
           <div class="mb-3">
             <label class="form-label">Tên danh mục</label>
-            <input type="text" class="form-control" name="name" [(ngModel)]="form.name" required placeholder="Ví dụ: Son lì">
+            <input type="text" class="form-control" name="name" [(ngModel)]="form.name" required (blur)="generateSlug()" placeholder="Ví dụ: Son lì">
           </div>
           <div class="mb-3">
             <label class="form-label">Slug</label>
@@ -66,16 +60,12 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Danh mục cha</label>
-            <select class="form-select" name="parentId" [(ngModel)]="form.parentId">
+            <select class="form-select" name="parent_id" [(ngModel)]="form.parent_id">
               <option [ngValue]="undefined">-- Không có (Danh mục gốc) --</option>
               <ng-container *ngFor="let c of allCategories">
                 <option *ngIf="c.id !== form.id" [ngValue]="c.id">{{ c.name }}</option>
               </ng-container>
             </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Bootstrap Icon Class</label>
-            <input type="text" class="form-control" name="icon" [(ngModel)]="form.icon" placeholder="bi-flower1">
           </div>
         </form>
       </div>
