@@ -54,10 +54,12 @@
     </div>
 
     <div class="cat-grid">
-        <div class="cat-card" *ngFor="let cat of categories" (click)="goToProducts()">
-            <div class="cat-card__name">{{ cat.name }}</div>
-            <div class="cat-card__count">{{ cat.count }} sản phẩm</div>
-        </div>
+        <ng-container *ngFor="let cat of categories">
+            <div class="cat-card" *ngIf="!cat.parentId" [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
+                <div class="cat-card__name">{{ cat.name }}</div>
+                <div class="cat-card__count" *ngIf="cat.productCount">{{ cat.productCount }} sản phẩm</div>
+            </div>
+        </ng-container>
     </div>
 </section>
 

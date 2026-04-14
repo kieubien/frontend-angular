@@ -15,6 +15,16 @@
             </div>
         </div>
 
+        <div class="footer__link-col">
+            <div class="footer__col-title">Sản phẩm</div>
+            <div class="footer__links">
+                <a *ngFor="let cat of categories" [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
+                    {{ cat.name }}
+                </a>
+                <a routerLink="/products">Tất cả sản phẩm</a>
+            </div>
+        </div>
+
         <div class="footer__link-col" *ngFor="let col of footerLinks">
             <div class="footer__col-title">{{ col.title }}</div>
             <div class="footer__links">

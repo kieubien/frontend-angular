@@ -1,6 +1,10 @@
 <app-navbar></app-navbar>
 <!-- BREADCRUMB -->
-<div class="bc"><a href="#">Trang chủ</a><span>›</span><a href="#">Son môi</a><span>›</span>Tất cả son môi</div>
+<div class="bc">
+  <a routerLink="/">Trang chủ</a>
+  <span>›</span>
+  <span>{{ selectedCategory?.name || 'Sản phẩm' }}</span>
+</div>
 
 <!-- PAGE LAYOUT -->
 <div class="page">
@@ -10,11 +14,23 @@
     <div class="sb-section">
       <div class="sb-title">Danh mục</div>
       <div class="sb-list">
-        <div class="sb-item"><div class="sb-check"><input type="checkbox" id="c1" checked><label for="c1">Son lì</label></div><span class="sb-count">48</span></div>
-        <div class="sb-item"><div class="sb-check"><input type="checkbox" id="c2"><label for="c2">Son bóng</label></div><span class="sb-count">32</span></div>
-        <div class="sb-item"><div class="sb-check"><input type="checkbox" id="c3"><label for="c3">Son dưỡng</label></div><span class="sb-count">24</span></div>
-        <div class="sb-item"><div class="sb-check"><input type="checkbox" id="c4"><label for="c4">Son kem</label></div><span class="sb-count">18</span></div>
-        <div class="sb-item"><div class="sb-check"><input type="checkbox" id="c5"><label for="c5">Son tint</label></div><span class="sb-count">14</span></div>
+        <!-- Option Tất cả -->
+        <div class="sb-item">
+            <div class="sb-check">
+                <input type="radio" name="cat" id="cat-all" [checked]="!selectedCategory" [routerLink]="['/products']">
+                <label for="cat-all">Tất cả sản phẩm</label>
+            </div>
+        </div>
+        <!-- Dynamic Categories -->
+        <div class="sb-item" *ngFor="let cat of categories$ | async">
+          <div class="sb-check">
+            <input type="radio" name="cat" [id]="'cat-'+cat.id" 
+                   [checked]="selectedCategory?.id === cat.id"
+                   [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
+            <label [for]="'cat-'+cat.id">{{ cat.name }}</label>
+          </div>
+          <span class="sb-count" *ngIf="cat.productCount">{{ cat.productCount }}</span>
+        </div>
       </div>
     </div>
 

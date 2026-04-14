@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CategoryService } from '../../../core/services/category.service';
+import { Category } from '../../../core/models/category.model';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-footer',
@@ -11,18 +13,9 @@ import { RouterModule } from '@angular/router';
 })
 export class FooterComponent {
   currentYear = new Date().getFullYear();
+  categories: Category[] = [];
 
   footerLinks = [
-    {
-      title: 'Sản phẩm',
-      links: [
-        { label:'Son môi',  path:'/products' },
-        { label:'Phấn má',  path:'/products' },
-        { label:'Mắt',      path:'/products' },
-        { label:'Dưỡng da', path:'/products' },
-        { label:'Gift Set', path:'/products' },
-      ]
-    },
     {
       title: 'Hỗ trợ',
       links: [
@@ -45,4 +38,10 @@ export class FooterComponent {
   ];
 
   paymentMethods = ['VISA','MasterCard','MoMo','ZaloPay','COD'];
+
+  constructor(private categoryService: CategoryService) {
+    this.categoryService.getCategories().subscribe(cats => {
+      this.categories = cats.filter(c => !c.parentId).slice(0, 5);
+    });
+  }
 }

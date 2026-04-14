@@ -1,0 +1,95 @@
+<div class="d-flex" style="min-height: 100vh;">
+  <app-sidebar></app-sidebar>
+
+  <main class="flex-grow-1 bg-light p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h3 class="fw-bold mb-1">Quản lý Danh mục</h3>
+        <p class="text-muted small mb-0">Tổ chức và phân loại sản phẩm của bạn.</p>
+      </div>
+      <button class="btn btn-pink rounded-pill px-4" (click)="openModal()">
+        <i class="bi bi-plus-lg me-2"></i> Thêm danh mục
+      </button>
+    </div>
+
+    <div class="admin-card overflow-hidden">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Icon</th>
+            <th>Tên danh mục</th>
+            <th>Slug</th>
+            <th>Danh mục cha</th>
+            <th>Số SP</th>
+            <th class="text-end">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cat of categories$ | async">
+            <td>
+              <div class="category-icon">
+                <i class="bi" [ngClass]="cat.icon || 'bi-bookmark'"></i>
+              </div>
+            </td>
+            <td><strong>{{ cat.name }}</strong></td>
+            <td><code class="text-pink">{{ cat.slug }}</code></td>
+            <td><span class="badge bg-light text-dark border">{{ getCategoryName(cat.parentId) }}</span></td>
+            <td>{{ cat.productCount || 0 }}</td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-secondary me-2" (click)="editCategory(cat)">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(cat.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editing ? 'Cập nhật' : 'Thêm mới' }} danh mục</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form #catForm="ngForm">
+          <div class="mb-3">
+            <label class="form-label">Tên danh mục</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="form.name" required placeholder="Ví dụ: Son lì">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Slug</label>
+            <input type="text" class="form-control" name="slug" [(ngModel)]="form.slug" required placeholder="son-li">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Danh mục cha</label>
+            <select class="form-select" name="parentId" [(ngModel)]="form.parentId">
+              <option [ngValue]="undefined">-- Không có (Danh mục gốc) --</option>
+              <ng-container *ngFor="let c of allCategories">
+                <option *ngIf="c.id !== form.id" [ngValue]="c.id">{{ c.name }}</option>
+              </ng-container>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Bootstrap Icon Class</label>
+            <input type="text" class="form-control" name="icon" [(ngModel)]="form.icon" placeholder="bi-flower1">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-0 p-4 pt-0">
+        <button type="button" class="btn btn-light rounded-pill px-4" (click)="closeModal()">Hủy</button>
+        <button type="button" class="btn btn-pink rounded-pill px-4" [disabled]="!catForm.valid" (click)="saveCategory()">
+          {{ editing ? 'Lưu thay đổi' : 'Thêm danh mục' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showModal"></div>

@@ -57,4 +57,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./admin/product-management/product-management').then((m) => m.ProductManagement),
   },
+  {
+    path: 'category-management',
+    loadComponent: () =>
+      import('./admin/category-management/category-management').then((m) => m.CategoryManagement),
+  },
 ];

@@ -5,6 +5,8 @@ import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../../shared/components/navbar/navbar';
 import { FooterComponent } from '../../shared/components/footer/footer';
+import { CategoryService } from '../../core/services/category.service';
+import { Category } from '../../core/models/category.model';
 
 @Component({
   selector: 'app-home',
@@ -37,13 +39,7 @@ export class HomeComponent implements OnInit {
   ];
 
   //  CATEGORIES (CLEAN) 
-  categories = [
-    { name: 'Son môi', count: 128 },
-    { name: 'Má hồng', count: 64 },
-    { name: 'Mắt & Kẻ mắt', count: 96 },
-    { name: 'Dưỡng da', count: 85 },
-    { name: 'Gift Set', count: 32 },
-  ];
+  categories: Category[] = [];
 
   //  TABS 
   tabs = [
@@ -58,10 +54,16 @@ export class HomeComponent implements OnInit {
     { value: '50%', label: 'Mắt' },
   ];
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private categoryService: CategoryService
+  ) {}
 
-  
-    ngOnInit(): void {
+  ngOnInit(): void {
+    this.categoryService.getCategories().subscribe(cats => {
+      this.categories = cats;
+    });
   this.products = this.mockData();
   this.featuredProducts = this.products
     .filter((p: any) => p.isFeatured)
@@ -99,11 +101,6 @@ export class HomeComponent implements OnInit {
   addToCart(p: any, e: Event): void {
     e.stopPropagation();
     console.log('Đã thêm "' + p.name + '" vào giỏ hàng!');
-  }
-
-  //  NAVIGATE 
-  goToProducts(): void {
-    this.router.navigate(['/products']);
   }
 
   //  SUBSCRIBE 
