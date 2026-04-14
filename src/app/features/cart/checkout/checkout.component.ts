@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { FooterComponent } from '../../../shared/components/footer/footer';
-import { NavbarComponent } from '../../../shared/components/navbar/navbar';
 import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
 import { Order } from '../../../shared/models/order.model';
@@ -15,7 +13,7 @@ import { CartItem } from '../../../shared/models/cart.model';
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, FooterComponent, NavbarComponent],
+  imports: [CommonModule, FormsModule],
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
 

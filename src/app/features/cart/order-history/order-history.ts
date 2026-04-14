@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../core/services/order.service';
-import { NavbarComponent } from '../../../shared/components/navbar/navbar';
-import { FooterComponent } from '../../../shared/components/footer/footer';
 import { Order } from '../../../shared/models/order.model';
 
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule],
   templateUrl: './order-history.html',
   styleUrls: ['./order-history.scss']
 })
@@ -27,11 +25,11 @@ export class OrderHistoryComponent implements OnInit {
     const userId = 1; 
     
     this.orderService.getUserOrders(userId).subscribe({
-      next: (res) => {
+      next: (res: any[]) => {
         this.orders = res;
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Lỗi tải lịch sử đơn hàng:', err);
         this.loading = false;
       }

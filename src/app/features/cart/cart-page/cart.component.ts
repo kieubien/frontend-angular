@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { FooterComponent } from '../../../shared/components/footer/footer';
-import { NavbarComponent } from '../../../shared/components/navbar/navbar';
 import { CartService } from '../../../core/services/cart.service';
 import { CartItem } from '../../../shared/models/cart.model';
 import { Router } from '@angular/router';
@@ -13,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, FooterComponent, NavbarComponent],
+  imports: [CommonModule, FormsModule],
 })
 export class CartComponent implements OnInit, OnDestroy {
 
@@ -44,6 +42,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   /* ===== ACTIONS ===== */
+  // Cập nhật số lượng sản phẩm trong giỏ hàng
   updateQty(id: number, delta: number, color?: string) {
     this.cartService.updateQty(id, delta, color);
   }

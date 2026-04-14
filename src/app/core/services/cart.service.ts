@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CartItem } from '../shared/models/cart.model';
+import { CartItem } from '../../shared/models/cart.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,10 +40,13 @@ export class CartService {
       const newItem: CartItem = {
         id: product.id,
         name: product.name,
+        brand: product.brand,
         price: product.price,
+        originalPrice: product.original_price || product.originalPrice,
         qty: qty,
         image: product.image,
         color: color,
+        colorHex: product.colorHex || '#ccc',
         size: size
       };
       currentItems.push(newItem);

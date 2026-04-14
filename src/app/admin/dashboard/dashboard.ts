@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
-  imports: [SidebarComponent, CommonModule]
+  imports: [CommonModule]
 })
 export class Dashboard {
 

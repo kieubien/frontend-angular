@@ -1,126 +1,97 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { NavbarComponent } from '../../shared/components/navbar/navbar';
-import { FooterComponent } from '../../shared/components/footer/footer';
-import { CategoryService } from '../../core/services/category.service';
 import { ProductService } from '../../core/services/product.service';
-import { Category } from '../../core/models/category.model';
-import { Observable } from 'rxjs';
+import { CategoryService } from '../../core/services/category.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './home.html',
-  styleUrls: ['./home.scss']
+  styleUrl: './home.scss'
 })
 export class HomeComponent implements OnInit {
-
+  categories: any[] = [];
   featuredProducts: any[] = [];
-  products: any[] = [];
   isLoading = true;
-  activeTab = 'featured';
+  activeTab = 'all';
   email = '';
 
-  //  HERO STATS 
+  tabs = [
+    { key: 'all', label: 'Tất cả' },
+    { key: 'lipstick', label: 'Son môi' },
+    { key: 'skincare', label: 'Chăm sóc da' },
+    { key: 'perfume', label: 'Nước hoa' }
+  ];
+
+  marqueeItems = [
+    'Miễn phí vận chuyển đơn từ 299K',
+    'Hoàn tiền 100% nếu phát hiện hàng giả',
+    'Tư vấn miễn phí 24/7',
+    'Đổi trả trong 30 ngày'
+  ];
+
   stats = [
     { num: '500+', label: 'Sản phẩm' },
-    { num: '50+', label: 'Thương hiệu' },
     { num: '20K+', label: 'Khách hàng' },
+    { num: '15+', label: 'Thương hiệu' }
   ];
 
-  //  MARQUEE 
-  marqueeItems = [
-    'Miễn phí ship đơn từ 299K', 'MAC Cosmetics', 'Charlotte Tilbury',
-    'NARS', 'Dior Beauty', 'YSL Beauty', 'Đổi trả 30 ngày', '100% Chính hãng',
-    'Miễn phí ship đơn từ 299K', 'MAC Cosmetics', 'Charlotte Tilbury',
-    'NARS', 'Dior Beauty', 'YSL Beauty', 'Đổi trả 30 ngày', '100% Chính hãng',
-  ];
-
-  //  CATEGORIES 
-  categories: Category[] = [];
-
-  //  TABS 
-  tabs = [
-    { key: 'featured', label: 'Bán chạy' },
-    { key: 'newest', label: 'Mới nhất' },
-    { key: 'sale', label: 'Khuyến mãi' },
-  ];
-
-  //  DISCOUNTS 
   discounts = [
-    { value: '30%', label: 'Son môi' },
-    { value: '50%', label: 'Mắt' },
+    { value: '30%', label: 'Giảm giá son' },
+    { value: '50%', label: 'Deal hời' }
   ];
 
   constructor(
-    private router: Router,
+    private productService: ProductService,
     private categoryService: CategoryService,
-    private productService: ProductService
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
-    // Load Categories
-    this.categoryService.getCategories().subscribe(cats => {
-      this.categories = cats;
+    this.loadData();
+  }
+
+  loadData() {
+    this.isLoading = true;
+    this.categoryService.getCategories().subscribe(res => {
+      this.categories = res;
     });
 
-    // Load Products
-    this.productService.getProducts().subscribe({
-      next: (prods) => {
-        this.products = prods;
-        this.updateFeaturedProducts();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Lỗi tải sản phẩm:', err);
-        this.isLoading = false;
-      }
+    this.productService.getProducts({ limit: 8 }).subscribe(res => {
+      this.featuredProducts = res;
+      this.isLoading = false;
     });
   }
 
-  // Cập nhật danh sách hiển thị dựa trên Tab
-  updateFeaturedProducts(): void {
-    if (this.activeTab === 'newest') {
-      this.featuredProducts = [...this.products]
-        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-        .slice(0, 4);
-    } 
-    else if (this.activeTab === 'sale') {
-      this.featuredProducts = this.products
-        .filter(p => p.badge === 'sale' || p.original_price)
-        .slice(0, 4);
-    } 
-    else {
-      // Mặc định là Featured/Bán chạy
-      this.featuredProducts = this.products.slice(0, 4);
+  setTab(key: string) {
+    this.activeTab = key;
+    this.isLoading = true;
+    const filter = key === 'all' ? { limit: 8 } : { category: key, limit: 8 };
+    this.productService.getProducts(filter).subscribe(res => {
+      this.featuredProducts = res;
+      this.isLoading = false;
+    });
+  }
+
+  addToCart(product: any, event: Event) {
+    event.stopPropagation();
+    this.cartService.addToCart(product);
+    alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
+  }
+
+  subscribe() {
+    if (this.email) {
+      alert('Cảm ơn bạn đã đăng ký nhận bản tin!');
+      this.email = '';
     }
   }
 
-  setTab(key: string): void {
-    this.activeTab = key;
-    this.updateFeaturedProducts();
-  }
-
-  //  CALC DISCOUNT 
   getDiscount(p: any): number {
-    if (!p.original_price || !p.price) return 0;
-    return Math.round((1 - p.price / p.original_price) * 100);
-  }
-
-  //  ADD TO CART 
-  addToCart(p: any, e: Event): void {
-    e.stopPropagation();
-    alert('Đã thêm "' + p.name + '" vào giỏ hàng!');
-  }
-
-  //  SUBSCRIBE 
-  subscribe(): void {
-    if (!this.email) return;
-    alert('Cảm ơn bạn đã đăng ký!');
-    this.email = '';
+    if (!p.originalPrice) return 0;
+    return Math.round((1 - p.price / p.originalPrice) * 100);
   }
 }
