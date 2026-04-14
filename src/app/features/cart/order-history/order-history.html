@@ -1,0 +1,68 @@
+<app-navbar></app-navbar>
+
+<div class="container my-5 min-vh-100">
+  <div class="row">
+    <div class="col-md-10 mx-auto">
+      <h3 class="fw-bold mb-4">Lịch sử mua hàng</h3>
+
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-pink" role="status">
+          <span class="visually-hidden">Đang tải...</span>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && orders.length === 0" class="text-center py-5 shadow-sm rounded bg-white">
+        <img src="assets/images/empty-cart.png" alt="Empty" class="mb-3" style="width: 150px; opacity: 0.5;">
+        <h5>Bạn chưa có đơn hàng nào!</h5>
+        <button class="btn btn-pink mt-3" routerLink="/products">Mua sắm ngay</button>
+      </div>
+
+      <div *ngIf="!loading && orders.length > 0">
+        <div class="card shadow-sm border-0 mb-3" *ngFor="let order of orders">
+          <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+              <span class="fw-bold text-uppercase">Mã đơn hàng: #{{order.id}}</span>
+              <small class="text-muted ms-3">Ngày đặt: {{order.created_at | date:'dd/MM/yyyy HH:mm'}}</small>
+            </div>
+            <span class="fw-bold" [ngClass]="getStatusClass(order.status)">
+              {{getStatusLabel(order.status)}}
+            </span>
+          </div>
+          
+          <div class="card-body">
+            <div class="row align-items-center" *ngFor="let item of order.OrderItems">
+              <div class="col-md-2 text-center">
+                <img [src]="item.Product?.image || 'assets/images/default-product.png'" 
+                     class="img-fluid rounded" style="max-height: 80px;">
+              </div>
+              <div class="col-md-6">
+                <h6 class="mb-1">{{item.Product?.name || 'Sản phẩm không còn tồn tại'}}</h6>
+                <small class="text-muted">Số lượng: x{{item.quantity}}</small>
+              </div>
+              <div class="col-md-4 text-end">
+                <span class="fw-bold">{{item.price | number}}đ</span>
+              </div>
+              <hr class="my-3 opacity-25">
+            </div>
+          </div>
+
+          <div class="card-footer bg-light border-0 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <small class="text-muted d-block">Địa chỉ nhận hàng:</small>
+                <strong>{{order.shipping_address}}</strong>
+              </div>
+              <div class="text-end">
+                <span class="text-muted me-2">Tổng số tiền:</span>
+                <h5 class="text-pink fw-bold mb-0">{{order.total_price | number}}đ</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

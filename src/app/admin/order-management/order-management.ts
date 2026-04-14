@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { OrderService } from '../../core/services/order.service';
+import { Order } from '../../shared/models/order.model';
 
 @Component({
   selector: 'app-order-management',
@@ -17,8 +18,8 @@ export class OrderManagement implements OnInit {
   filterStatus = '';
   filterPayment = '';
 
-  selectedOrder: any = null;
-  orders: any[] = [];
+  selectedOrder: Order | null = null;
+  orders: Order[] = [];
 
   statusList = [
     { key: '', label: 'Tất cả' },
@@ -34,21 +35,31 @@ export class OrderManagement implements OnInit {
     this.loadOrders();
   }
 
+  /* ===== LOAD ORDERS ===== */
   loadOrders() {
-    this.orderService.getOrders().subscribe(res => {
-      this.orders = res;
+    this.orderService.getOrders().subscribe({
+      next: (res) => {
+        this.orders = res;
+      },
+      error: (err) => {
+        console.error('Lỗi tải danh sách đơn hàng:', err);
+      }
     });
   }
 
+  /* ===== FILTER LOGIC ===== */
   filteredOrders() {
     return this.orders.filter(o => {
       const customerName = o.customer_name || 'Khách vãng lai';
-      return (!this.filterStatus || o.status === this.filterStatus)
-        && (!this.filterPayment || o.payment_method === this.filterPayment)
-        && (!this.searchText || customerName.toLowerCase().includes(this.searchText.toLowerCase()));
+      const matchStatus = !this.filterStatus || o.status === this.filterStatus;
+      const matchPayment = !this.filterPayment || o.payment_method === this.filterPayment;
+      const matchText = !this.searchText || customerName.toLowerCase().includes(this.searchText.toLowerCase());
+      
+      return matchStatus && matchPayment && matchText;
     });
   }
 
+  /* ===== UI UTILS ===== */
   getStatusClass(status: string) {
     return {
       'bg-success': status === 'done',
@@ -74,22 +85,28 @@ export class OrderManagement implements OnInit {
     this.searchText = '';
   }
 
-  selectOrder(order: any) {
-    this.selectedOrder = order;
+  selectOrder(order: Order) {
+    // Clone order to avoid direct binding modification before confirmation
+    this.selectedOrder = { ...order };
   }
 
+  /* ===== ACTIONS ===== */
   updateStatus() {
-    if (!this.selectedOrder) return;
+    if (!this.selectedOrder || !this.selectedOrder.id) return;
+    
     this.orderService.updateStatus(this.selectedOrder.id, this.selectedOrder.status).subscribe({
       next: () => {
         alert('Cập nhật trạng thái thành công!');
         this.loadOrders();
+        this.selectedOrder = null; // Close detail view after success
       },
-      error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')
+      error: (err) => {
+        alert(err.error?.message || 'Có lỗi xảy ra khi cập nhật');
+      }
     });
   }
 
   exportExcel() {
     alert('Tính năng đang phát triển!');
   }
-}
+}

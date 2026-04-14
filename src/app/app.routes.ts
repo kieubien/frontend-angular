@@ -36,6 +36,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'order-history',
+    loadComponent: () =>
+      import('./features/cart/order-history/order-history').then(
+        (m) => m.OrderHistoryComponent,
+      ),
+  },
+  {
     path: 'login',
     loadComponent: () => import('./auth/login/login.component').then((m) => m.LoginComponent),
   },

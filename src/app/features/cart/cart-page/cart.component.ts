@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { FooterComponent } from '../../../shared/components/footer/footer';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar';
+import { CartService } from '../../../core/services/cart.service';
+import { CartItem } from '../../../shared/models/cart.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -11,9 +15,11 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar';
   standalone: true,
   imports: [CommonModule, FormsModule, FooterComponent, NavbarComponent],
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnDestroy {
 
-  items: any[] = [];
+  items: CartItem[] = [];
+  private cartSub!: Subscription;
+
   couponCode = '';
   couponMessage = '';
   couponStatus = '';
@@ -21,48 +27,45 @@ export class CartComponent implements OnInit {
   discount = 0;
   shippingFee = 30000;
 
+  constructor(
+    private cartService: CartService,
+    private router: Router
+  ) {}
+
   ngOnInit() {
-    this.loadCart();
+    this.cartSub = this.cartService.cartItems$.subscribe(items => {
+      this.items = items;
+      this.updateTotal(); // Cập nhật phí ship dựa trên subtotal mới
+    });
   }
 
-  /* ===== LOAD CART ===== */
-  loadCart() {
-    const data = localStorage.getItem('cart');
-    this.items = data ? JSON.parse(data) : [];
+  ngOnDestroy() {
+    if (this.cartSub) this.cartSub.unsubscribe();
   }
 
-  saveCart() {
-    localStorage.setItem('cart', JSON.stringify(this.items));
+  /* ===== ACTIONS ===== */
+  updateQty(id: number, delta: number, color?: string) {
+    this.cartService.updateQty(id, delta, color);
   }
 
-  /* ===== GETTERS ===== */
+  removeItem(id: number, color?: string) {
+    if (confirm('Bạn có chắc muốn xoá sản phẩm này khỏi giỏ hàng?')) {
+      this.cartService.removeFromCart(id, color);
+    }
+  }
+
+  /* ===== CALCULATIONS ===== */
   get subtotal() {
-    return this.items.reduce((sum, item) => sum + item.price * item.qty, 0);
+    return this.cartService.getSubtotal();
   }
 
   get total() {
     return this.subtotal - this.discount + this.shippingFee;
   }
 
-  /* ===== UPDATE QTY ===== */
-  updateQty(id: number, color: string, delta: number) {
-    const item = this.items.find(i => i.id === id && i.color === color);
-    if (!item) return;
-
-    item.qty += delta;
-
-    if (item.qty <= 0) {
-      this.removeItem(id, color);
-      return;
-    }
-
-    this.saveCart();
-  }
-
-  /* ===== REMOVE ===== */
-  removeItem(id: number, color: string) {
-    this.items = this.items.filter(i => !(i.id === id && i.color === color));
-    this.saveCart();
+  private updateTotal() {
+    // Miễn phí vận chuyển cho đơn hàng trên 299k
+    this.shippingFee = this.subtotal >= 299000 ? 0 : 30000;
   }
 
   /* ===== COUPON ===== */
@@ -80,8 +83,17 @@ export class CartComponent implements OnInit {
     }
   }
 
+  /* ===== NAVIGATION ===== */
+  goToCheckout() {
+    if (this.items.length === 0) {
+      alert('Giỏ hàng của bạn đang trống!');
+      return;
+    }
+    this.router.navigate(['/checkout']);
+  }
+
   /* ===== FORMAT ===== */
   formatPrice(price: number) {
     return price.toLocaleString('vi-VN') + 'đ';
   }
-}
+}

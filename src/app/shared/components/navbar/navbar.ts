@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,9 +13,10 @@ import { Observable } from 'rxjs';
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   cartCount = 0;
   categories$: Observable<Category[]>;
+  private cartSub!: Subscription;
   
   isLoggedIn = false;
   userRole = '';
@@ -22,6 +24,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private categoryService: CategoryService,
+    private cartService: CartService,
     private router: Router
   ) {
     this.categories$ = this.categoryService.getCategories();
@@ -29,6 +32,13 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkUser();
+    this.cartSub = this.cartService.cartItems$.subscribe(items => {
+      this.cartCount = items.reduce((sum, item) => sum + item.qty, 0);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.cartSub) this.cartSub.unsubscribe();
   }
 
   checkUser(): void {
