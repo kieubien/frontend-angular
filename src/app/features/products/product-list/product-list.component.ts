@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FooterComponent } from '../../../shared/components/footer/footer';
 import { NavbarComponent } from '../../../shared/components/navbar/navbar';
 import { CategoryService } from '../../../core/services/category.service';
+import { ProductService } from '../../../core/services/product.service';
 import { Category } from '../../../core/models/category.model';
 import { Observable } from 'rxjs';
 
@@ -17,12 +18,15 @@ import { Observable } from 'rxjs';
 export class ProductListComponent implements OnInit {
   selectedCategory: Category | undefined;
   categories$: Observable<Category[]>;
+  products$: Observable<any[]>;
 
   constructor(
     private route: ActivatedRoute,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private productService: ProductService
   ) {
     this.categories$ = this.categoryService.getCategories();
+    this.products$ = this.productService.getProducts();
   }
 
   ngOnInit(): void {
@@ -30,11 +34,15 @@ export class ProductListComponent implements OnInit {
       const slug = params['category'];
       if (slug) {
         this.categoryService.getCategoryBySlug(slug).subscribe({
-          next: (cat) => this.selectedCategory = cat,
+          next: (cat) => {
+            this.selectedCategory = cat;
+            this.products$ = this.productService.getProducts({ category: slug });
+          },
           error: () => this.selectedCategory = undefined
         });
       } else {
         this.selectedCategory = undefined;
+        this.products$ = this.productService.getProducts();
       }
     });
   }

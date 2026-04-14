@@ -6,7 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../../shared/components/navbar/navbar';
 import { FooterComponent } from '../../shared/components/footer/footer';
 import { CategoryService } from '../../core/services/category.service';
+import { ProductService } from '../../core/services/product.service';
 import { Category } from '../../core/models/category.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -38,7 +40,7 @@ export class HomeComponent implements OnInit {
     'NARS', 'Dior Beauty', 'YSL Beauty', 'Đổi trả 30 ngày', '100% Chính hãng',
   ];
 
-  //  CATEGORIES (CLEAN) 
+  //  CATEGORIES 
   categories: Category[] = [];
 
   //  TABS 
@@ -55,121 +57,70 @@ export class HomeComponent implements OnInit {
   ];
 
   constructor(
-    private http: HttpClient,
     private router: Router,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
+    // Load Categories
     this.categoryService.getCategories().subscribe(cats => {
       this.categories = cats;
     });
-  this.products = this.mockData();
-  this.featuredProducts = this.products
-    .filter((p: any) => p.isFeatured)
-    .slice(0, 4);
 
-  this.isLoading = false;
-}
+    // Load Products
+    this.productService.getProducts().subscribe({
+      next: (prods) => {
+        this.products = prods;
+        this.updateFeaturedProducts();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Lỗi tải sản phẩm:', err);
+        this.isLoading = false;
+      }
+    });
+  }
 
-  //  CHANGE TAB 
-  setTab(key: string): void {
-    this.activeTab = key;
-
-    if (key === 'newest') {
-      this.featuredProducts = [...this.products].reverse().slice(0, 4);
+  // Cập nhật danh sách hiển thị dựa trên Tab
+  updateFeaturedProducts(): void {
+    if (this.activeTab === 'newest') {
+      this.featuredProducts = [...this.products]
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .slice(0, 4);
     } 
-    else if (key === 'sale') {
+    else if (this.activeTab === 'sale') {
       this.featuredProducts = this.products
-        .filter((p: any) => p.badge === 'sale')
+        .filter(p => p.badge === 'sale' || p.original_price)
         .slice(0, 4);
     } 
     else {
-      this.featuredProducts = this.products
-        .filter((p: any) => p.isFeatured)
-        .slice(0, 4);
+      // Mặc định là Featured/Bán chạy
+      this.featuredProducts = this.products.slice(0, 4);
     }
+  }
+
+  setTab(key: string): void {
+    this.activeTab = key;
+    this.updateFeaturedProducts();
   }
 
   //  CALC DISCOUNT 
   getDiscount(p: any): number {
-    if (!p.originalPrice) return 0;
-    return Math.round((1 - p.price / p.originalPrice) * 100);
+    if (!p.original_price || !p.price) return 0;
+    return Math.round((1 - p.price / p.original_price) * 100);
   }
 
   //  ADD TO CART 
   addToCart(p: any, e: Event): void {
     e.stopPropagation();
-    console.log('Đã thêm "' + p.name + '" vào giỏ hàng!');
+    alert('Đã thêm "' + p.name + '" vào giỏ hàng!');
   }
 
   //  SUBSCRIBE 
   subscribe(): void {
     if (!this.email) return;
-    console.log('Đăng ký thành công!');
+    alert('Cảm ơn bạn đã đăng ký!');
     this.email = '';
-  }
-
-  //  MOCK DATA 
-  mockData(): any[] {
-    return [
-      {
-        id: 1,
-        name: 'Lipstick Matte Ruby Woo',
-        brand: 'MAC Cosmetics',
-        price: 480000,
-        originalPrice: 600000,
-        badge: 'sale',
-        reviewCount: 342,
-        isFeatured: true,
-        colors: [
-          { hex: '#C95E85' },
-          { hex: '#E24B4A' },
-          { hex: '#9B3060' }
-        ]
-      },
-      {
-        id: 2,
-        name: 'Rouge Dior Satin 999',
-        brand: 'Dior Beauty',
-        price: 1250000,
-        originalPrice: null,
-        badge: 'new',
-        reviewCount: 218,
-        isFeatured: true,
-        colors: [
-          { hex: '#C8963E' },
-          { hex: '#C95E85' }
-        ]
-      },
-      {
-        id: 3,
-        name: 'Velvet Matte Lip Pencil',
-        brand: 'NARS Cosmetics',
-        price: 720000,
-        originalPrice: 850000,
-        badge: null,
-        reviewCount: 189,
-        isFeatured: true,
-        colors: [
-          { hex: '#DEB8F0' },
-          { hex: '#D4537E' }
-        ]
-      },
-      {
-        id: 4,
-        name: 'Rouge Pur Couture Sheer',
-        brand: 'YSL Beauty',
-        price: 980000,
-        originalPrice: null,
-        badge: 'hot',
-        reviewCount: 401,
-        isFeatured: true,
-        colors: [
-          { hex: '#E88DAE' },
-          { hex: '#E24B4A' }
-        ]
-      },
-    ];
   }
 }

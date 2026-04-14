@@ -1,6 +1,7 @@
 const sequelize = require('./database');
 const Category = require('./models/category');
 const User = require('./models/user');
+const Product = require('./models/product');
 
 const categoriesData = [
     { id: 1, name: 'Son môi', slug: 'son-moi', product_count: 128, icon: 'bi-flower1' },
@@ -19,7 +20,7 @@ const usersData = [
         first_name: "Kiều",
         last_name: "Biên",
         email: "admin@blushbloom.vn",
-        password: "admin123", // Sẽ được mã hóa tự động bằng hooks beforeCreate
+        password: "admin123",
         role: "admin",
         phone: "0123456789"
     },
@@ -33,12 +34,49 @@ const usersData = [
     }
 ];
 
+const productsData = [
+    {
+        name: 'Lipstick Matte Ruby Woo',
+        brand: 'MAC Cosmetics',
+        slug: 'lipstick-matte-ruby-woo',
+        price: 480000,
+        original_price: 600000,
+        stock: 50,
+        status: 'active',
+        badge: 'sale',
+        category_id: 11,
+        description: 'Màu đỏ kinh điển của MAC'
+    },
+    {
+        name: 'Rouge Dior Satin 999',
+        brand: 'Dior Beauty',
+        slug: 'rouge-dior-satin-999',
+        price: 1250000,
+        stock: 20,
+        status: 'active',
+        badge: 'new',
+        category_id: 1,
+        description: 'Quyến rũ và sang trọng'
+    },
+    {
+        name: 'NARS Radiant Creamy Concealer',
+        brand: 'NARS',
+        slug: 'nars-radiant-creamy-concealer',
+        price: 750000,
+        stock: 35,
+        status: 'active',
+        category_id: 3,
+        description: 'Che khuyết điểm số 1 thế giới'
+    }
+];
+
 async function seed() {
     try {
         console.log("Bat dau seed dữ liệu...");
         await sequelize.authenticate();
 
-        // Xóa sạch bảng Category / User để tránh lặp id khi seed nhiều lần
+        // Xóa sạch bảng (theo thứ tự quan hệ)
+        await Product.destroy({ where: {} });
         await Category.destroy({ where: {} });
         await User.destroy({ where: {} });
 
@@ -51,6 +89,11 @@ async function seed() {
             await Category.create(cat);
         }
         console.log("Đã tạo Categories thành công.");
+
+        for (const prod of productsData) {
+            await Product.create(prod);
+        }
+        console.log("Đã tạo Products thành công.");
 
         console.log("Hoàn thành seed!");
         process.exit();

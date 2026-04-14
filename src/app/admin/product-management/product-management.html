@@ -56,16 +56,15 @@
       <div class="card p-2 mb-3 d-flex gap-2 flex-wrap">
         <select class="form-select form-select-sm w-auto"
                 [(ngModel)]="filterCategory">
-          <option value="">Danh mục</option>
-          <option>Son môi</option>
-          <option>Phấn má</option>
+          <option value="">Tất cả danh mục</option>
+          <option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</option>
         </select>
 
         <select class="form-select form-select-sm w-auto"
                 [(ngModel)]="filterStatus">
           <option value="">Trạng thái</option>
           <option value="active">Đang bán</option>
-          <option value="hidden">Ẩn</option>
+          <option value="inactive">Tạm ngưng</option>
         </select>
 
         <button class="btn btn-outline-pink btn-sm" (click)="resetFilters()">
@@ -76,42 +75,48 @@
       <!-- Table -->
       <div class="card shadow-sm">
         <div class="table-responsive">
-          <table class="table">
+          <table class="table align-middle">
             <thead>
               <tr>
+                <th>Ảnh</th>
                 <th>Tên</th>
-                <th>Danh mục</th>
+                <th>Thương hiệu</th>
                 <th>Giá</th>
                 <th>Tồn</th>
                 <th>Trạng thái</th>
-                <th></th>
+                <th>Hành động</th>
               </tr>
             </thead>
 
             <tbody>
               <tr *ngFor="let p of filteredProducts()">
-                <td>{{p.name}}</td>
-                <td>{{p.category}}</td>
-                <td>{{p.price}}</td>
+                <td>
+                  <img *ngIf="p.image" [src]="p.image" width="40" height="40" class="rounded object-fit-cover">
+                  <div *ngIf="!p.image" class="bg-light rounded d-flex align-items-center justify-content-center" style="width:40px;height:40px">
+                    <i class="bi bi-image text-muted"></i>
+                  </div>
+                </td>
+                <td class="fw-semibold">{{p.name}}</td>
+                <td>{{p.brand}}</td>
+                <td>{{p.price | number}}đ</td>
                 <td>{{p.stock}}</td>
 
                 <td>
                   <span class="badge"
                     [ngClass]="p.status === 'active' ? 'bg-success' : 'bg-secondary'">
-                    {{p.status}}
+                    {{ p.status === 'active' ? 'Đang bán' : 'Tạm ngưng' }}
                   </span>
                 </td>
 
                 <td>
-                  <button class="btn btn-sm btn-outline-primary"
-                          (click)="editProduct(p)">
-                    Sửa
-                  </button>
-
-                  <button class="btn btn-sm btn-outline-danger"
-                          (click)="deleteProduct(p)">
-                    Xóa
-                  </button>
+                  <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-primary" (click)="editProduct(p)">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteProduct(p)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -123,40 +128,78 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade show d-block" *ngIf="showModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal fade show d-block" *ngIf="showModal" style="background: rgba(0,0,0,0.5)">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow">
 
           <div class="modal-header">
-            <h5 class="modal-title">{{editing ? 'Sửa' : 'Thêm'}} sản phẩm</h5>
+            <h5 class="modal-title fw-bold">{{editing ? 'Chỉnh sửa' : 'Thêm mới'}} sản phẩm</h5>
             <button class="btn-close" (click)="closeModal()"></button>
           </div>
 
-          <div class="modal-body">
+          <div class="modal-body p-4">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label small fw-bold">Tên sản phẩm</label>
+                <input class="form-control mb-3" placeholder="Ví dụ: MAC Ruby Woo" [(ngModel)]="form.name">
 
-            <input class="form-control mb-2"
-                   placeholder="Tên"
-                   [(ngModel)]="form.name">
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Giá bán (VNĐ)</label>
+                    <input type="number" class="form-control mb-3" [(ngModel)]="form.price">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Giá gốc (nếu giảm giá)</label>
+                    <input type="number" class="form-control mb-3" [(ngModel)]="form.original_price">
+                  </div>
+                </div>
 
-            <input class="form-control mb-2"
-                   placeholder="Giá"
-                   [(ngModel)]="form.price">
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Thương hiệu</label>
+                    <input class="form-control mb-3" placeholder="MAC, Dior..." [(ngModel)]="form.brand">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-bold">Danh mục</label>
+                    <select class="form-select mb-3" [(ngModel)]="form.category_id">
+                      <option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</option>
+                    </select>
+                  </div>
+                </div>
 
-            <input class="form-control mb-2"
-                   placeholder="Tồn kho"
-                   [(ngModel)]="form.stock">
+                <label class="form-label small fw-bold">Mô tả ngắn</label>
+                <textarea class="form-control mb-3" rows="3" [(ngModel)]="form.description"></textarea>
+              </div>
 
-            <select class="form-select"
-                    [(ngModel)]="form.category">
-              <option>Son môi</option>
-              <option>Phấn má</option>
-            </select>
+              <div class="col-md-4 border-start">
+                <label class="form-label small fw-bold">Số lượng tồn kho</label>
+                <input type="number" class="form-control mb-3" [(ngModel)]="form.stock">
 
+                <label class="form-label small fw-bold">Đường dẫn ảnh</label>
+                <input class="form-control mb-3" placeholder="https://..." [(ngModel)]="form.image">
+
+                <label class="form-label small fw-bold">Nhãn dán (Badge)</label>
+                <select class="form-select mb-3" [(ngModel)]="form.badge">
+                  <option [ngValue]="null">Không có</option>
+                  <option value="sale">Giảm giá (Sale)</option>
+                  <option value="new">Hàng mới (New)</option>
+                  <option value="hot">Bán chạy (Hot)</option>
+                </select>
+
+                <label class="form-label small fw-bold">Trạng thái</label>
+                <select class="form-select" [(ngModel)]="form.status">
+                  <option value="active">Đang bán</option>
+                  <option value="inactive">Tạm ngưng</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModal()">Hủy</button>
-            <button class="btn btn-pink" (click)="saveProduct()">Lưu</button>
+          <div class="modal-footer bg-light">
+            <button class="btn btn-secondary px-4" (click)="closeModal()">Hủy</button>
+            <button class="btn btn-pink px-4" (click)="saveProduct()">
+              {{editing ? 'Cập nhật' : 'Thêm ngay'}}
+            </button>
           </div>
 
         </div>

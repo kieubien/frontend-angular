@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { OrderService } from '../../core/services/order.service';
 
 @Component({
   selector: 'app-order-management',
@@ -10,18 +11,14 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   templateUrl: './order-management.html',
   styleUrls: ['./order-management.scss']
 })
-export class OrderManagement {
+export class OrderManagement implements OnInit {
 
   searchText = '';
   filterStatus = '';
   filterPayment = '';
 
   selectedOrder: any = null;
-
-  orders = [
-    { id: '001', customer: 'Nguyễn A', total: '1.200.000đ', status: 'done', payment: 'COD' },
-    { id: '002', customer: 'Trần B', total: '800.000đ', status: 'pending', payment: 'VISA' }
-  ];
+  orders: any[] = [];
 
   statusList = [
     { key: '', label: 'Tất cả' },
@@ -31,11 +28,24 @@ export class OrderManagement {
     { key: 'cancelled', label: 'Huỷ' }
   ];
 
+  constructor(private orderService: OrderService) {}
+
+  ngOnInit(): void {
+    this.loadOrders();
+  }
+
+  loadOrders() {
+    this.orderService.getOrders().subscribe(res => {
+      this.orders = res;
+    });
+  }
+
   filteredOrders() {
     return this.orders.filter(o => {
+      const customerName = o.customer_name || 'Khách vãng lai';
       return (!this.filterStatus || o.status === this.filterStatus)
-        && (!this.filterPayment || o.payment === this.filterPayment)
-        && (!this.searchText || o.customer.toLowerCase().includes(this.searchText.toLowerCase()));
+        && (!this.filterPayment || o.payment_method === this.filterPayment)
+        && (!this.searchText || customerName.toLowerCase().includes(this.searchText.toLowerCase()));
     });
   }
 
@@ -46,6 +56,10 @@ export class OrderManagement {
       'bg-primary': status === 'shipping',
       'bg-danger': status === 'cancelled'
     };
+  }
+
+  getStatusLabel(status: string) {
+    return this.statusList.find(s => s.key === status)?.label || status;
   }
 
   getCountByStatus(status: string) {
@@ -65,10 +79,17 @@ export class OrderManagement {
   }
 
   updateStatus() {
-    alert('Cập nhật thành công!');
+    if (!this.selectedOrder) return;
+    this.orderService.updateStatus(this.selectedOrder.id, this.selectedOrder.status).subscribe({
+      next: () => {
+        alert('Cập nhật trạng thái thành công!');
+        this.loadOrders();
+      },
+      error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')
+    });
   }
 
   exportExcel() {
-    alert('Xuất Excel thành công!');
+    alert('Tính năng đang phát triển!');
   }
 }

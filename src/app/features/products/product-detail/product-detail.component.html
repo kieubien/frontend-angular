@@ -1,134 +1,112 @@
 <app-navbar></app-navbar>
-<div class="bc"><a href="#">Trang chủ</a><span>›</span><a href="#">Son môi</a><span>›</span><a href="#">MAC Cosmetics</a><span>›</span>Lipstick Matte Ruby Woo</div>
 
-<!-- PRODUCT DETAIL -->
-<div class="pd">
-  <!-- LEFT: IMAGES -->
-  <div class="img-col">
-    <div class="main-img">
-      <svg width="160" height="260" viewBox="0 0 160 260">
-        <rect x="52" y="30" width="56" height="165" rx="8" fill="#F4B8D0"/>
-        <rect x="52" y="30" width="56" height="36" rx="7" fill="#E88DAE"/>
-        <path d="M56 30 Q80 4 104 30" fill="#F9D5E5"/>
-        <rect x="52" y="177" width="56" height="50" rx="7" fill="#C95E85"/>
-        <text x="80" y="207" text-anchor="middle" fill="rgba(255,255,255,.75)" font-size="11" font-family="Nunito" font-weight="600">MAC</text>
-        <rect x="52" y="181" width="56" height="7" rx="2" fill="rgba(255,255,255,.2)"/>
-        <ellipse cx="80" cy="29" rx="28" ry="10" fill="#FFDCE8" opacity=".5"/>
-      </svg>
-      <div class="img-badge">-20% Hôm nay</div>
-    </div>
-    <div class="thumb-row">
-      <div class="thumb sel"><svg width="44" height="64" viewBox="0 0 44 64"><rect x="10" y="7" width="24" height="42" rx="4" fill="#F4B8D0"/><rect x="10" y="7" width="24" height="12" rx="3" fill="#E88DAE"/><path d="M12 7 Q22 1 32 7" fill="#F9D5E5"/><rect x="10" y="42" width="24" height="16" rx="3" fill="#C95E85"/></svg></div>
-      <div class="thumb"><svg width="44" height="64" viewBox="0 0 44 64"><rect x="10" y="7" width="24" height="42" rx="4" fill="#E24B4A"/><rect x="10" y="7" width="24" height="12" rx="3" fill="#A32D2D"/><path d="M12 7 Q22 1 32 7" fill="#F7C1C1"/><rect x="10" y="42" width="24" height="16" rx="3" fill="#7A1F1F"/></svg></div>
-      <div class="thumb"><svg width="44" height="64" viewBox="0 0 44 64"><rect x="10" y="7" width="24" height="42" rx="4" fill="#DEB8F0"/><rect x="10" y="7" width="24" height="12" rx="3" fill="#A060C0"/><path d="M12 7 Q22 1 32 7" fill="#F5E8FF"/><rect x="10" y="42" width="24" height="16" rx="3" fill="#6030A0"/></svg></div>
-      <div class="thumb"><svg width="44" height="64" viewBox="0 0 44 64"><rect x="10" y="7" width="24" height="42" rx="4" fill="#F5D9A8"/><rect x="10" y="7" width="24" height="12" rx="3" fill="#C8963E"/><path d="M12 7 Q22 1 32 7" fill="#FFF0D8"/><rect x="10" y="42" width="24" height="16" rx="3" fill="#7A4A10"/></svg></div>
-    </div>
-  </div>
+<div class="container my-5" *ngIf="!isLoading && product">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a routerLink="/products" class="text-decoration-none text-muted">Sản phẩm</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{product.name}}</li>
+        </ol>
+    </nav>
 
-  <!-- RIGHT: INFO -->
-  <div class="info-col">
-    <div class="brand-row">
-      <div class="brand-name">MAC Cosmetics</div>
-      <div class="wish-btn"><span>Yêu thích (1.2K)</span></div>
-    </div>
-    <h1 class="prod-name">Lipstick Matte<br>Ruby Woo</h1>
-    <div class="rating-row">
-      <span class="stars">★★★★★</span>
-      <span class="rating-num">4.9</span>
-      <span class="review-cnt">342 đánh giá</span>
-      <span class="sold-cnt">2.800 đã bán</span>
-    </div>
-    <div class="price-row">
-      <span class="price-main">480.000đ</span>
-      <span class="price-old">600.000đ</span>
-      <span class="price-save">Tiết kiệm 120K</span>
-    </div>
+    <div class="row g-5">
+        <!-- Ảnh sản phẩm -->
+        <div class="col-md-6">
+            <div class="product-gallery">
+                <div class="main-img-wrap rounded shadow-sm bg-white p-4 text-center border">
+                    <img *ngIf="product.image" [src]="product.image" [alt]="product.name" class="img-fluid main-img" style="max-height: 400px; object-fit: contain;">
+                    <div *ngIf="!product.image" class="py-5 text-muted">
+                        <i class="bi bi-image display-1"></i>
+                        <p>Không có ảnh sản phẩm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="opt-label">Chọn màu sắc: <span>Ruby Woo (Đỏ tươi)</span></div>
-    <div class="shades">
-      <div class="shade sel"><div class="shade-dot" style="background:#C95E85;"></div><div class="shade-lbl">Ruby Woo</div></div>
-      <div class="shade"><div class="shade-dot" style="background:#E24B4A;"></div><div class="shade-lbl">Russian Red</div></div>
-      <div class="shade"><div class="shade-dot" style="background:#9B3060;"></div><div class="shade-lbl">Diva</div></div>
-      <div class="shade"><div class="shade-dot" style="background:#D2855A;"></div><div class="shade-lbl">Honey Love</div></div>
-      <div class="shade"><div class="shade-dot" style="background:#F4B8D0;"></div><div class="shade-lbl">Syrup</div></div>
-      <div class="shade"><div class="shade-dot" style="background:#3D1F2D;"></div><div class="shade-lbl">Cyber</div></div>
-    </div>
+        <!-- Thông tin sản phẩm -->
+        <div class="col-md-6">
+            <div class="product-info">
+                <span class="badge bg-danger mb-2" *ngIf="product.badge">{{product.badge | uppercase}}</span>
+                <div class="text-muted small mb-1">{{product.brand}}</div>
+                <h1 class="display-6 fw-bold mb-3">{{product.name}}</h1>
+                
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="rating text-warning">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
+                        <span class="text-muted ms-2">({{product.review_count || 0}} đánh giá)</span>
+                    </div>
+                    <div class="divider text-muted">|</div>
+                    <div class="text-success small"><i class="bi bi-check-circle-fill"></i> Còn {{product.stock}} sản phẩm</div>
+                </div>
 
-    <div class="qty-row">
-      <span class="qty-label">Số lượng:</span>
-      <div class="qty-ctrl">
-        <button class="qty-btn">−</button>
-        <span class="qty-val">1</span>
-        <button class="qty-btn">+</button>
-      </div>
-      <span style="font-size:12px;color:var(--soft);">Còn 86 sản phẩm</span>
-    </div>
+                <div class="price-box p-3 bg-light rounded mb-4">
+                    <div class="d-flex align-items-end gap-3">
+                        <span class="fs-2 fw-bold text-danger">{{product.price | number}}đ</span>
+                        <span class="text-decoration-line-through text-muted" *ngIf="product.original_price">{{product.original_price | number}}đ</span>
+                        <span class="badge bg-danger ms-auto" *ngIf="product.original_price">-{{getDiscount()}}%</span>
+                    </div>
+                </div>
 
-    <div class="action-row">
-      <button class="btn-cart">Thêm giỏ hàng</button>
-      <button class="btn-buy"> Mua ngay</button>
-      <div class="btn-share">Shia sẻ</div>
-    </div>
+                <div class="desc mb-4">
+                    <h6 class="fw-bold">Mô tả sản phẩm:</h6>
+                    <p class="text-muted" style="white-space: pre-line;">{{product.description || 'Chưa có mô tả cho sản phẩm này.'}}</p>
+                </div>
 
-    <div class="perks">
-      <div class="perk"><span class="perk-icon"></span>Miễn phí ship từ 299K</div>
-      <div class="perk"><span class="perk-icon"></span>100% hàng chính hãng</div>
-      <div class="perk"><span class="perk-icon"></span>Đổi trả trong 30 ngày</div>
-      <div class="perk"><span class="perk-icon"></span>Quà tặng kèm hấp dẫn</div>
-    </div>
+                <div class="actions d-flex gap-2">
+                    <div class="quantity-input d-flex align-items-center border rounded px-3 py-2 bg-white" style="width: 140px;">
+                        <button class="btn btn-link text-dark p-0 text-decoration-none"><i class="bi bi-dash fs-4"></i></button>
+                        <input type="number" class="form-control border-0 text-center shadow-none" value="1" min="1">
+                        <button class="btn btn-link text-dark p-0 text-decoration-none"><i class="bi bi-plus fs-4"></i></button>
+                    </div>
+                    <button class="btn btn-primary flex-grow-1 py-3 fw-bold">
+                        <i class="bi bi-cart-plus-fill me-2"></i> THÊM VÀO GIỎ HÀNG
+                    </button>
+                </div>
 
-    <div class="tabs">
-      <div class="tab on">Mô tả</div>
-      <div class="tab">Thành phần</div>
-      <div class="tab">Cách dùng</div>
+                <div class="mt-4 pt-4 border-top">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4">
+                           <div class="d-flex align-items-center gap-2 small text-muted">
+                               <i class="bi bi-truck fs-5 text-primary"></i>
+                               <span>Ship COD toàn quốc</span>
+                           </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="d-flex align-items-center gap-2 small text-muted">
+                                <i class="bi bi-shield-check fs-5 text-primary"></i>
+                                <span>Chính hãng 100%</span>
+                            </div>
+                         </div>
+                         <div class="col-6 col-md-4">
+                            <div class="d-flex align-items-center gap-2 small text-muted">
+                                <i class="bi bi-arrow-repeat fs-5 text-primary"></i>
+                                <span>Đổi trả 30 ngày</span>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="tab-content">
-      Son môi MAC Lipstick Matte Ruby Woo có công thức son lì đặc biệt, mang lại màu sắc rực rỡ, bền màu suốt 8 tiếng không cần chỉnh. Chất son mịn mượt, lên môi đều màu chỉ với một lần thoa.
-      <div class="desc-tags">
-        <span class="dtag">Lì 8h</span>
-        <span class="dtag">Không khô môi</span>
-        <span class="dtag">Cruelty-free</span>
-        <span class="dtag">Không chứa paraben</span>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- REVIEWS -->
-<div class="rv-sec">
-  <div style="margin-bottom:24px;">
-    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--p4);font-weight:600;">✦ Khách hàng nói gì</div>
-    <h2 style="font-family:var(--ff);font-size:28px;color:var(--text);margin-top:4px;">Đánh giá <em style="color:var(--p4);font-style:italic;">thực tế</em></h2>
-  </div>
-  <div class="rv-summary">
-    <div class="rv-big">
-      <div class="rv-score">4.9</div>
-      <div class="rv-stars">★★★★★</div>
-      <div class="rv-total">342 đánh giá</div>
-    </div>
-    <div class="rv-bars">
-      <div class="bar-row"><span class="bar-lbl">★★★★★</span><div class="bar-track"><div class="bar-fill" style="width:88%;"></div></div><span class="bar-cnt">301</span></div>
-      <div class="bar-row"><span class="bar-lbl">★★★★☆</span><div class="bar-track"><div class="bar-fill" style="width:8%;"></div></div><span class="bar-cnt">28</span></div>
-      <div class="bar-row"><span class="bar-lbl">★★★☆☆</span><div class="bar-track"><div class="bar-fill" style="width:2%;"></div></div><span class="bar-cnt">8</span></div>
-      <div class="bar-row"><span class="bar-lbl">★★☆☆☆</span><div class="bar-track"><div class="bar-fill" style="width:1%;"></div></div><span class="bar-cnt">3</span></div>
-      <div class="bar-row"><span class="bar-lbl">★☆☆☆☆</span><div class="bar-track"><div class="bar-fill" style="width:1%;"></div></div><span class="bar-cnt">2</span></div>
-    </div>
-  </div>
-  <div class="rv-list">
-    <div class="rv-card"><div class="rv-top"><div class="rv-av" style="background:#E88DAE;">NL</div><div><div class="rv-name">Nguyễn Lan Anh</div><div class="rv-date">12/03/2025</div></div></div><div class="rv-stars2">★★★★★</div><p class="rv-text">Son màu đẹp hơn mình tưởng, lên môi cực mịn không lem. Giao hàng nhanh, đóng gói cẩn thận. Chắc chắn mua lại!</p></div>
-    <div class="rv-card"><div class="rv-top"><div class="rv-av" style="background:#C8963E;">TM</div><div><div class="rv-name">Trần Minh Thư</div><div class="rv-date">08/03/2025</div></div></div><div class="rv-stars2">★★★★★</div><p class="rv-text">Mua làm quà sinh nhật bạn thân, shop tư vấn nhiệt tình. Hộp quà rất xinh, bạn mình thích mê. Cảm ơn shop!</p></div>
-  </div>
+<!-- Loading state -->
+<div class="container my-5 py-5 text-center" *ngIf="isLoading">
+    <div class="spinner-border text-primary mb-3" role="status"></div>
+    <p class="text-muted">Đang tải thông tin sản phẩm...</p>
 </div>
 
-<!-- RELATED -->
-<div class="related">
-  <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--p4);font-weight:600;">✦ Có thể bạn thích</div>
-  <h2 style="font-family:var(--ff);font-size:28px;color:var(--text);margin-top:4px;margin-bottom:24px;">Sản phẩm <em style="color:var(--p4);font-style:italic;">liên quan</em></h2>
-  <div class="rel-grid">
-    <div class="rel-card"><div class="rel-img" style="background:#FFF8EE;"><svg width="56" height="90" viewBox="0 0 56 90"><rect x="14" y="8" width="28" height="58" rx="4" fill="#F5D9A8"/><rect x="14" y="8" width="28" height="14" rx="3" fill="#C8963E"/><path d="M16 8 Q28 1 40 8" fill="#FFF0D8"/><rect x="14" y="58" width="28" height="20" rx="3" fill="#9B6020"/></svg></div><div class="rel-info"><div class="rel-brand">Dior Beauty</div><div class="rel-name">Rouge Dior Satin 999</div><div class="rel-price">1.250.000đ</div></div></div>
-    <div class="rel-card"><div class="rel-img" style="background:#F5EEFF;"><svg width="56" height="90" viewBox="0 0 56 90"><rect x="14" y="8" width="28" height="58" rx="4" fill="#DEB8F0"/><rect x="14" y="8" width="28" height="14" rx="3" fill="#A060C0"/><path d="M16 8 Q28 1 40 8" fill="#F5E8FF"/><rect x="14" y="58" width="28" height="20" rx="3" fill="#6030A0"/></svg></div><div class="rel-info"><div class="rel-brand">NARS</div><div class="rel-name">Velvet Matte Pencil</div><div class="rel-price">720.000đ</div></div></div>
-    <div class="rel-card"><div class="rel-img" style="background:#FFEEF4;"><svg width="56" height="90" viewBox="0 0 56 90"><rect x="14" y="8" width="28" height="58" rx="4" fill="#F4B8D0"/><rect x="14" y="8" width="28" height="14" rx="3" fill="#C95E85"/><path d="M16 8 Q28 1 40 8" fill="#FFDCE8"/><rect x="14" y="58" width="28" height="20" rx="3" fill="#9B3060"/></svg></div><div class="rel-info"><div class="rel-brand">YSL Beauty</div><div class="rel-name">Rouge Pur Couture</div><div class="rel-price">980.000đ</div></div></div>
-    <div class="rel-card"><div class="rel-img" style="background:#FFF0F5;"><svg width="56" height="90" viewBox="0 0 56 90"><rect x="14" y="8" width="28" height="58" rx="4" fill="#F9D5E5"/><rect x="14" y="8" width="28" height="14" rx="3" fill="#E88DAE"/><path d="M16 8 Q28 1 40 8" fill="#fff"/><rect x="14" y="58" width="28" height="20" rx="3" fill="#C95E85"/></svg></div><div class="rel-info"><div class="rel-brand">Chanel</div><div class="rel-name">Rouge Allure Velvet</div><div class="rel-price">1.450.000đ</div></div></div>
-  </div>
+<!-- Error state -->
+<div class="container my-5 py-5 text-center" *ngIf="!isLoading && !product">
+    <i class="bi bi-exclamation-triangle display-1 text-muted mb-3"></i>
+    <h3>Không tìm thấy sản phẩm</h3>
+    <p class="text-muted">Sản phẩm bạn tìm kiếm không tồn tại hoặc đã bị xoá.</p>
+    <a routerLink="/products" class="btn btn-outline-primary mt-3">Quay lại cửa hàng</a>
 </div>
+
 <app-footer></app-footer>

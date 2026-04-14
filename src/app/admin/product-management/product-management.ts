@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { ProductService } from '../../core/services/product.service';
+import { CategoryService } from '../../core/services/category.service';
+import { Category } from '../../core/models/category.model';
 
 @Component({
   selector: 'app-product-management',
@@ -10,7 +13,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   templateUrl: './product-management.html',
   styleUrls: ['./product-management.scss']
 })
-export class ProductManagement {
+export class ProductManagement implements OnInit {
 
   searchText = '';
   filterCategory = '';
@@ -20,15 +23,34 @@ export class ProductManagement {
   editing = false;
 
   form: any = {};
+  products: any[] = [];
+  categories: Category[] = [];
 
-  products = [
-    { name: 'MAC Ruby Woo', category: 'Son môi', price: '500k', stock: 10, status: 'active' },
-    { name: 'Dior 999', category: 'Son môi', price: '900k', stock: 5, status: 'active' }
-  ];
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+    this.loadCategories();
+  }
+
+  loadProducts() {
+    this.productService.getProducts().subscribe(res => {
+      this.products = res;
+    });
+  }
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(res => {
+      this.categories = res;
+    });
+  }
 
   filteredProducts() {
     return this.products.filter(p =>
-      (!this.filterCategory || p.category === this.filterCategory) &&
+      (!this.filterCategory || p.category_id == Number(this.filterCategory)) &&
       (!this.filterStatus || p.status === this.filterStatus) &&
       (!this.searchText || p.name.toLowerCase().includes(this.searchText.toLowerCase()))
     );
@@ -49,7 +71,7 @@ export class ProductManagement {
   }
 
   openModal() {
-    this.form = {};
+    this.form = { status: 'active' };
     this.editing = false;
     this.showModal = true;
   }
@@ -61,18 +83,42 @@ export class ProductManagement {
   }
 
   saveProduct() {
-    if (this.editing) {
-      const index = this.products.findIndex(x => x.name === this.form.name);
-      this.products[index] = this.form;
-    } else {
-      this.products.push({ ...this.form, status: 'active' });
+    // Tự tạo slug nếu chưa có
+    if (!this.form.slug) {
+        this.form.slug = this.form.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
     }
 
-    this.closeModal();
+    if (this.editing) {
+      this.productService.updateProduct(this.form.id, this.form).subscribe({
+        next: () => {
+          alert('Cập nhật thành công!');
+          this.loadProducts();
+          this.closeModal();
+        },
+        error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')
+      });
+    } else {
+      this.productService.addProduct(this.form).subscribe({
+        next: () => {
+          alert('Thêm sản phẩm thành công!');
+          this.loadProducts();
+          this.closeModal();
+        },
+        error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')
+      });
+    }
   }
 
   deleteProduct(p: any) {
-    this.products = this.products.filter(x => x !== p);
+    if (confirm(`Bạn có chắc muốn xoá sản phẩm "${p.name}"?`)) {
+      this.productService.deleteProduct(p.id).subscribe({
+        next: () => {
+          alert('Đã xoá thành công!');
+          this.loadProducts();
+        },
+        error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')
+      });
+    }
   }
 
   closeModal() {

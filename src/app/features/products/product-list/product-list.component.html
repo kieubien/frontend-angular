@@ -110,92 +110,48 @@
       <span class="af-clear">Xóa tất cả</span>
     </div>
 
-    <div class="prod-grid">
-      <!-- P1 -->
-      <div class="pc">
-        <div class="pc-img" style="background:#FFF0F5;">
-          <svg width="80" height="140" viewBox="0 0 80 140"><rect x="22" y="18" width="36" height="90" rx="5" fill="#F4B8D0"/><rect x="22" y="18" width="36" height="20" rx="4" fill="#E88DAE"/><path d="M25 18 Q40 2 55 18" fill="#F9D5E5"/><rect x="22" y="96" width="36" height="28" rx="4" fill="#C95E85"/><text x="40" y="115" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6" font-family="Nunito">MAC</text></svg>
-          <span class="pc-badge sale-b">-20%</span><div class="pc-wish">🤍</div>
+    <div class="prod-grid" *ngIf="products$ | async as products; else loadingItems">
+      <div class="pc" *ngFor="let p of products">
+        <div class="pc-img" [style.background]="'#fff'">
+          <!-- Nếu có ảnh từ DB thì hiện ảnh, nếu không thì hiện Placeholder -->
+          <img *ngIf="p.image" [src]="p.image" [alt]="p.name" class="img-fluid">
+          <svg *ngIf="!p.image" width="80" height="140" viewBox="0 0 80 140">
+            <rect x="22" y="18" width="36" height="90" rx="5" fill="#f5f5f5"/>
+            <text x="40" y="70" text-anchor="middle" fill="#ccc" font-size="10">No Image</text>
+          </svg>
+          
+          <span class="pc-badge sale-b" *ngIf="p.badge === 'sale'">Sale</span>
+          <span class="pc-badge new-b" *ngIf="p.badge === 'new'">Mới</span>
+          <span class="pc-badge hot-b" *ngIf="p.badge === 'hot'">Hot</span>
+          <div class="pc-wish">🤍</div>
         </div>
         <div class="pc-body">
-          <div class="pc-brand">MAC Cosmetics</div>
-          <div class="pc-name">Lipstick Matte Ruby Woo</div>
-          <div><span class="pc-stars">★★★★★</span><span class="pc-rev">(342)</span></div>
-          <div class="swatches"><div class="sw" style="background:#C95E85;"></div><div class="sw" style="background:#8B2246;"></div><div class="sw" style="background:#E88DAE;"></div><div class="sw" style="background:#D2855A;"></div></div>
-          <div class="pc-foot"><div><span class="pc-price">480.000đ</span><span class="pc-old">600.000đ</span></div><button class="add-btn">+</button></div>
+          <div class="pc-brand">{{ p.brand }}</div>
+          <div class="pc-name">{{ p.name }}</div>
+          <div><span class="pc-stars">★★★★★</span><span class="pc-rev">({{ p.review_count || 0 }})</span></div>
+          <div class="pc-foot">
+            <div>
+              <span class="pc-price">{{ p.price | number }}đ</span>
+              <span class="pc-old" *ngIf="p.original_price">{{ p.original_price | number }}đ</span>
+            </div>
+            <button class="add-btn">+</button>
+          </div>
         </div>
       </div>
-      <!-- P2 -->
-      <div class="pc">
-        <div class="pc-img" style="background:#FFF8EE;">
-          <svg width="80" height="140" viewBox="0 0 80 140"><rect x="20" y="18" width="40" height="90" rx="5" fill="#F5D9A8"/><rect x="20" y="18" width="40" height="22" rx="4" fill="#C8963E"/><path d="M23 18 Q40 2 57 18" fill="#FFF0D8"/><rect x="20" y="96" width="40" height="28" rx="4" fill="#9B6020"/><text x="40" y="115" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6" font-family="Nunito">DIOR</text></svg>
-          <span class="pc-badge new-b">Mới</span><div class="pc-wish">🤍</div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-brand">Dior Beauty</div>
-          <div class="pc-name">Rouge Dior Satin 999</div>
-          <div><span class="pc-stars">★★★★☆</span><span class="pc-rev">(218)</span></div>
-          <div class="swatches"><div class="sw" style="background:#C8963E;"></div><div class="sw" style="background:#C95E85;"></div><div class="sw" style="background:#9B3060;"></div></div>
-          <div class="pc-foot"><div><span class="pc-price">1.250.000đ</span></div><button class="add-btn">+</button></div>
-        </div>
-      </div>
-      <!-- P3 -->
-      <div class="pc">
-        <div class="pc-img" style="background:#F5EEFF;">
-          <svg width="80" height="140" viewBox="0 0 80 140"><rect x="22" y="18" width="36" height="90" rx="5" fill="#DEB8F0"/><rect x="22" y="18" width="36" height="20" rx="4" fill="#A060C0"/><path d="M25 18 Q40 2 55 18" fill="#F5E8FF"/><rect x="22" y="96" width="36" height="28" rx="4" fill="#6030A0"/><text x="40" y="115" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6" font-family="Nunito">NARS</text></svg>
-          <div class="pc-wish">Thêm</div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-brand">NARS Cosmetics</div>
-          <div class="pc-name">Velvet Matte Lip Pencil</div>
-          <div><span class="pc-stars">★★★★★</span><span class="pc-rev">(189)</span></div>
-          <div class="swatches"><div class="sw" style="background:#DEB8F0;"></div><div class="sw" style="background:#D4537E;"></div><div class="sw" style="background:#aaa;"></div></div>
-          <div class="pc-foot"><div><span class="pc-price">720.000đ</span><span class="pc-old">850.000đ</span></div><button class="add-btn">+</button></div>
-        </div>
-      </div>
-      <!-- P4 -->
-      <div class="pc">
-        <div class="pc-img" style="background:#FFEEF4;">
-          <svg width="80" height="140" viewBox="0 0 80 140"><rect x="22" y="18" width="36" height="90" rx="5" fill="#F4B8D0"/><rect x="22" y="18" width="36" height="20" rx="4" fill="#C95E85"/><path d="M25 18 Q40 2 55 18" fill="#FFDCE8"/><rect x="22" y="96" width="36" height="28" rx="4" fill="#9B3060"/><text x="40" y="115" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6" font-family="Nunito">YSL</text></svg>
-          <span class="pc-badge hot-b">Hot</span><div class="pc-wish">🤍</div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-brand">YSL Beauty</div>
-          <div class="pc-name">Rouge Pur Couture Sheer</div>
-          <div><span class="pc-stars">★★★★★</span><span class="pc-rev">(401)</span></div>
-          <div class="swatches"><div class="sw" style="background:#E88DAE;"></div><div class="sw" style="background:#E24B4A;"></div><div class="sw" style="background:#F5D9A8;"></div></div>
-          <div class="pc-foot"><div><span class="pc-price">980.000đ</span></div><button class="add-btn">+</button></div>
-        </div>
-      </div>
-      <!-- P5 -->
-      <div class="pc">
-        <div class="pc-img" style="background:#FFF0F5;">
-          <svg width="80" height="140" viewBox="0 0 80 140"><rect x="22" y="18" width="36" height="90" rx="5" fill="#F9D5E5"/><rect x="22" y="18" width="36" height="20" rx="4" fill="#E88DAE"/><path d="M25 18 Q40 2 55 18" fill="#fff"/><rect x="22" y="96" width="36" height="28" rx="4" fill="#C95E85"/><text x="40" y="115" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6" font-family="Nunito">CHANEL</text></svg>
-          <span class="pc-badge new-b">Mới</span><div class="pc-wish"></div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-brand">Chanel</div>
-          <div class="pc-name">Rouge Allure Velvet Nuit</div>
-          <div><span class="pc-stars">★★★★★</span><span class="pc-rev">(276)</span></div>
-          <div class="swatches"><div class="sw" style="background:#F9D5E5;"></div><div class="sw" style="background:#C95E85;"></div><div class="sw" style="background:#9B3060;"></div><div class="sw" style="background:#3D1F2D;"></div></div>
-          <div class="pc-foot"><div><span class="pc-price">1.450.000đ</span></div><button class="add-btn">+</button></div>
-        </div>
-      </div>
-      <!-- P6 -->
-      <div class="pc">
-        <div class="pc-img" style="background:#FFF4E8;">
-          <svg width="80" height="140" viewBox="0 0 80 140"><rect x="22" y="18" width="36" height="90" rx="5" fill="#F5D9A8"/><rect x="22" y="18" width="36" height="20" rx="4" fill="#C8963E"/><path d="M25 18 Q40 2 55 18" fill="#FFF0D8"/><rect x="22" y="96" width="36" height="28" rx="4" fill="#633806"/><text x="40" y="115" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="6" font-family="Nunito">CT</text></svg>
-          <span class="pc-badge sale-b">-15%</span><div class="pc-wish">🤍</div>
-        </div>
-        <div class="pc-body">
-          <div class="pc-brand">Charlotte Tilbury</div>
-          <div class="pc-name">Matte Revolution Lipstick</div>
-          <div><span class="pc-stars">★★★★★</span><span class="pc-rev">(523)</span></div>
-          <div class="swatches"><div class="sw" style="background:#D2855A;"></div><div class="sw" style="background:#C8963E;"></div><div class="sw" style="background:#E24B4A;"></div></div>
-          <div class="pc-foot"><div><span class="pc-price">850.000đ</span><span class="pc-old">1.000.000đ</span></div><button class="add-btn">+</button></div>
-        </div>
+      
+      <!-- Thông báo nếu không có sản phẩm -->
+      <div class="no-results" *ngIf="products.length === 0">
+        <i class="bi bi-search"></i>
+        <p>Không tìm thấy sản phẩm nào trong danh mục này.</p>
       </div>
     </div>
+
+    <ng-template #loadingItems>
+      <div class="loading-wrap">
+        <div class="spinner-border text-pink"></div>
+        <p>Đang tải sản phẩm...</p>
+      </div>
+    </ng-template>
 
     <!-- PAGINATION -->
     <div class="pag">

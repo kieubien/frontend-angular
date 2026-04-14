@@ -83,19 +83,19 @@
             <tbody>
               <tr *ngFor="let o of filteredOrders()">
                 <td>#{{o.id}}</td>
-                <td>{{o.customer}}</td>
-                <td>{{o.total}}</td>
-                <td>{{o.payment}}</td>
+                <td>{{o.customer_name || 'Khách vãng lai'}}</td>
+                <td class="fw-bold">{{o.total_price | number}}đ</td>
+                <td>{{o.payment_method}}</td>
                 <td>
                   <span class="badge"
                     [ngClass]="getStatusClass(o.status)">
-                    {{o.status}}
+                    {{getStatusLabel(o.status)}}
                   </span>
                 </td>
                 <td>
                   <button class="btn btn-sm btn-outline-primary"
                           (click)="selectOrder(o)">
-                    Xem
+                    Chi tiết
                   </button>
                 </td>
               </tr>
@@ -106,26 +106,57 @@
       </div>
 
       <!-- Detail -->
-      <div class="card mt-3" *ngIf="selectedOrder">
-        <div class="card-header fw-bold">
+      <div class="card mt-3 shadow-sm border-0" *ngIf="selectedOrder">
+        <div class="card-header bg-white fw-bold py-3 shadow-sm">
           Chi tiết đơn hàng #{{selectedOrder.id}}
         </div>
 
         <div class="card-body">
-          <p><strong>Khách:</strong> {{selectedOrder.customer}}</p>
-          <p><strong>Tổng:</strong> {{selectedOrder.total}}</p>
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Khách hàng:</strong> {{selectedOrder.customer_name || 'N/A'}}</p>
+              <p><strong>Điện thoại:</strong> {{selectedOrder.phone || 'N/A'}}</p>
+              <p><strong>Địa chỉ:</strong> {{selectedOrder.shipping_address || 'N/A'}}</p>
+              <p><strong>Tổng tiền:</strong> <span class="text-pink fw-bold fs-5">{{selectedOrder.total_price | number}}đ</span></p>
+            </div>
+            <div class="col-md-6 border-start">
+              <p><strong>Phương thức:</strong> {{selectedOrder.payment_method}}</p>
+              <p><strong>Trạng thái hiện tại:</strong> <span [ngClass]="getStatusClass(selectedOrder.status)" class="badge">{{getStatusLabel(selectedOrder.status)}}</span></p>
+              
+              <div class="mt-4">
+                <label class="form-label small fw-bold">Cập nhật trạng thái:</label>
+                <div class="d-flex gap-2">
+                  <select class="form-select form-select-sm w-auto" [(ngModel)]="selectedOrder.status">
+                    <option *ngFor="let s of statusList.slice(1)" [value]="s.key">{{s.label}}</option>
+                  </select>
+                  <button class="btn btn-pink btn-sm px-4" (click)="updateStatus()">Xác nhận</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <select class="form-select w-auto"
-                  [(ngModel)]="selectedOrder.status">
-            <option value="pending">Chờ xử lý</option>
-            <option value="shipping">Đang giao</option>
-            <option value="done">Hoàn thành</option>
-            <option value="cancelled">Huỷ</option>
-          </select>
-
-          <button class="btn btn-pink mt-2" (click)="updateStatus()">
-            Cập nhật
-          </button>
+          <!-- Order Items -->
+          <div class="mt-4" *ngIf="selectedOrder.OrderItems">
+              <h6 class="fw-bold mb-3 border-bottom pb-2">Sản phẩm đã đặt:</h6>
+              <table class="table table-sm table-borderless">
+                  <thead>
+                      <tr class="text-muted small">
+                          <th>Sản phẩm</th>
+                          <th class="text-center">SL</th>
+                          <th class="text-end">Đơn giá</th>
+                          <th class="text-end">Tiền</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let item of selectedOrder.OrderItems">
+                          <td>{{item.Product?.name || 'Sản phẩm đã xoá'}}</td>
+                          <td class="text-center">x{{item.quantity}}</td>
+                          <td class="text-end">{{item.price | number}}đ</td>
+                          <td class="text-end fw-bold">{{item.price * item.quantity | number}}đ</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
         </div>
       </div>
 
