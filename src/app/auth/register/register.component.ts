@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../../shared/components/navbar/navbar';
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -21,14 +23,18 @@ export class RegisterComponent {
   strengthColor = '';
   strengthLabel = '';
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router,
+    private http: HttpClient
+  ) {
     this.registerForm = this.fb.group({
-      firstName:  ['', Validators.required],
-      lastName:   ['', Validators.required],
+      firstName:  ['', [Validators.required]],
+      lastName:   ['', [Validators.required]],
       email:      ['', [Validators.required, Validators.email]],
-      phone:      ['', Validators.required],
+      phone:      ['', [Validators.required]],
       password:   ['', [Validators.required, Validators.minLength(8)]],
-      agree:      [false, Validators.requiredTrue],
+      agree:      [false, [Validators.requiredTrue]],
       newsletter: [true]
     });
   }
@@ -65,13 +71,25 @@ export class RegisterComponent {
       return;
     }
 
-    const { firstName, lastName, email } = this.registerForm.value;
-    localStorage.setItem('bb_user', JSON.stringify({
-      name:  `${firstName} ${lastName}`,
-      role:  'user',
-      email
-    }));
+    const { firstName, lastName, email, phone, password, newsletter } = this.registerForm.value;
+    
+    const body = {
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      phone: phone,
+      password: password,
+      newsletter: newsletter ? 1 : 0
+    };
 
-    this.router.navigate(['/home']);
+    this.http.post<any>('http://localhost:3000/users/register', body).subscribe({
+      next: (res) => {
+        alert('Đăng ký thành công! Mời bạn đăng nhập.');
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Đăng ký thất bại. Vui lòng thử lại.';
+      }
+    });
   }
 }
