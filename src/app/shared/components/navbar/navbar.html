@@ -11,10 +11,10 @@
     </ul>
 
     <div class="navbar__actions">
-        <button class="navbar__icon-btn" title="Tìm kiếm">🔍</button>
-        <button class="navbar__icon-btn" routerLink="/login" title="Tài khoản">👤</button>
+        <button class="navbar__icon-btn" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+        <button class="navbar__icon-btn" routerLink="/login" title="Tài khoản"><i class="bi bi-person"></i></button>
         <button class="navbar__icon-btn" routerLink="/cart" title="Giỏ hàng" style="position:relative">
-            🛒
+            <i class="bi bi-bag"></i>
             <span class="navbar__badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
         </button>
         <button class="btn-register" routerLink="/register">Đăng ký</button>
