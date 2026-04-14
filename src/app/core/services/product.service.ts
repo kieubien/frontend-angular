@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -8,12 +8,21 @@ import { map } from 'rxjs/operators';
 })
 export class ProductService {
   private apiUrl = 'http://localhost:3000/products';
+  private cache = new Map<string, any[]>();
 
   constructor(private http: HttpClient) {}
 
   getProducts(params?: any): Observable<any[]> {
+    const cacheKey = JSON.stringify(params || {});
+    if (this.cache.has(cacheKey)) {
+      return of(this.cache.get(cacheKey)!);
+    }
+
     return this.http.get<{data: any[]}>(`${this.apiUrl}/list`, { params }).pipe(
-      map(res => res.data)
+      map(res => {
+        this.cache.set(cacheKey, res.data);
+        return res.data;
+      })
     );
   }
 

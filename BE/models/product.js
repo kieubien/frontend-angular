@@ -59,7 +59,7 @@ const Product = sequelize.define('Product', {
         defaultValue: 'active'
     },
     image: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT('long'),
         allowNull: true
     },
     category_id: {

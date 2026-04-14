@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const cors = require("cors");
 const b = require('buffer');
 b.SlowBuffer = Buffer;
@@ -9,6 +10,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+app.use(compression());
 app.use(express.json());
 
 app.use(cors({

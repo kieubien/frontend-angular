@@ -3,19 +3,27 @@
 
     <ul class="navbar__links" *ngIf="categories$ | async as allCats">
         <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Trang chủ</a></li>
+        <li><a routerLink="/products" routerLinkActive="active">Sản phẩm</a></li>
         
-        <li *ngFor="let cat of getRootCategories(allCats)" class="navbar__item">
-            <a [routerLink]="['/products']" [queryParams]="{category: cat.slug}" routerLinkActive="active">
-                {{ cat.name }}
-                <i class="bi bi-chevron-down ms-1" *ngIf="getChildren(allCats, cat.id).length > 0"></i>
+        <li class="navbar__item">
+            <a href="javascript:void(0)">
+                Danh mục <i class="bi bi-chevron-down ms-1"></i>
             </a>
 
-            <!-- Submenu if children exist -->
-            <ul class="navbar__submenu" *ngIf="getChildren(allCats, cat.id).length > 0">
-                <li *ngFor="let sub of getChildren(allCats, cat.id)">
-                    <a [routerLink]="['/products']" [queryParams]="{category: sub.slug}">
-                        {{ sub.name }}
+            <!-- Dropdown for Categories -->
+            <ul class="navbar__submenu">
+                <li *ngFor="let cat of getRootCategories(allCats)" class="navbar__subitem">
+                    <a [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
+                        {{ cat.name }}
+                        <i class="bi bi-chevron-right float-end mt-1" *ngIf="getChildren(allCats, cat.id).length > 0"></i>
                     </a>
+
+                    <!-- Third level if needed -->
+                    <ul class="navbar__nested-menu" *ngIf="getChildren(allCats, cat.id).length > 0">
+                        <li *ngFor="let sub of getChildren(allCats, cat.id)">
+                            <a [routerLink]="['/products']" [queryParams]="{category: sub.slug}">{{ sub.name }}</a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </li>
