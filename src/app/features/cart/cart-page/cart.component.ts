@@ -4,14 +4,14 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../../core/services/cart.service';
 import { CartItem } from '../../../shared/models/cart.model';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class CartComponent implements OnInit, OnDestroy {
 
@@ -95,4 +95,4 @@ export class CartComponent implements OnInit, OnDestroy {
   formatPrice(price: number) {
     return price.toLocaleString('vi-VN') + 'đ';
   }
-}
+}

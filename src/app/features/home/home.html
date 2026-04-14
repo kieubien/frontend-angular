@@ -82,9 +82,10 @@
     </div>
 
     <div class="product-grid" *ngIf="!isLoading">
-        <div class="product-card" *ngFor="let p of featuredProducts">
+        <div class="product-card" *ngFor="let p of featuredProducts" [routerLink]="['/products', p.id]">
             <div class="product-card__img-wrap">
-                <div class="product-card__placeholder"><i class="bi" [ngClass]="p.icon"></i></div>
+                <img *ngIf="p.image" [src]="p.image" [alt]="p.name" class="product-card__img">
+                <div *ngIf="!p.image" class="product-card__placeholder"><i class="bi bi-image"></i></div>
                 <span class="product-card__badge badge-sale" *ngIf="p.badge==='sale'">-{{ getDiscount(p) }}%</span>
                 <span class="product-card__badge badge-new" *ngIf="p.badge==='new'">Mới</span>
                 <span class="product-card__badge badge-hot" *ngIf="p.badge==='hot'">Hot</span>
@@ -98,15 +99,16 @@
                         <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
                             class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     </span>
-                    <span class="review-count">({{ p.reviewCount }})</span>
+                    <span class="review-count">({{ p.review_count || p.reviewCount || 0 }})</span>
                 </div>
-                <div class="product-card__colors">
+                <!-- Màu sắc (Ẩn nếu không có dữ liệu thực) -->
+                <div class="product-card__colors" *ngIf="p.colors && p.colors.length > 0">
                     <span class="color-dot" *ngFor="let c of p.colors.slice(0,4)" [style.background]="c.hex"></span>
                 </div>
                 <div class="product-card__footer">
                     <div>
                         <span class="price-current">{{ p.price | number }}đ</span>
-                        <span class="price-old" *ngIf="p.originalPrice">{{ p.originalPrice | number }}đ</span>
+                        <span class="price-old" *ngIf="p.original_price || p.originalPrice">{{ (p.original_price || p.originalPrice) | number }}đ</span>
                     </div>
                     <button class="add-btn" (click)="addToCart(p, $event)"><i class="bi bi-plus"></i></button>
                 </div>
@@ -150,4 +152,3 @@
     </div>
     <p class="newsletter__note"><i class="bi bi-shield-check"></i> Không spam. Huỷ đăng ký bất kỳ lúc nào.</p>
 </div>
-

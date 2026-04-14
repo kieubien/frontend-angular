@@ -9,4 +9,8 @@ export interface CartItem {
   color?: string;
   colorHex?: string;
   size?: string;
+  emoji?: string;
+  brand?: string;
+  colorHex?: string;
+  originalPrice?: number;
 }

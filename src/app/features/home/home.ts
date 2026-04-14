@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../core/services/product.service';
 import { CategoryService } from '../../core/services/category.service';
 import { CartService } from '../../core/services/cart.service';
+import { Category } from '../../core/models/category.model';
 
 @Component({
   selector: 'app-home',
@@ -14,30 +15,31 @@ import { CartService } from '../../core/services/cart.service';
   styleUrl: './home.scss'
 })
 export class HomeComponent implements OnInit {
-  categories: any[] = [];
+  categories: Category[] = [];
   featuredProducts: any[] = [];
+  products: any[] = [];
   isLoading = true;
-  activeTab = 'all';
+  activeTab = 'featured';
   email = '';
 
   tabs = [
-    { key: 'all', label: 'Tất cả' },
-    { key: 'lipstick', label: 'Son môi' },
-    { key: 'skincare', label: 'Chăm sóc da' },
-    { key: 'perfume', label: 'Nước hoa' }
+    { key: 'featured', label: 'Bán chạy' },
+    { key: 'newest', label: 'Mới nhất' },
+    { key: 'sale', label: 'Khuyến mãi' }
   ];
 
   marqueeItems = [
     'Miễn phí vận chuyển đơn từ 299K',
     'Hoàn tiền 100% nếu phát hiện hàng giả',
     'Tư vấn miễn phí 24/7',
-    'Đổi trả trong 30 ngày'
+    'Đổi trả trong 30 ngày',
+    'MAC Cosmetics', 'Dior Beauty', 'YSL Beauty'
   ];
 
   stats = [
     { num: '500+', label: 'Sản phẩm' },
     { num: '20K+', label: 'Khách hàng' },
-    { num: '15+', label: 'Thương hiệu' }
+    { num: '50+', label: 'Thương hiệu' }
   ];
 
   discounts = [
@@ -48,7 +50,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
-    private cartService: CartService
+    private cartService: CartService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -61,26 +64,51 @@ export class HomeComponent implements OnInit {
       this.categories = res;
     });
 
-    this.productService.getProducts({ limit: 8 }).subscribe(res => {
-      this.featuredProducts = res;
-      this.isLoading = false;
+    this.productService.getProducts().subscribe({
+      next: (prods) => {
+        this.products = prods || [];
+        this.updateFeaturedProducts();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Lỗi tải sản phẩm:', err);
+        this.isLoading = false;
+        this.products = [];
+      }
     });
+  }
+
+  updateFeaturedProducts(): void {
+    if (!this.products) {
+      this.featuredProducts = [];
+      return;
+    }
+
+    if (this.activeTab === 'newest') {
+      this.featuredProducts = [...this.products]
+        .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+        .slice(0, 8);
+    } 
+    else if (this.activeTab === 'sale') {
+      this.featuredProducts = this.products
+        .filter(p => p.badge === 'sale' || p.original_price)
+        .slice(0, 8);
+    } 
+    else {
+      // Mặc định là Featured/Bán chạy
+      this.featuredProducts = this.products.slice(0, 8);
+    }
   }
 
   setTab(key: string) {
     this.activeTab = key;
-    this.isLoading = true;
-    const filter = key === 'all' ? { limit: 8 } : { category: key, limit: 8 };
-    this.productService.getProducts(filter).subscribe(res => {
-      this.featuredProducts = res;
-      this.isLoading = false;
-    });
+    this.updateFeaturedProducts();
   }
 
   addToCart(product: any, event: Event) {
     event.stopPropagation();
-    this.cartService.addToCart(product);
-    alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
+    this.cartService.addToCart(product, 1);
+    alert(`Đã thêm "${product.name}" vào giỏ hàng! 💖`);
   }
 
   subscribe() {
@@ -91,7 +119,8 @@ export class HomeComponent implements OnInit {
   }
 
   getDiscount(p: any): number {
-    if (!p.originalPrice) return 0;
-    return Math.round((1 - p.price / p.originalPrice) * 100);
+    const original = p.original_price || p.originalPrice;
+    if (!original) return 0;
+    return Math.round((1 - p.price / original) * 100);
   }
 }
