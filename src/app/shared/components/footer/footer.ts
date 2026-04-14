@@ -41,7 +41,7 @@ export class FooterComponent {
 
   constructor(private categoryService: CategoryService) {
     this.categoryService.getCategories().subscribe(cats => {
-      this.categories = cats.filter(c => !c.parentId).slice(0, 5);
+      this.categories = cats.filter(c => !(c.parent_id || c.parentId)).slice(0, 5);
     });
   }
 }

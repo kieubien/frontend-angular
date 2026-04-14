@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -45,20 +46,24 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
+    canActivate: [adminGuard],
     loadComponent: () => import('./admin/dashboard/dashboard').then((m) => m.Dashboard),
   },
   {
     path: 'order-management',
+    canActivate: [adminGuard],
     loadComponent: () =>
       import('./admin/order-management/order-management').then((m) => m.OrderManagement),
   },
   {
     path: 'product-management',
+    canActivate: [adminGuard],
     loadComponent: () =>
       import('./admin/product-management/product-management').then((m) => m.ProductManagement),
   },
   {
     path: 'category-management',
+    canActivate: [adminGuard],
     loadComponent: () =>
       import('./admin/category-management/category-management').then((m) => m.CategoryManagement),
   },

@@ -25,6 +25,11 @@ export class CategoryManagement implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.categories$ = this.categoryService.getCategories();
     this.categories$.subscribe(cats => {
       this.allCategories = cats;
     });
@@ -36,7 +41,7 @@ export class CategoryManagement implements OnInit {
   }
 
   openModal() {
-    this.form = { name: '', slug: '', icon: 'bi-bookmark' };
+    this.form = { name: '', slug: '', icon: 'bi-bookmark', parent_id: null };
     this.editing = false;
     this.showModal = true;
   }
@@ -49,16 +54,30 @@ export class CategoryManagement implements OnInit {
 
   saveCategory() {
     if (this.editing) {
-      this.categoryService.updateCategory(this.form);
+      this.categoryService.updateCategory(this.form).subscribe({
+        next: () => {
+          this.loadCategories();
+          this.closeModal();
+        },
+        error: (err) => alert('Lỗi: ' + JSON.stringify(err))
+      });
     } else {
-      this.categoryService.addCategory(this.form);
+      this.categoryService.addCategory(this.form).subscribe({
+        next: () => {
+          this.loadCategories();
+          this.closeModal();
+        },
+        error: (err) => alert('Lỗi: ' + JSON.stringify(err))
+      });
     }
-    this.closeModal();
   }
 
   deleteCategory(id: number) {
     if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-      this.categoryService.deleteCategory(id);
+      this.categoryService.deleteCategory(id).subscribe({
+        next: () => this.loadCategories(),
+        error: (err) => alert('Lỗi: ' + JSON.stringify(err))
+      });
     }
   }
 

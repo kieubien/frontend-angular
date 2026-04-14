@@ -29,7 +29,10 @@ export class ProductListComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       const slug = params['category'];
       if (slug) {
-        this.selectedCategory = this.categoryService.getCategoryBySlug(slug);
+        this.categoryService.getCategoryBySlug(slug).subscribe({
+          next: (cat) => this.selectedCategory = cat,
+          error: () => this.selectedCategory = undefined
+        });
       } else {
         this.selectedCategory = undefined;
       }

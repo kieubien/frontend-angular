@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../../shared/components/navbar/navbar';
 import { FooterComponent } from '../../shared/components/footer/footer';
 @Component({
@@ -21,7 +22,7 @@ export class LoginComponent {
     { email: 'lananh@email.com',    password: 'user123',  name: 'Nguyễn Lan Anh', role: 'user' }
   ];
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private http: HttpClient) {
     this.loginForm = this.fb.group({
       email:    ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -39,23 +40,30 @@ export class LoginComponent {
     }
 
     const { email, password } = this.loginForm.value;
-    const user = this.mockUsers.find(u => u.email === email && u.password === password);
 
-    if (!user) {
-      this.errorMessage = 'Email hoặc mật khẩu không đúng.';
-      return;
-    }
+    this.http.post<any>('http://localhost:3000/users/login', { email, password }).subscribe({
+      next: (res) => {
+        const token = res.token;
+        // Tách Payload từ JWT ra để lấy role, email, name
+        const payloadStr = atob(token.split('.')[1]);
+        const payload = JSON.parse(payloadStr);
 
-    localStorage.setItem('bb_user', JSON.stringify({
-      name:  user.name,
-      role:  user.role,
-      email: user.email
-    }));
+        localStorage.setItem('bb_token', token);
+        localStorage.setItem('bb_user', JSON.stringify({
+          name: `${payload.first_name || ''} ${payload.last_name || ''}`.trim(),
+          role: payload.role === 1 || payload.role === 'admin' ? 'admin' : 'user',
+          email: payload.email
+        }));
 
-    if (user.role === 'admin') {
-      this.router.navigate(['/admin/dashboard']);
-    } else {
-      this.router.navigate(['/home']);
-    }
+        if (payload.role === 1 || payload.role === 'admin') {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/']);
+        }
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Email hoặc mật khẩu không đúng.';
+      }
+    });
   }
 }

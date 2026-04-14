@@ -2,8 +2,10 @@ export interface Category {
   id: number;
   name: string;
   slug: string;
-  parentId?: number;
+  parent_id?: number;
+  parentId?: number; // Giữ lại để tránh break code cũ nếu có
   icon?: string;
   description?: string;
-  productCount?: number;
+  product_count?: number;
+  productCount?: number; // Giữ lại để tránh break code cũ nếu có
 }

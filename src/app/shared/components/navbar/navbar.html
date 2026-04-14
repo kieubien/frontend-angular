@@ -23,11 +23,31 @@
 
     <div class="navbar__actions">
         <button class="navbar__icon-btn" title="Tìm kiếm"><i class="bi bi-search"></i></button>
-        <button class="navbar__icon-btn" routerLink="/login" title="Tài khoản"><i class="bi bi-person"></i></button>
+        
+        <!-- Nếu là Admin thì hiện nút Quản trị -->
+        <button class="navbar__icon-btn text-primary" *ngIf="isLoggedIn && userRole === 'admin'" 
+                routerLink="/dashboard" title="Trang quản trị">
+            <i class="bi bi-shield-lock-fill"></i>
+            <span class="ms-1 d-none d-md-inline" style="font-size: 14px;">Quản trị</span>
+        </button>
+
+        <!-- Nút tài khoản / Giỏ hàng -->
+        <button class="navbar__icon-btn" routerLink="/login" title="Tài khoản" *ngIf="!isLoggedIn">
+            <i class="bi bi-person"></i>
+        </button>
+
+        <ng-container *ngIf="isLoggedIn">
+            <span class="navbar__user-name d-none d-lg-inline me-2">{{ userName }}</span>
+            <button class="navbar__icon-btn" (click)="logout()" title="Đăng xuất">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </ng-container>
+
         <button class="navbar__icon-btn" routerLink="/cart" title="Giỏ hàng" style="position:relative">
             <i class="bi bi-bag"></i>
             <span class="navbar__badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
         </button>
-        <button class="btn-register" routerLink="/register">Đăng ký</button>
+
+        <button class="btn-register" routerLink="/register" *ngIf="!isLoggedIn">Đăng ký</button>
     </div>
 </nav>
