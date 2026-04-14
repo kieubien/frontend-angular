@@ -12,17 +12,9 @@
             <a class="btn-outline" routerLink="/products"><i class="bi bi-collection"></i> Xem bộ sưu tập</a>
         </div>
         <div class="hero__stats">
-            <div>
-                <span class="hero__stat-num">500+</span>
-                <span class="hero__stat-label">Sản phẩm</span>
-            </div>
-            <div>
-                <span class="hero__stat-num">50+</span>
-                <span class="hero__stat-label">Thương hiệu</span>
-            </div>
-            <div>
-                <span class="hero__stat-num">20K+</span>
-                <span class="hero__stat-label">Khách hàng</span>
+            <div *ngFor="let s of stats">
+                <span class="hero__stat-num">{{ s.num }}</span>
+                <span class="hero__stat-label">{{ s.label }}</span>
             </div>
         </div>
     </div>
@@ -41,15 +33,9 @@
 <!-- MARQUEE -->
 <div class="marquee">
     <div class="marquee__inner">
-        <span class="marquee__item">Miễn phí ship đơn từ 299K<i class="bi bi-flower2 marquee__dot"></i></span>
-        <span class="marquee__item">MAC Cosmetics<i class="bi bi-flower2 marquee__dot"></i></span>
-        <span class="marquee__item">Charlotte Tilbury<i class="bi bi-flower2 marquee__dot"></i></span>
-        <span class="marquee__item">NARS<i class="bi bi-flower2 marquee__dot"></i></span>
-        <span class="marquee__item">Dior Beauty<i class="bi bi-flower2 marquee__dot"></i></span>
-        <span class="marquee__item">YSL Beauty<i class="bi bi-flower2 marquee__dot"></i></span>
-        <span class="marquee__item">Đổi trả 30 ngày<i class="bi bi-flower2 marquee__dot"></i></span>
-        <span class="marquee__item">100% Chính hãng<i class="bi bi-flower2 marquee__dot"></i></span>
-        <!-- Repeat for smooth loop if needed, but marquee usually handles it -->
+        <span *ngFor="let item of marqueeItems" class="marquee__item">
+            {{ item }}<i class="bi bi-flower2 marquee__dot"></i>
+        </span>
     </div>
 </div>
 
@@ -68,25 +54,9 @@
     </div>
 
     <div class="cat-grid">
-        <div class="cat-card">
-            <div class="cat-card__name">Son môi</div>
-            <div class="cat-card__count">128 sản phẩm</div>
-        </div>
-        <div class="cat-card">
-            <div class="cat-card__name">Má hồng</div>
-            <div class="cat-card__count">64 sản phẩm</div>
-        </div>
-        <div class="cat-card">
-            <div class="cat-card__name">Mắt & Kẻ mắt</div>
-            <div class="cat-card__count">96 sản phẩm</div>
-        </div>
-        <div class="cat-card">
-            <div class="cat-card__name">Dưỡng da</div>
-            <div class="cat-card__count">85 sản phẩm</div>
-        </div>
-        <div class="cat-card">
-            <div class="cat-card__name">Gift Set</div>
-            <div class="cat-card__count">32 sản phẩm</div>
+        <div class="cat-card" *ngFor="let cat of categories" (click)="goToProducts()">
+            <div class="cat-card__name">{{ cat.name }}</div>
+            <div class="cat-card__count">{{ cat.count }} sản phẩm</div>
         </div>
     </div>
 </section>
@@ -102,130 +72,43 @@
     </div>
 
     <div class="tabs">
-        <button class="tab active">Bán chạy</button>
-        <button class="tab">Mới nhất</button>
-        <button class="tab">Khuyến mãi</button>
+        <button class="tab" *ngFor="let tab of tabs" [class.active]="activeTab === tab.key" (click)="setTab(tab.key)">
+            {{ tab.label }} </button>
     </div>
 
-    <div class="product-grid">
-        <!-- Product 1 -->
-        <div class="product-card">
-            <div class="product-card__img-wrap">
-                <div class="product-card__placeholder"><i class="bi bi-heart-fill"></i></div>
-                <span class="product-card__badge badge-sale">-20%</span>
-                <button class="product-card__wish"><i class="bi bi-heart"></i></button>
-            </div>
-            <div class="product-card__body">
-                <div class="product-card__brand">MAC Cosmetics</div>
-                <div class="product-card__name">Lipstick Matte Ruby Woo</div>
-                <div>
-                    <span class="stars">
-                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
-                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                    </span>
-                    <span class="review-count">(342)</span>
-                </div>
-                <div class="product-card__colors">
-                    <span class="color-dot" style="background: #C95E85"></span>
-                    <span class="color-dot" style="background: #E24B4A"></span>
-                    <span class="color-dot" style="background: #9B3060"></span>
-                </div>
-                <div class="product-card__footer">
-                    <div>
-                        <span class="price-current">480,000đ</span>
-                        <span class="price-old">600,000đ</span>
-                    </div>
-                    <button class="add-btn"><i class="bi bi-plus"></i></button>
-                </div>
-            </div>
-        </div>
+    <div class="loading" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Đang tải...</p>
+    </div>
 
-        <!-- Product 2 -->
-        <div class="product-card">
+    <div class="product-grid" *ngIf="!isLoading">
+        <div class="product-card" *ngFor="let p of featuredProducts">
             <div class="product-card__img-wrap">
-                <div class="product-card__placeholder"><i class="bi bi-star-fill"></i></div>
-                <span class="product-card__badge badge-new">Mới</span>
+                <div class="product-card__placeholder"><i class="bi" [ngClass]="p.icon"></i></div>
+                <span class="product-card__badge badge-sale" *ngIf="p.badge==='sale'">-{{ getDiscount(p) }}%</span>
+                <span class="product-card__badge badge-new" *ngIf="p.badge==='new'">Mới</span>
+                <span class="product-card__badge badge-hot" *ngIf="p.badge==='hot'">Hot</span>
                 <button class="product-card__wish"><i class="bi bi-heart"></i></button>
             </div>
             <div class="product-card__body">
-                <div class="product-card__brand">Dior Beauty</div>
-                <div class="product-card__name">Rouge Dior Satin 999</div>
+                <div class="product-card__brand">{{ p.brand }}</div>
+                <div class="product-card__name">{{ p.name }}</div>
                 <div>
                     <span class="stars">
                         <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
                             class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     </span>
-                    <span class="review-count">(218)</span>
+                    <span class="review-count">({{ p.reviewCount }})</span>
                 </div>
                 <div class="product-card__colors">
-                    <span class="color-dot" style="background: #C8963E"></span>
-                    <span class="color-dot" style="background: #C95E85"></span>
+                    <span class="color-dot" *ngFor="let c of p.colors.slice(0,4)" [style.background]="c.hex"></span>
                 </div>
                 <div class="product-card__footer">
                     <div>
-                        <span class="price-current">1,250,000đ</span>
+                        <span class="price-current">{{ p.price | number }}đ</span>
+                        <span class="price-old" *ngIf="p.originalPrice">{{ p.originalPrice | number }}đ</span>
                     </div>
-                    <button class="add-btn"><i class="bi bi-plus"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="product-card">
-            <div class="product-card__img-wrap">
-                <div class="product-card__placeholder"><i class="bi bi-lightning-fill"></i></div>
-                <button class="product-card__wish"><i class="bi bi-heart"></i></button>
-            </div>
-            <div class="product-card__body">
-                <div class="product-card__brand">NARS Cosmetics</div>
-                <div class="product-card__name">Velvet Matte Lip Pencil</div>
-                <div>
-                    <span class="stars">
-                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
-                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                    </span>
-                    <span class="review-count">(189)</span>
-                </div>
-                <div class="product-card__colors">
-                    <span class="color-dot" style="background: #DEB8F0"></span>
-                    <span class="color-dot" style="background: #D4537E"></span>
-                </div>
-                <div class="product-card__footer">
-                    <div>
-                        <span class="price-current">720,000đ</span>
-                        <span class="price-old">850,000đ</span>
-                    </div>
-                    <button class="add-btn"><i class="bi bi-plus"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product 4 -->
-        <div class="product-card">
-            <div class="product-card__img-wrap">
-                <div class="product-card__placeholder"><i class="bi bi-fire"></i></div>
-                <span class="product-card__badge badge-hot">Hot</span>
-                <button class="product-card__wish"><i class="bi bi-heart"></i></button>
-            </div>
-            <div class="product-card__body">
-                <div class="product-card__brand">YSL Beauty</div>
-                <div class="product-card__name">Rouge Pur Couture Sheer</div>
-                <div>
-                    <span class="stars">
-                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
-                            class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                    </span>
-                    <span class="review-count">(401)</span>
-                </div>
-                <div class="product-card__colors">
-                    <span class="color-dot" style="background: #E88DAE"></span>
-                    <span class="color-dot" style="background: #E24B4A"></span>
-                </div>
-                <div class="product-card__footer">
-                    <div>
-                        <span class="price-current">980,000đ</span>
-                    </div>
-                    <button class="add-btn"><i class="bi bi-plus"></i></button>
+                    <button class="add-btn" (click)="addToCart(p, $event)"><i class="bi bi-plus"></i></button>
                 </div>
             </div>
         </div>
@@ -243,31 +126,29 @@
         </button>
     </div>
     <div class="sale-banner__right">
-        <div class="discount-badge">
-            <span class="discount-badge__num">30%</span>
-            <span class="discount-badge__label">Son môi</span>
-        </div>
-        <div class="discount-badge">
-            <span class="discount-badge__num">50%</span>
-            <span class="discount-badge__label">Mắt</span>
+        <div class="discount-badge" *ngFor="let d of discounts">
+            <span class="discount-badge__num">{{ d.value }}</span>
+            <span class="discount-badge__label">
+                {{ d.label }}
+            </span>
         </div>
     </div>
 </div>
 
 <!-- NEWSLETTER -->
-<div class="newsletter text-center py-5">
+<div class="newsletter">
     <div class="section-label" style="color:rgba(255,255,255,.7)">
         <i class="bi bi-people-fill"></i> Cộng đồng làm đẹp
     </div>
-    <h2 class="newsletter__title text-white">Nhận <em>ưu đãi độc quyền</em></h2>
-    <p class="newsletter__desc text-white-50 mx-auto" style="max-width: 500px;">Đăng ký nhận bản tin để không bỏ lỡ deal hot, sản phẩm mới và mẹo làm đẹp.</p>
-    <div class="newsletter__form mx-auto" style="max-width: 500px;">
-        <input class="newsletter__input" type="email" placeholder="Nhập email của bạn...">
-        <button class="newsletter__btn">
+    <h2 class="newsletter__title">Nhận <em>ưu đãi độc quyền</em></h2>
+    <p class="newsletter__desc">Đăng ký nhận bản tin để không bỏ lỡ deal hot, sản phẩm mới và mẹo làm đẹp.</p>
+    <div class="newsletter__form">
+        <input class="newsletter__input" type="email" placeholder="Nhập email của bạn..." [(ngModel)]="email">
+        <button class="newsletter__btn" (click)="subscribe()">
             <i class="bi bi-send-fill"></i> Đăng ký ngay
         </button>
     </div>
-    <p class="newsletter__note text-white-50 mt-3"><i class="bi bi-shield-check"></i> Không spam. Huỷ đăng ký bất kỳ lúc nào.</p>
+    <p class="newsletter__note"><i class="bi bi-shield-check"></i> Không spam. Huỷ đăng ký bất kỳ lúc nào.</p>
 </div>
 
 <app-footer></app-footer>

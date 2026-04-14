@@ -1,0 +1,54 @@
+.text-pink {
+  color: #d63384;
+}
+
+.btn-pink {
+  background: #d63384;
+  color: #fff;
+
+  &:hover {
+    background: #c2186a;
+    color: #fff;
+  }
+}
+
+.btn-outline-pink {
+  border: 1px solid #d63384;
+  color: #d63384;
+
+  &:hover {
+    background: #d63384;
+    color: #fff;
+  }
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  background: #d63384;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.chart {
+  height: 200px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.chart-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .bar {
+    width: 20px;
+    background: #d63384;
+    border-radius: 4px;
+  }
+}

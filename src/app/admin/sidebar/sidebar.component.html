@@ -1,0 +1,91 @@
+<aside class="admin-sidebar d-flex flex-column">
+  <!-- Brand -->
+  <div class="p-3 border-bottom">
+    <h5 class="mb-0 text-pink fw-bold">
+      Blush<span class="text-dark">&</span>Bloom
+    </h5>
+    <small class="text-muted">Admin Dashboard</small>
+  </div>
+
+  <!-- Profile -->
+  <div class="d-flex align-items-center gap-2 p-3 border-bottom">
+    <div class="avatar">Lương Sơn Bá</div>
+    <div>
+      <div class="fw-semibold">Minh Tiến</div>
+      <small class="text-muted">Super Admin</small>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-grow-1 p-2">
+
+    <div class="nav-section">Tổng quan</div>
+
+    <a class="nav-link"
+       routerLink="/dashboard"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{ exact: true }">
+      <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+
+    <a class="nav-link d-flex justify-content-between align-items-center"
+       routerLink="/order-management"
+       routerLinkActive="active">
+      <span><i class="bi bi-box-seam"></i> Đơn hàng</span>
+      <span class="badge bg-danger">5</span>
+    </a>
+
+    <div class="nav-section">Quản lý</div>
+
+    <a class="nav-link"
+       routerLink="/product-management"
+       routerLinkActive="active">
+      <i class="bi bi-bag"></i> Sản phẩm
+    </a>
+
+    <!-- chưa có route thì disable -->
+    <a class="nav-link disabled" href="javascript:void(0)">
+      <i class="bi bi-grid"></i> Danh mục
+    </a>
+
+    <a class="nav-link disabled" href="javascript:void(0)">
+      <i class="bi bi-tag"></i> Thương hiệu
+    </a>
+
+    <a class="nav-link disabled" href="javascript:void(0)">
+      <i class="bi bi-ticket"></i> Mã giảm giá
+    </a>
+
+    <a class="nav-link disabled" href="javascript:void(0)">
+      <i class="bi bi-people"></i> Khách hàng
+    </a>
+
+    <div class="nav-section">Nội dung</div>
+
+    <a class="nav-link disabled" href="javascript:void(0)">
+      <i class="bi bi-star"></i> Đánh giá
+    </a>
+
+    <a class="nav-link disabled" href="javascript:void(0)">
+      <i class="bi bi-image"></i> Banner
+    </a>
+
+    <div class="nav-section">Hệ thống</div>
+
+    <a class="nav-link disabled" href="javascript:void(0)">
+      <i class="bi bi-bar-chart"></i> Báo cáo
+    </a>
+
+    <a class="nav-link disabled" href="javascript:void(0)">
+      <i class="bi bi-gear"></i> Cài đặt
+    </a>
+
+  </nav>
+
+  <!-- Logout -->
+  <div class="p-3 border-top">
+    <button class="btn btn-outline-danger w-100">
+      <i class="bi bi-box-arrow-right"></i> Đăng xuất
+    </button>
+  </div>
+</aside>

@@ -1,0 +1,134 @@
+<div class="d-flex">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main -->
+  <div class="flex-grow-1 bg-light min-vh-100">
+
+    <!-- Topbar -->
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-white">
+      <div>
+        <h5 class="fw-bold mb-0">Quản lý đơn hàng</h5>
+        <small class="text-muted">Xin chào, Kiều Biên · {{orders.length}} đơn hàng</small>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <input type="text" class="form-control form-control-sm"
+               placeholder="Tìm kiếm..."
+               [(ngModel)]="searchText">
+
+        <button class="btn btn-light">
+          <i class="bi bi-bell"></i>
+        </button>
+
+        <button class="btn btn-pink" (click)="exportExcel()">
+          <i class="bi bi-file-earmark-excel"></i> Xuất Excel
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="p-3">
+
+      <!-- Status -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-2" *ngFor="let s of statusList">
+          <div class="card text-center p-2 cursor"
+               (click)="filterStatus = s.key">
+            <div class="fw-bold text-pink">{{getCountByStatus(s.key)}}</div>
+            <small class="text-muted">{{s.label}}</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="card p-2 mb-3 d-flex flex-row gap-2 flex-wrap">
+
+        <select class="form-select form-select-sm w-auto"
+                [(ngModel)]="filterStatus">
+          <option value="">Tất cả trạng thái</option>
+          <option value="pending">Chờ xử lý</option>
+          <option value="shipping">Đang giao</option>
+          <option value="done">Hoàn thành</option>
+          <option value="cancelled">Đã huỷ</option>
+        </select>
+
+        <select class="form-select form-select-sm w-auto"
+                [(ngModel)]="filterPayment">
+          <option value="">Thanh toán</option>
+          <option value="COD">COD</option>
+          <option value="VISA">VISA</option>
+        </select>
+
+        <button class="btn btn-outline-pink btn-sm" (click)="resetFilters()">
+          Reset
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th>Mã</th>
+                <th>Khách</th>
+                <th>Tổng</th>
+                <th>Thanh toán</th>
+                <th>Trạng thái</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let o of filteredOrders()">
+                <td>#{{o.id}}</td>
+                <td>{{o.customer}}</td>
+                <td>{{o.total}}</td>
+                <td>{{o.payment}}</td>
+                <td>
+                  <span class="badge"
+                    [ngClass]="getStatusClass(o.status)">
+                    {{o.status}}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary"
+                          (click)="selectOrder(o)">
+                    Xem
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+      <!-- Detail -->
+      <div class="card mt-3" *ngIf="selectedOrder">
+        <div class="card-header fw-bold">
+          Chi tiết đơn hàng #{{selectedOrder.id}}
+        </div>
+
+        <div class="card-body">
+          <p><strong>Khách:</strong> {{selectedOrder.customer}}</p>
+          <p><strong>Tổng:</strong> {{selectedOrder.total}}</p>
+
+          <select class="form-select w-auto"
+                  [(ngModel)]="selectedOrder.status">
+            <option value="pending">Chờ xử lý</option>
+            <option value="shipping">Đang giao</option>
+            <option value="done">Hoàn thành</option>
+            <option value="cancelled">Huỷ</option>
+          </select>
+
+          <button class="btn btn-pink mt-2" (click)="updateStatus()">
+            Cập nhật
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

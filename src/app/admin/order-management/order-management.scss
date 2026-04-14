@@ -1,0 +1,26 @@
+.text-pink {
+  color: #d63384;
+}
+
+.btn-pink {
+  background: #d63384;
+  color: #fff;
+
+  &:hover {
+    background: #c2186a;
+  }
+}
+
+.btn-outline-pink {
+  border: 1px solid #d63384;
+  color: #d63384;
+
+  &:hover {
+    background: #d63384;
+    color: #fff;
+  }
+}
+
+.cursor {
+  cursor: pointer;
+}

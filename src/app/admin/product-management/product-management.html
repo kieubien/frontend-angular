@@ -1,0 +1,167 @@
+<div class="d-flex">
+  <app-sidebar></app-sidebar>
+
+  <div class="flex-grow-1 bg-light min-vh-100">
+
+    <!-- Topbar -->
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-white">
+      <div>
+        <h5 class="fw-bold mb-0">Quản lý sản phẩm</h5>
+        <small class="text-muted">Xin chào, Kiều Biên · {{products.length}} sản phẩm</small>
+      </div>
+
+      <div class="d-flex gap-2">
+        <input class="form-control form-control-sm"
+               placeholder="Tìm sản phẩm..."
+               [(ngModel)]="searchText">
+
+        <button class="btn btn-light">
+          <i class="bi bi-bell"></i>
+        </button>
+
+        <button class="btn btn-pink" (click)="openModal()">
+          <i class="bi bi-plus"></i> Thêm sản phẩm
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="p-3">
+
+      <!-- Stats -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-3">
+          <div class="card p-2 text-center">
+            <div class="fw-bold text-pink">{{products.length}}</div>
+            <small>Tổng sản phẩm</small>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card p-2 text-center">
+            <div class="fw-bold text-success">{{getActiveCount()}}</div>
+            <small>Đang bán</small>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card p-2 text-center">
+            <div class="fw-bold text-warning">{{getLowStock()}}</div>
+            <small>Sắp hết</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="card p-2 mb-3 d-flex gap-2 flex-wrap">
+        <select class="form-select form-select-sm w-auto"
+                [(ngModel)]="filterCategory">
+          <option value="">Danh mục</option>
+          <option>Son môi</option>
+          <option>Phấn má</option>
+        </select>
+
+        <select class="form-select form-select-sm w-auto"
+                [(ngModel)]="filterStatus">
+          <option value="">Trạng thái</option>
+          <option value="active">Đang bán</option>
+          <option value="hidden">Ẩn</option>
+        </select>
+
+        <button class="btn btn-outline-pink btn-sm" (click)="resetFilters()">
+          Reset
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tên</th>
+                <th>Danh mục</th>
+                <th>Giá</th>
+                <th>Tồn</th>
+                <th>Trạng thái</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let p of filteredProducts()">
+                <td>{{p.name}}</td>
+                <td>{{p.category}}</td>
+                <td>{{p.price}}</td>
+                <td>{{p.stock}}</td>
+
+                <td>
+                  <span class="badge"
+                    [ngClass]="p.status === 'active' ? 'bg-success' : 'bg-secondary'">
+                    {{p.status}}
+                  </span>
+                </td>
+
+                <td>
+                  <button class="btn btn-sm btn-outline-primary"
+                          (click)="editProduct(p)">
+                    Sửa
+                  </button>
+
+                  <button class="btn btn-sm btn-outline-danger"
+                          (click)="deleteProduct(p)">
+                    Xóa
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade show d-block" *ngIf="showModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title">{{editing ? 'Sửa' : 'Thêm'}} sản phẩm</h5>
+            <button class="btn-close" (click)="closeModal()"></button>
+          </div>
+
+          <div class="modal-body">
+
+            <input class="form-control mb-2"
+                   placeholder="Tên"
+                   [(ngModel)]="form.name">
+
+            <input class="form-control mb-2"
+                   placeholder="Giá"
+                   [(ngModel)]="form.price">
+
+            <input class="form-control mb-2"
+                   placeholder="Tồn kho"
+                   [(ngModel)]="form.stock">
+
+            <select class="form-select"
+                    [(ngModel)]="form.category">
+              <option>Son môi</option>
+              <option>Phấn má</option>
+            </select>
+
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModal()">Hủy</button>
+            <button class="btn btn-pink" (click)="saveProduct()">Lưu</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
