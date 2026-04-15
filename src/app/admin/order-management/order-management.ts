@@ -17,6 +17,7 @@ export class OrderManagement implements OnInit {
   filterPayment = '';
 
   selectedOrder: any = null;
+  selectedStatusTemp: string = '';
   orders: any[] = [];
 
   statusList = [
@@ -61,6 +62,15 @@ export class OrderManagement implements OnInit {
     return this.statusList.find(s => s.key === status)?.label || status;
   }
 
+  getAvailableStatuses(currentStatus: string) {
+    if (currentStatus === 'pending') {
+      return this.statusList.filter(s => ['shipping', 'done', 'cancelled'].includes(s.key));
+    } else if (currentStatus === 'shipping') {
+      return this.statusList.filter(s => ['done', 'cancelled'].includes(s.key));
+    }
+    return [];
+  }
+
   getCountByStatus(status: string) {
     return status
       ? this.orders.filter(o => o.status === status).length
@@ -75,13 +85,15 @@ export class OrderManagement implements OnInit {
 
   selectOrder(order: any) {
     this.selectedOrder = order;
+    this.selectedStatusTemp = order.status;
   }
 
   updateStatus() {
     if (!this.selectedOrder) return;
-    this.orderService.updateStatus(this.selectedOrder.id, this.selectedOrder.status).subscribe({
+    this.orderService.updateStatus(this.selectedOrder.id, this.selectedStatusTemp).subscribe({
       next: () => {
         alert('Cập nhật trạng thái thành công!');
+        this.selectedOrder.status = this.selectedStatusTemp;
         this.loadOrders();
       },
       error: (err) => alert(err.error?.message || 'Có lỗi xảy ra')

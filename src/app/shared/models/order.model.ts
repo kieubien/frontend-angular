@@ -18,5 +18,6 @@ export interface Order {
   phone: string;
   created_at?: string;
   updated_at?: string;
+  items?: OrderItem[];
   OrderItems?: OrderItem[];
 }

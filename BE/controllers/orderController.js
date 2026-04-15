@@ -77,6 +77,18 @@ class OrderController {
             const { status } = req.body;
             const order = await Order.findByPk(req.params.id);
             if (!order) return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+
+            const validTransitions = {
+                'pending': ['shipping', 'done', 'cancelled'],
+                'shipping': ['done', 'cancelled'],
+                'done': [],
+                'cancelled': []
+            };
+
+            if (!validTransitions[order.status] || !validTransitions[order.status].includes(status)) {
+                return res.status(400).json({ message: 'Chuyển đổi trạng thái không hợp lệ!' });
+            }
+
             order.status = status;
             await order.save();
             res.status(200).json({ status: 200, message: 'Cập nhật trạng thái thành công' });

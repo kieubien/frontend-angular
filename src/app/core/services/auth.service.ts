@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { User } from '../models/user.model';
 
 export interface AuthUser {
+  id?: number;
   name: string;
   role: 'admin' | 'user';
   email: string;

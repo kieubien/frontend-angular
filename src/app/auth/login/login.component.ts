@@ -70,6 +70,7 @@ export class LoginComponent {
             : (payload.name || payload.email?.split('@')[0] || 'Người dùng');
 
           const user: AuthUser = {
+            id: payload.id,
             name: displayName,
             role: payload.role === 1 || payload.role === 'admin' ? 'admin' : 'user',
             email: payload.email

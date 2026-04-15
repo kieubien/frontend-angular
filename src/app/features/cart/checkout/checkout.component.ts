@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Order } from '../../../shared/models/order.model';
 import { CartItem } from '../../../shared/models/cart.model';
 
@@ -35,7 +36,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   constructor(
     private cartService: CartService,
     private orderService: OrderService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -90,8 +92,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       payment_method: this.paymentMethod.toUpperCase(),
       total_price: this.total,
       status: 'pending',
-      user_id: null, // Cần bổ sung nếu có login logic
-      OrderItems: this.items.map(i => ({
+      user_id: this.authService.currentUserValue?.id || null,
+      items: this.items.map(i => ({
         product_id: i.id,
         quantity: i.qty,
         price: i.price

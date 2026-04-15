@@ -120,12 +120,20 @@
               
               <div class="mt-4">
                 <label class="form-label small fw-bold">Cập nhật trạng thái:</label>
-                <div class="d-flex gap-2">
-                  <select class="form-select form-select-sm w-auto" [(ngModel)]="selectedOrder.status">
-                    <option *ngFor="let s of statusList.slice(1)" [value]="s.key">{{s.label}}</option>
+                <div class="d-flex gap-2" *ngIf="['pending', 'shipping'].includes(selectedOrder.status); else lockedTemplate">
+                  <select class="form-select form-select-sm w-auto" [(ngModel)]="selectedStatusTemp">
+                    <option *ngFor="let s of getAvailableStatuses(selectedOrder.status)" [value]="s.key">{{s.label}}</option>
                   </select>
                   <button class="btn btn-pink btn-sm px-4" (click)="updateStatus()">Xác nhận</button>
                 </div>
+                <ng-template #lockedTemplate>
+                  <div class="text-success small fw-bold mt-1" *ngIf="selectedOrder.status === 'done'">
+                    <i class="bi bi-check-circle-fill me-1"></i> Đơn hàng đã hoàn thành, không thể thay đổi.
+                  </div>
+                  <div class="text-danger small fw-bold mt-1" *ngIf="selectedOrder.status === 'cancelled'">
+                    <i class="bi bi-x-circle-fill me-1"></i> Đơn hàng đã bị huỷ, không thể thay đổi.
+                  </div>
+                </ng-template>
               </div>
             </div>
           </div>
