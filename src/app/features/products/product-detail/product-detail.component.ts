@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
+import { CartService } from '../../../core/services/cart.service';
 
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card';
 
@@ -21,7 +22,8 @@ export class ProductDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService
   ) { }
 
   ngOnInit(): void {
@@ -73,8 +75,12 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(): void {
-    // To be implemented with CartService
-    console.log('Adding to cart:', this.product.name, 'Qty:', this.quantity);
-    alert(`Đã thêm ${this.quantity} ${this.product.name} vào giỏ hàng!`);
+    if (this.product) {
+      this.cartService.addToCart(this.product, this.quantity);
+      console.log('Added to cart:', this.product.name, 'Qty:', this.quantity);
+      
+      // Hiển thị thông báo thành công (Có thể dùng thư viện Toast, ở đây tạm dùng alert)
+      alert(`Đã thêm ${this.quantity} ${this.product.name} vào giỏ hàng thành công!`);
+    }
   }
 }
