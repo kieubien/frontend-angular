@@ -1,0 +1,25 @@
+<app-navbar></app-navbar>
+<div class="profile-container">
+  <div class="profile-card">
+    <h2>Thông tin tài khoản</h2>
+    <div class="profile-info" *ngIf="user">
+      <div class="info-group">
+        <label>Họ và tên:</label>
+        <p>{{ user.name || (user.firstName + ' ' + user.lastName) }}</p>
+      </div>
+      <div class="info-group">
+        <label>Email:</label>
+        <p>{{ user.email }}</p>
+      </div>
+      <div class="info-group">
+        <label>Điện thoại:</label>
+        <p>{{ user.phone || 'Chưa cập nhật' }}</p>
+      </div>
+      <div class="info-group">
+        <label>Vai trò:</label>
+        <p>{{ user.role === 'admin' ? 'Quản trị viên' : 'Khách hàng' }}</p>
+      </div>
+      <button class="btn-logout" (click)="doLogout()">Đăng xuất</button>
+    </div>
+  </div>
+</div>

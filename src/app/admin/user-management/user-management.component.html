@@ -1,0 +1,52 @@
+<div class="admin-layout">
+  <app-sidebar></app-sidebar>
+  
+  <div class="main-content">
+    <div class="header">
+      <h2>Quản lý Người dùng</h2>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên</th>
+            <th>Email</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name || (user.firstName + ' ' + user.lastName) }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="badge" [ngClass]="user.role === 'admin' ? 'badge-admin' : 'badge-user'">
+                {{ user.role === 'admin' ? 'Admin' : 'Client' }}
+              </span>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="user.status === 'banned' ? 'badge-banned' : 'badge-active'">
+                {{ user.status === 'banned' ? 'Đã khóa' : 'Đang hoạt động' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn btn-role" (click)="toggleRole(user)">
+                Đổi Quyển
+              </button>
+              <button class="btn" [ngClass]="user.status === 'banned' ? 'btn-unlock' : 'btn-lock'" (click)="toggleStatus(user)">
+                {{ user.status === 'banned' ? 'Mở Khóa' : 'Khóa' }}
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="users.length === 0">
+            <td colspan="6" style="text-align: center;">Chưa có dữ liệu.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

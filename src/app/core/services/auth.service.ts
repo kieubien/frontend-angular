@@ -1,6 +1,9 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { User } from '../models/user.model';
 
 export interface AuthUser {
   name: string;
@@ -12,10 +15,14 @@ export interface AuthUser {
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = 'http://localhost:3000/users';
   private currentUserSubject: BehaviorSubject<AuthUser | null>;
   public currentUser$: Observable<AuthUser | null>;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: any,
+    private http: HttpClient
+  ) {
     console.log('AuthService: Instantiated');
     let initialUser = null;
     if (isPlatformBrowser(this.platformId)) {
@@ -60,5 +67,19 @@ export class AuthService {
 
   isAdmin(): boolean {
     return this.currentUserValue?.role === 'admin';
+  }
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<{ data: User[] }>(`${this.apiUrl}/list`).pipe(
+      map(res => res.data || [])
+    );
+  }
+
+  updateUserRole(id: string | number, role: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update-role/${id}`, { role });
+  }
+
+  updateUserStatus(id: string | number, status: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update-status/${id}`, { status });
   }
 }
