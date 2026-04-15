@@ -126,7 +126,7 @@
       <span class="af-clear" [routerLink]="['/products']" (click)="searchTerm=''">Xóa tất cả</span>
     </div>
 
-    <div class="prod-grid" *ngIf="products$ | async as products; else loadingItems">
+    <div class="prod-grid" *ngIf="products$ | async as products">
       <div class="pc-col" *ngFor="let p of products; trackBy: trackByProductId">
         <app-product-card [product]="p"></app-product-card>
       </div>
@@ -138,13 +138,6 @@
         <button class="btn btn-outline-primary" [routerLink]="['/products']" (click)="searchTerm=''">Xem tất cả sản phẩm</button>
       </div>
     </div>
-
-    <ng-template #loadingItems>
-      <div class="loading-wrap">
-        <div class="spinner-border text-pink"></div>
-        <p>Đang tải sản phẩm...</p>
-      </div>
-    </ng-template>
 
     <!-- PAGINATION -->
     <div class="pag">

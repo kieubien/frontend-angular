@@ -1,4 +1,5 @@
 const CategoryModel = require('../models/category');
+const ProductModel = require('../models/product');
 
 class CategoryController {
 
@@ -112,11 +113,23 @@ class CategoryController {
                 return res.status(404).json({ message: "Id không tồn tại" });
             }
 
+            // Kiểm tra xem có sản phẩm nào thuộc danh mục này không
+            const productCount = await ProductModel.count({ where: { category_id: id } });
+            if (productCount > 0) {
+                return res.status(400).json({ 
+                    message: `Không thể xóa danh mục này vì vẫn còn ${productCount} sản phẩm bên trong. Vui lòng xóa hoặc di chuyển sản phẩm trước!` 
+                });
+            }
+
             await category.destroy();
 
             res.status(200).json({ message: "Xóa thành công" });
         } catch (error) {
             console.error('Error deleting category:', error);
+            // Catch Foreign Key Constraint error specifically just in case
+            if (error.name === 'SequelizeForeignKeyConstraintError') {
+                return res.status(400).json({ message: "Không thể xóa do ràng buộc dữ liệu với sản phẩm." });
+            }
             const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
             res.status(500).json({ error: message });
         }
