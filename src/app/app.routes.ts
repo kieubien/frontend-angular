@@ -86,6 +86,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./admin/category-management/category-management').then((m) => m.CategoryManagement),
       },
+      {
+        path: 'users', // /admin/users
+        loadComponent: () =>
+          import('./admin/user-management/user-management.component').then((m) => m.UserManagementComponent),
+      },
     ]
   },
 

@@ -73,6 +73,52 @@ class UserController {
             return res.status(500).json({ message: "Lỗi server, vui lòng thử lại!", error: message });
         }
     }
+
+    static async getAllUsers(req, res) {
+        try {
+            const users = await User.findAll({
+                attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'role', 'status', 'created_at']
+            });
+            const formattedUsers = users.map(user => ({
+                id: user.id,
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+                phone: user.phone,
+                role: user.role,
+                status: user.status || 'active',
+                createdAt: user.created_at
+            }));
+            res.status(200).json({ data: formattedUsers });
+        } catch (error) {
+            console.error("Lỗi lấy danh sách user:", error);
+            res.status(500).json({ message: "Lỗi server" });
+        }
+    }
+
+    static async updateRole(req, res) {
+        try {
+            const { id } = req.params;
+            const { role } = req.body;
+            await User.update({ role }, { where: { id } });
+            res.status(200).json({ message: "Cập nhật quyền thành công" });
+        } catch (error) {
+            console.error("Lỗi cập nhật quyền:", error);
+            res.status(500).json({ message: "Lỗi server" });
+        }
+    }
+
+    static async updateStatus(req, res) {
+        try {
+            const { id } = req.params;
+            const { status } = req.body;
+            await User.update({ status }, { where: { id } });
+            res.status(200).json({ message: "Cập nhật trạng thái thành công" });
+        } catch (error) {
+            console.error("Lỗi cập nhật trạng thái:", error);
+            res.status(500).json({ message: "Lỗi server" });
+        }
+    }
 }
 
 module.exports = UserController;
