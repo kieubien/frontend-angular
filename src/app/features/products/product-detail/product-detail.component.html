@@ -1,113 +1,167 @@
-<div class="container my-5" *ngIf="product">
+<div class="product-page" *ngIf="product">
     <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Trang chủ</a></li>
-            <li class="breadcrumb-item"><a routerLink="/products" class="text-decoration-none text-muted">Sản phẩm</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">{{product.name}}</li>
-        </ol>
-    </nav>
-
-    <div class="row g-5">
-        <!-- Ảnh sản phẩm -->
-        <div class="col-md-6">
-            <div class="product-gallery">
-                <div class="main-img-wrap rounded shadow-sm bg-white p-4 text-center border">
-                    <img *ngIf="product.image" [src]="product.image" [alt]="product.name" class="img-fluid main-img"
-                        style="max-height: 400px; object-fit: contain;">
-                    <div *ngIf="!product.image" class="py-5 text-muted">
-                        <i class="bi bi-image display-1"></i>
-                        <p>Không có ảnh sản phẩm</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Thông tin sản phẩm -->
-        <div class="col-md-6">
-            <div class="product-info">
-                <span class="badge bg-danger mb-2" *ngIf="product.badge">{{product.badge | uppercase}}</span>
-                <div class="text-muted small mb-1">{{product.brand}}</div>
-                <h1 class="display-6 fw-bold mb-3">{{product.name}}</h1>
-
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <div class="rating text-warning">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-half"></i>
-                        <span class="text-muted ms-2">({{product.review_count || 0}} đánh giá)</span>
-                    </div>
-                    <div class="divider text-muted">|</div>
-                    <div class="text-success small"><i class="bi bi-check-circle-fill"></i> Còn {{product.stock}} sản
-                        phẩm</div>
-                </div>
-
-                <div class="price-box p-3 bg-light rounded mb-4">
-                    <div class="d-flex align-items-end gap-3">
-                        <span class="fs-2 fw-bold text-danger">{{product.price | number}}đ</span>
-                        <span class="text-decoration-line-through text-muted"
-                            *ngIf="product.original_price">{{product.original_price | number}}đ</span>
-                        <span class="badge bg-danger ms-auto" *ngIf="product.original_price">-{{getDiscount()}}%</span>
-                    </div>
-                </div>
-
-                <div class="desc mb-4">
-                    <h6 class="fw-bold">Mô tả sản phẩm:</h6>
-                    <p class="text-muted" style="white-space: pre-line;">{{product.description || 'Chưa có mô tả cho sản
-                        phẩm này.'}}</p>
-                </div>
-
-                <div class="actions d-flex gap-2">
-                    <div class="quantity-input d-flex align-items-center border rounded px-3 py-2 bg-white"
-                        style="width: 140px;">
-                        <button class="btn btn-link text-dark p-0 text-decoration-none"><i
-                                class="bi bi-dash fs-4"></i></button>
-                        <input type="number" class="form-control border-0 text-center shadow-none" value="1" min="1">
-                        <button class="btn btn-link text-dark p-0 text-decoration-none"><i
-                                class="bi bi-plus fs-4"></i></button>
-                    </div>
-                    <button class="btn btn-primary flex-grow-1 py-3 fw-bold">
-                        <i class="bi bi-cart-plus-fill me-2"></i> THÊM VÀO GIỎ HÀNG
-                    </button>
-                </div>
-
-                <div class="mt-4 pt-4 border-top">
-                    <div class="row g-3">
-                        <div class="col-6 col-md-4">
-                            <div class="d-flex align-items-center gap-2 small text-muted">
-                                <i class="bi bi-truck fs-5 text-primary"></i>
-                                <span>Ship COD toàn quốc</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div class="d-flex align-items-center gap-2 small text-muted">
-                                <i class="bi bi-shield-check fs-5 text-primary"></i>
-                                <span>Chính hãng 100%</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div class="d-flex align-items-center gap-2 small text-muted">
-                                <i class="bi bi-arrow-repeat fs-5 text-primary"></i>
-                                <span>Đổi trả 30 ngày</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="bc">
+        <a routerLink="/">Trang chủ</a> <span>/</span>
+        <a routerLink="/products">Sản phẩm</a> <span>/</span>
+        {{product.name}}
     </div>
+
+    <main class="pd">
+        <!-- LEFT - IMAGES -->
+        <div class="pd-left">
+            <div class="main-img">
+                <div class="img-badge" *ngIf="product.badge">{{product.badge}}</div>
+                <img *ngIf="product.image" [src]="product.image" [alt]="product.name" class="img-fluid">
+                <i *ngIf="!product.image" class="bi bi-image display-1 text-muted"></i>
+            </div>
+            <div class="thumb-row" *ngIf="product.images?.length > 0">
+                <div class="thumb sel">
+                    <img [src]="product.image" class="img-fluid">
+                </div>
+                <div class="thumb" *ngFor="let img of product.images">
+                    <img [src]="img" class="img-fluid">
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT - INFO -->
+        <div class="pd-right">
+            <div class="brand-row">
+                <span class="brand-name">{{product.brand || 'Blush & Bloom'}}</span>
+                <div class="wish-btn">
+                    <i class="bi bi-heart"></i>
+                    <span>Yêu thích</span>
+                </div>
+            </div>
+
+            <h1 class="prod-name">{{product.name}}</h1>
+
+            <div class="rating-row">
+                <div class="stars">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                </div>
+                <span class="rating-num">4.5</span>
+                <span class="review-cnt">({{product.review_count || 42}} đánh giá)</span>
+                <span class="sold-cnt">Đã bán {{product.sold_count || 120}}</span>
+            </div>
+
+            <div class="price-row">
+                <span class="price-main">{{product.price | number}}đ</span>
+                <span class="price-old" *ngIf="product.original_price">{{product.original_price | number}}đ</span>
+                <span class="price-save" *ngIf="product.original_price">Tiết kiệm {{getDiscount()}}%</span>
+            </div>
+
+            <div class="shades" *ngIf="product.colors?.length > 0">
+                <div class="opt-label">Màu sắc: <span>Tự nhiên</span></div>
+                <div class="shades-list">
+                    <div class="shade sel">
+                        <div class="shade-dot" [style.background]="'#E88DAE'"></div>
+                        <span class="shade-lbl">Hồng</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qty-row">
+                <span class="qty-label">Số lượng:</span>
+                <div class="qty-ctrl">
+                    <button class="qty-btn" (click)="updateQuantity(-1)"><i class="bi bi-dash"></i></button>
+                    <span class="qty-val">{{quantity}}</span>
+                    <button class="qty-btn" (click)="updateQuantity(1)"><i class="bi bi-plus"></i></button>
+                </div>
+                <span class="stock-info text-muted small" *ngIf="product.stock">Còn {{product.stock}} sản phẩm</span>
+            </div>
+
+            <div class="action-row">
+                <button class="btn-cart" (click)="addToCart()">
+                    <i class="bi bi-cart-plus me-2"></i> THÊM VÀO GIỎ
+                </button>
+                <button class="btn-buy" (click)="addToCart()">MUA NGAY</button>
+                <div class="btn-share"><i class="bi bi-share"></i></div>
+            </div>
+
+            <div class="perks">
+                <div class="perk">
+                    <i class="bi bi-truck perk-icon"></i>
+                    <span>Freeship từ 500k</span>
+                </div>
+                <div class="perk">
+                    <i class="bi bi-shield-check perk-icon"></i>
+                    <span>Chính hãng 100%</span>
+                </div>
+                <div class="perk">
+                    <i class="bi bi-arrow-repeat perk-icon"></i>
+                    <span>Đổi trả 30 ngày</span>
+                </div>
+                <div class="perk">
+                    <i class="bi bi-gift perk-icon"></i>
+                    <span>Quà tặng đi kèm</span>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab" [class.on]="activeTab === 'desc'" (click)="setTab('desc')">MÔ TẢ</div>
+                <div class="tab" [class.on]="activeTab === 'usage'" (click)="setTab('usage')">HƯỚNG DẪN</div>
+                <div class="tab" [class.on]="activeTab === 'reviews'" (click)="setTab('reviews')">ĐÁNH GIÁ</div>
+            </div>
+
+            <div class="tab-content" [ngSwitch]="activeTab">
+                <div *ngSwitchCase="'desc'">
+                    <p style="white-space: pre-line;">{{product.description || 'Sản phẩm cao cấp từ Blush & Bloom giúp bạn tỏa sáng tự nhiên mỗi ngày.'}}</p>
+                    <div class="desc-tags">
+                        <span class="dtag">Organic</span>
+                        <span class="dtag">Cruelty Free</span>
+                        <span class="dtag">Vegan</span>
+                    </div>
+                </div>
+                <div *ngSwitchCase="'usage'">
+                    <p>1. Làm sạch da trước khi sử dụng.<br>
+                       2. Thoa một lượng vừa đủ lên vùng cần chăm sóc.<br>
+                       3. Massage nhẹ nhàng để dưỡng chất thấm sâu.</p>
+                </div>
+                <div *ngSwitchCase="'reviews'">
+                    <div class="rv-summary">
+                        <div class="rv-big">
+                            <div class="rv-score">4.5</div>
+                            <div class="rv-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
+                            <div class="rv-total">42 đánh giá</div>
+                        </div>
+                        <div class="rv-bars">
+                            <div class="bar-row" *ngFor="let i of [5,4,3,2,1]">
+                                <span class="bar-lbl">{{i}} sao</span>
+                                <div class="bar-track"><div class="bar-fill" [style.width]="(i*15 + 5) + '%'"></div></div>
+                                <span class="bar-cnt">{{i*3}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Related Products -->
+    <section class="related" *ngIf="relatedProducts.length > 0">
+        <h3 class="section-title mb-4">Sản Phẩm <em>Liên Quan</em></h3>
+        <div class="rel-grid">
+            <app-product-card *ngFor="let p of relatedProducts" [product]="p"></app-product-card>
+        </div>
+    </section>
 </div>
 
-
+<!-- Loading indicator -->
+<div class="loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <span>Đang tải thông tin sản phẩm...</span>
+</div>
 
 <!-- Error state -->
 <div class="container my-5 py-5 text-center" *ngIf="!isLoading && !product">
-    <i class="bi bi-exclamation-triangle display-1 text-muted mb-3"></i>
-    <h3>Không tìm thấy sản phẩm</h3>
+    <i class="bi bi-exclamation-triangle display-1 text-muted mb-3" style="color: var(--pink-300) !important;"></i>
+    <h3 style="font-family: var(--font-display);">Không tìm thấy sản phẩm</h3>
     <p class="text-muted">Sản phẩm bạn tìm kiếm không tồn tại hoặc đã bị xoá.</p>
-    <a routerLink="/products" class="btn btn-outline-primary mt-3">Quay lại cửa hàng</a>
+    <a routerLink="/products" class="btn-primary mt-3">Quay lại cửa hàng</a>
 </div>
-
