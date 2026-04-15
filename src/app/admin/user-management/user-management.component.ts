@@ -7,43 +7,49 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [CommonModule, SidebarComponent],
+  imports: [CommonModule],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent implements OnInit {
   users: User[] = [];
+  selectedUser: User | null = null;
+  showDetailModal = false;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
+    console.log('UserManagementComponent: Initializing...');
     this.loadUsers();
   }
 
   loadUsers() {
     this.authService.getUsers().subscribe({
       next: (data) => {
-        this.users = data;
+        console.log('UserManagementComponent: Loaded users:', data);
+        this.users = data || [];
       },
       error: (err) => {
-        console.error('Lỗi khi tải danh sách người dùng', err);
+        console.error('UserManagementComponent: Error loading users:', err);
       }
     });
   }
 
-  toggleRole(user: User) {
-    if (!user.id) return;
-    const newRole = user.role === 'admin' ? 'user' : 'admin';
-    this.authService.updateUserRole(user.id, newRole).subscribe(() => {
-      user.role = newRole;
-    });
+  viewDetail(user: User) {
+    this.selectedUser = user;
+    this.showDetailModal = true;
   }
 
-  toggleStatus(user: User) {
-    if (!user.id) return;
-    const newStatus = user.status === 'active' ? 'banned' : 'active';
-    this.authService.updateUserStatus(user.id, newStatus).subscribe(() => {
-      user.status = newStatus;
-    });
+  closeModal() {
+    this.showDetailModal = false;
+    this.selectedUser = null;
+  }
+
+  getActiveCount(): number {
+    return this.users.filter(u => u.status !== 'banned').length;
+  }
+
+  getBannedCount(): number {
+    return this.users.filter(u => u.status === 'banned').length;
   }
 }

@@ -8,4 +8,5 @@ export interface User {
   password?: string;
   role: 'admin' | 'user';
   status?: 'active' | 'banned';
+  createdAt?: string | Date;
 }

@@ -34,6 +34,11 @@ const User = sequelize.define('User', {
         allowNull: true,
         defaultValue: 'user'
     },
+    status: {
+        type: DataTypes.ENUM('active', 'banned'),
+        allowNull: true,
+        defaultValue: 'active'
+    },
     newsletter: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
