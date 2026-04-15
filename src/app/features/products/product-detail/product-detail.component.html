@@ -1,4 +1,4 @@
-<div class="container my-5" *ngIf="!isLoading && product">
+<div class="container my-5" *ngIf="product">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
@@ -101,11 +101,7 @@
     </div>
 </div>
 
-<!-- Loading state -->
-<div class="container my-5 py-5 text-center" *ngIf="isLoading">
-    <div class="spinner-border text-primary mb-3" role="status"></div>
-    <p class="text-muted">Đang tải thông tin sản phẩm...</p>
-</div>
+
 
 <!-- Error state -->
 <div class="container my-5 py-5 text-center" *ngIf="!isLoading && !product">
