@@ -6,9 +6,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { Category } from '../../../core/models/category.model';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap, catchError } from 'rxjs/operators';
-
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card';
-
 import { FormsModule } from '@angular/forms';
 
 @Component({

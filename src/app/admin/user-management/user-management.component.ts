@@ -36,6 +36,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   viewDetail(user: User) {
+    console.log('UserManagementComponent: Viewing detail for:', user);
     this.selectedUser = user;
     this.showDetailModal = true;
   }

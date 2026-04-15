@@ -74,7 +74,6 @@
                 </button>
               </td>
             </tr>
-
           </tbody>
         </table>
       </div>
@@ -84,12 +83,12 @@
   <!-- Detail Modal -->
   <div class="modal fade show d-block" *ngIf="showDetailModal" style="background: rgba(0,0,0,0.5)">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg">
+      <div class="modal-content border-0 shadow-lg" *ngIf="selectedUser">
         <div class="modal-header bg-light border-0">
           <h5 class="modal-title fw-bold">Thông tin khách hàng</h5>
           <button type="button" class="btn-close" (click)="closeModal()"></button>
         </div>
-        <div class="modal-body p-4 pt-2" *ngIf="selectedUser">
+        <div class="modal-body p-4 pt-2">
           <div class="text-center mb-4">
             <div class="avatar-lg bg-pink-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" 
                  style="width: 80px; height: 80px; background: #ffeef2; color: #db2777; font-size: 28px; font-weight: bold;">
@@ -116,7 +115,7 @@
               <label class="small text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Ngày tham gia hệ thống</label>
               <div class="p-2 bg-light rounded-2 border-0">
                 <i class="bi bi-calendar3 me-2 text-primary"></i>
-                {{ selectedUser.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                {{ selectedUser.createdAt ? (selectedUser.createdAt | date:'dd/MM/yyyy HH:mm') : 'N/A' }}
               </div>
             </div>
           </div>
