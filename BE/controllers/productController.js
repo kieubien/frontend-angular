@@ -1,5 +1,6 @@
 const ProductModel = require('../models/product');
 const CategoryModel = require('../models/category');
+const OrderItemModel = require('../models/orderItem');
 
 class ProductController {
     static async list(req, res) {
@@ -79,6 +80,10 @@ class ProductController {
         try {
             const product = await ProductModel.findByPk(req.params.id);
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
+
+            // Xoá sản phẩm trong các đơn hàng trước (cascade delete thủ công) để tránh lỗi khoá ngoại
+            await OrderItemModel.destroy({ where: { product_id: product.id } });
+
             await product.destroy();
             res.status(200).json({ status: 200, message: 'Xoá thành công' });
         } catch (error) {
