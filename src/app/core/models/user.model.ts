@@ -7,5 +7,5 @@ export interface User {
   phone?: string;
   password?: string;
   role: 'admin' | 'user';
-  status: 'active' | 'banned';
+  status?: 'active' | 'banned';
 }
