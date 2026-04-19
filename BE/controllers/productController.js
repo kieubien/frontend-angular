@@ -48,11 +48,10 @@ class ProductController {
             res.status(500).json({ error: message });
         }
     }
-
     static async create(req, res) {
         try {
-            const { name, brand, slug, price, original_price, stock, status, category_id, description, badge } = req.body;
-            let data = { name, brand, slug, price, original_price, stock, status, category_id, description, badge };
+            const { name, brand, slug, price, price_sale, stock, status, category_id, description, badge } = req.body;
+            let data = { name, brand, slug, price, price_sale, stock, status, category_id, description, badge };
             
             Object.keys(data).forEach(key => {
                 if (data[key] === undefined) {
@@ -62,7 +61,6 @@ class ProductController {
                     data[key] = null;
                 }
             });
-
             if (req.file) {
                 data.image = `http://localhost:3000/uploads/${req.file.filename}`;
             }
@@ -80,8 +78,8 @@ class ProductController {
             const product = await ProductModel.findByPk(req.params.id);
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
             
-            const { name, brand, slug, price, original_price, stock, status, category_id, description, badge } = req.body;
-            let data = { name, brand, slug, price, original_price, stock, status, category_id, description, badge };
+            const { name, brand, slug, price, price_sale, stock, status, category_id, description, badge } = req.body;
+            let data = { name, brand, slug, price, price_sale, stock, status, category_id, description, badge };
             
             Object.keys(data).forEach(key => {
                 if (data[key] === undefined) {

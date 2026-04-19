@@ -38,12 +38,12 @@ const Product = sequelize.define('Product', {
             notNull: { msg: 'Giá sản phẩm không được để trống' }
         }
     },
-    original_price: {
+    price_sale: {
         type: DataTypes.DECIMAL(15, 2),
         allowNull: true,
         validate: {
-            isDecimal: { msg: 'Giá gốc phải là số' },
-            min: { args: [0], msg: 'Giá gốc không được âm' }
+            isDecimal: { msg: 'Giá sale phải là số' },
+            min: { args: [0], msg: 'Giá sale không được âm' }
         }
     },
     stock: {

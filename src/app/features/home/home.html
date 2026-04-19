@@ -100,8 +100,8 @@
                 </div>
                 <div class="product-card__footer">
                     <div>
-                        <span class="price-current">{{ p.price | number }}đ</span>
-                        <span class="price-old" *ngIf="p.original_price || p.originalPrice">{{ (p.original_price || p.originalPrice) | number }}đ</span>
+                        <span class="price-current">{{ (p.price_sale || p.priceSale || p.price) | number }}đ</span>
+                        <span class="price-old" *ngIf="p.price_sale || p.priceSale">{{ p.price | number }}đ</span>
                     </div>
                     <button class="add-btn" *ngIf="p.stock !== 0" (click)="addToCart(p, $event)"><i class="bi bi-plus"></i></button>
                     <button class="add-btn bg-secondary border-secondary text-white" style="opacity:0.5" *ngIf="p.stock === 0" disabled><i class="bi bi-x"></i></button>
