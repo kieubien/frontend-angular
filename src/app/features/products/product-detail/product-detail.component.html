@@ -1,9 +1,4 @@
-<div *ngIf="isLoading" class="container text-center py-5">
-    <div class="spinner-border text-pink" role="status"></div>
-    <p class="text-muted mt-2">Đang tải thông tin sản phẩm...</p>
-</div>
-
-<div class="product-page" *ngIf="!isLoading && product">
+<div class="product-page" *ngIf="product">
     
     <div class="bc">
         <a routerLink="/">Trang chủ</a> <span>/</span>
@@ -155,7 +150,7 @@
     </section>
 </div>
 
-<div class="container my-5 py-5 text-center" *ngIf="!isLoading && !product">
+<div class="container my-5 py-5 text-center" *ngIf="!product">
     <i class="bi bi-exclamation-triangle display-1 text-muted mb-3" style="color: var(--pink-300) !important;"></i>
     <h3 style="font-family: var(--font-display);">Không tìm thấy sản phẩm</h3>
     <p class="text-muted">Sản phẩm bạn tìm kiếm không tồn tại hoặc đã bị xoá.</p>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
@@ -23,7 +23,8 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -44,9 +45,11 @@ export class ProductDetailComponent implements OnInit {
         this.isLoading = false;
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.cdr.detectChanges();
       },
       error: () => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -55,6 +58,7 @@ export class ProductDetailComponent implements OnInit {
 
     this.productService.getProducts({ limit: 4 }).subscribe(products => {
       this.relatedProducts = products.filter(p => p.id !== this.product.id).slice(0, 4);
+      this.cdr.detectChanges();
     });
   }
 

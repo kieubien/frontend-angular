@@ -24,6 +24,20 @@
     padding: 10px;
     border-radius: 20px;
     border: 1px solid var(--pink-200);
+    outline: none;
+    transition: border-color 0.2s;
+
+    &.is-invalid {
+        border-color: #ef4444;
+        background-color: #fef2f2;
+    }
+}
+
+.error-text {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-left: 12px;
 }
 
 .row-2 {

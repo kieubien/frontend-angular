@@ -16,10 +16,6 @@ const Category = connection.define('Category', {
         allowNull: false,
         unique: true
     },
-    parent_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
     icon: {
         type: DataTypes.STRING,
         allowNull: true

@@ -11,17 +11,10 @@
             </a>
 
             <ul class="navbar__submenu">
-                <li *ngFor="let cat of getRootCategories(allCats)" class="navbar__subitem">
+                <li *ngFor="let cat of allCats" class="navbar__subitem">
                     <a [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
                         {{ cat.name }}
-                        <i class="bi bi-chevron-right float-end mt-1" *ngIf="getChildren(allCats, cat.id).length > 0"></i>
                     </a>
-
-                    <ul class="navbar__nested-menu" *ngIf="getChildren(allCats, cat.id).length > 0">
-                        <li *ngFor="let sub of getChildren(allCats, cat.id)">
-                            <a [routerLink]="['/products']" [queryParams]="{category: sub.slug}">{{ sub.name }}</a>
-                        </li>
-                    </ul>
                 </li>
             </ul>
         </li>

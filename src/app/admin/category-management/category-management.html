@@ -15,7 +15,7 @@
           <tr>
             <th>Tên danh mục</th>
             <th>Slug</th>
-            <th>Danh mục cha</th>
+
             <th>Số SP</th>
             <th class="text-end">Thao tác</th>
           </tr>
@@ -24,7 +24,7 @@
           <tr *ngFor="let cat of categories$ | async">
             <td><strong>{{ cat.name }}</strong></td>
             <td><code class="text-pink">{{ cat.slug }}</code></td>
-            <td><span class="badge bg-light text-dark border">{{ getCategoryName(cat.parent_id) }}</span></td>
+
             <td>{{ cat.product_count || 0 }}</td>
             <td class="text-end">
               <button class="btn btn-sm btn-outline-secondary me-2" (click)="editCategory(cat)">
@@ -62,14 +62,6 @@
             <div class="text-danger small mt-1" *ngIf="catSlugCtrl.invalid && catSlugCtrl.touched">
               <i class="bi bi-exclamation-circle"></i> Vui lòng nhập đường dẫn (slug) cho danh mục.
             </div>
-          </div>          <div class="mb-3">
-            <label class="form-label">Danh mục cha</label>
-            <select class="form-select" name="parent_id" [(ngModel)]="form.parent_id">
-              <option [ngValue]="undefined">-- Không có (Danh mục gốc) --</option>
-              <ng-container *ngFor="let c of allCategories">
-                <option *ngIf="c.id !== form.id" [ngValue]="c.id">{{ c.name }}</option>
-              </ng-container>
-            </select>
           </div>
         </form>
       </div>

@@ -34,10 +34,7 @@ export class CategoryManagement implements OnInit {
     });
   }
 
-  getCategoryName(id?: number): string {
-    if (!id) return '-';
-    return this.allCategories.find(c => c.id === id)?.name || '-';
-  }
+
 
   generateSlug() {
     if (!this.form.name) return;
@@ -51,7 +48,7 @@ export class CategoryManagement implements OnInit {
   }
 
   openModal() {
-    this.form = { name: '', slug: '', icon: 'bi-bookmark', parent_id: null };
+    this.form = { name: '', slug: '', icon: 'bi-bookmark' };
     this.editing = false;
     this.showModal = true;
   }

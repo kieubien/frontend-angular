@@ -69,8 +69,8 @@ class CategoryController {
 
     static async create(req, res) {
         try {
-            const { name, slug, parent_id, icon, description, product_count } = req.body;
-            const category = await CategoryModel.create({ name, slug, parent_id, icon, description, product_count });
+            const { name, slug, icon, description, product_count } = req.body;
+            const category = await CategoryModel.create({ name, slug, icon, description, product_count });
 
             res.status(201).json({
                 message: "Thêm mới thành công",
@@ -86,7 +86,7 @@ class CategoryController {
     static async update(req, res) {
         try {
             const { id } = req.params;
-            const { name, slug, parent_id, icon, description, product_count } = req.body;
+            const { name, slug, icon, description, product_count } = req.body;
 
             const category = await CategoryModel.findByPk(id);
             if (!category) {
@@ -95,7 +95,6 @@ class CategoryController {
 
             category.name = name;
             category.slug = slug;
-            if (parent_id !== undefined) category.parent_id = parent_id;
             if (icon !== undefined) category.icon = icon;
             category.description = description;
             if (product_count !== undefined) category.product_count = product_count;

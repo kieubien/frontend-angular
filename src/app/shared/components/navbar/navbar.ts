@@ -68,11 +68,5 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
-  getChildren(categories: Category[], parentId: number): Category[] {
-    return categories.filter(c => (c.parent_id || c.parentId) === parentId);
-  }
 
-  getRootCategories(categories: Category[]): Category[] {
-    return categories.filter(c => !(c.parent_id || c.parentId));
-  }
 }

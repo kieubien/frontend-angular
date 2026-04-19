@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
@@ -16,7 +16,10 @@ export class UserManagementComponent implements OnInit {
   selectedUser: User | null = null;
   showDetailModal = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     console.log('UserManagementComponent: Initializing...');
@@ -28,6 +31,7 @@ export class UserManagementComponent implements OnInit {
       next: (data) => {
         console.log('UserManagementComponent: Loaded users:', data);
         this.users = data || [];
+        this.cdr.detectChanges(); // Force UI update
       },
       error: (err) => {
         console.error('UserManagementComponent: Error loading users:', err);

@@ -51,7 +51,7 @@
 
     <div class="cat-grid">
         <ng-container *ngFor="let cat of categories">
-            <div class="cat-card" *ngIf="!cat.parent_id && !cat.parentId" [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
+            <div class="cat-card" [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
                 <div class="cat-card__name">{{ cat.name }}</div>
                 <div class="cat-card__count">{{ (cat.product_count || cat.productCount || 0) }} sản phẩm</div>
             </div>

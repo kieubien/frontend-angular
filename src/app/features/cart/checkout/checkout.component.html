@@ -37,12 +37,14 @@
       <div class="checkout-title">Thông tin giao hàng</div>
 
       <div class="form-group">
-        <input type="text" placeholder="Họ và tên" [(ngModel)]="customerName">
+        <input type="text" placeholder="Họ và tên" [(ngModel)]="customerName" [class.is-invalid]="errors.customerName">
+        <div class="error-text" *ngIf="errors.customerName">{{ errors.customerName }}</div>
       </div>
 
       <div class="row-2">
         <div class="form-group">
-          <input type="text" placeholder="Số điện thoại" [(ngModel)]="phone">
+          <input type="text" placeholder="Số điện thoại" [(ngModel)]="phone" [class.is-invalid]="errors.phone">
+          <div class="error-text" *ngIf="errors.phone">{{ errors.phone }}</div>
         </div>
         <div class="form-group">
           <input type="email" placeholder="Email" [(ngModel)]="email">
@@ -50,27 +52,8 @@
       </div>
 
       <div class="form-group">
-        <input type="text" placeholder="Địa chỉ (Số nhà, Tên đường)" [(ngModel)]="address">
-      </div>
-
-      <div class="row-2">
-        <div class="form-group">
-          <select [(ngModel)]="selectedProvince" (change)="loadDistrict(selectedProvince)">
-            <option value="">-- Chọn Tỉnh/Thành --</option>
-            <option *ngFor="let p of provinces" [value]="p.code">
-              {{ p.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <select [(ngModel)]="selectedDistrict">
-            <option value="">-- Chọn Quận/Huyện --</option>
-            <option *ngFor="let d of districts" [value]="d.code">
-              {{ d.name }}
-            </option>
-          </select>
-        </div>
+        <input type="text" placeholder="Địa chỉ giao hàng (Số nhà, Tên đường, Quận, TP...)" [(ngModel)]="address" [class.is-invalid]="errors.address">
+        <div class="error-text" *ngIf="errors.address">{{ errors.address }}</div>
       </div>
 
     </div>

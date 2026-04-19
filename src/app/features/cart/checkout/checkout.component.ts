@@ -25,12 +25,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   phone = '';
   email = '';
   address = '';
-  selectedProvince = '';
-  selectedDistrict = '';
   paymentMethod = 'cod';
-
-  provinces: any[] = [];
-  districts: any[] = [];
+  errors: any = {};
 
   constructor(
     private cartService: CartService,
@@ -43,7 +39,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.cartSub = this.cartService.cartItems$.subscribe(items => {
       this.items = items;
     });
-    this.loadProvince();
   }
 
   ngOnDestroy() {
@@ -67,19 +62,29 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   placeOrder() {
+    this.errors = {};
     if (this.items.length === 0) {
       alert('Giỏ hàng của bạn đang trống!');
       return;
     }
 
-    if (!this.customerName || !this.phone || !this.address || !this.selectedProvince) {
-      alert('Vui lòng điền đầy đủ thông tin giao hàng!');
-      return;
+    let hasError = false;
+    if (!this.customerName.trim()) {
+      this.errors.customerName = 'Vui lòng nhập họ và tên';
+      hasError = true;
+    }
+    if (!this.phone.trim()) {
+      this.errors.phone = 'Vui lòng nhập số điện thoại';
+      hasError = true;
+    }
+    if (!this.address.trim()) {
+      this.errors.address = 'Vui lòng nhập địa chỉ giao hàng cụ thể';
+      hasError = true;
     }
 
-    const provinceName = this.provinces.find(p => p.code === this.selectedProvince)?.name || '';
-    const districtName = this.districts.find(d => d.code === this.selectedDistrict)?.name || '';
-    const fullAddress = `${this.address}, ${districtName}, ${provinceName}`;
+    if (hasError) return;
+
+    const fullAddress = this.address.trim();
 
     const orderPayload: Order = {
       customer_name: this.customerName,
@@ -108,26 +113,4 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
   }
 
-  async loadProvince() {
-    try {
-      const res = await fetch('https://provinces.open-api.vn/api/p/');
-      this.provinces = await res.json();
-    } catch (error) {
-      console.error('Lỗi tải tỉnh/thành:', error);
-    }
-  }
-
-  async loadDistrict(code: string) {
-    if (!code) {
-      this.districts = [];
-      return;
-    }
-    try {
-      const res = await fetch(`https://provinces.open-api.vn/api/p/${code}?depth=2`);
-      const data = await res.json();
-      this.districts = data.districts;
-    } catch (error) {
-      console.error('Lỗi tải quận/huyện:', error);
-    }
-  }
 }
