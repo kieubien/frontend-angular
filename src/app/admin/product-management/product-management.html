@@ -73,7 +73,8 @@
                 <th>Ảnh</th>
                 <th>Tên</th>
                 <th>Thương hiệu</th>
-                <th>Giá</th>
+                <th>Giá gốc</th>
+                <th>Giá sale</th>
                 <th>Tồn</th>
                 <th>Trạng thái</th>
                 <th>Hành động</th>
@@ -91,6 +92,7 @@
                 <td class="fw-semibold">{{p.name}}</td>
                 <td>{{p.brand}}</td>
                 <td>{{p.price | number}}đ</td>
+                <td>{{p.price_sale ? (p.price_sale | number) + 'đ' : '-'}}</td>
                 <td>{{p.stock}}</td>
 
                 <td>
@@ -150,15 +152,15 @@
 
               <div class="row g-3 mb-3">
                 <div class="col-md-4">
-                  <label class="form-label small fw-bold text-muted">GIÁ BÁN (đ) (*)</label>
+                  <label class="form-label small fw-bold text-muted">GIÁ GỐC (đ) (*)</label>
                   <input type="number" class="form-control" name="price" placeholder="0" [(ngModel)]="form.price" required min="1" #priceCtrl="ngModel" [ngClass]="{'is-invalid': priceCtrl.invalid && priceCtrl.touched}">
                   <div class="text-danger small mt-1" *ngIf="priceCtrl.invalid && priceCtrl.touched">
-                    <i class="bi bi-exclamation-circle"></i> Vui lòng nhập giá hợp lệ lớn hơn 0.
+                    <i class="bi bi-exclamation-circle"></i> Vui lòng nhập giá gốc hợp lệ lớn hơn 0.
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <label class="form-label small fw-bold text-muted">GIÁ GỐC (đ)</label>
-                  <input type="number" class="form-control" name="original_price" placeholder="0" [(ngModel)]="form.original_price">
+                  <label class="form-label small fw-bold text-muted">GIÁ SALE (đ)</label>
+                  <input type="number" class="form-control" name="price_sale" placeholder="0" [(ngModel)]="form.price_sale">
                 </div>
                 <div class="col-md-4">
                   <label class="form-label small fw-bold text-muted">SỐ LƯỢNG (*)</label>

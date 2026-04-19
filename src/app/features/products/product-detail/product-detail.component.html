@@ -54,9 +54,9 @@
             </div>
 
             <div class="price-row">
-                <span class="price-main">{{product.price | number}}đ</span>
-                <span class="price-old" *ngIf="product.original_price">{{product.original_price | number}}đ</span>
-                <span class="price-save" *ngIf="product.original_price">Tiết kiệm {{getDiscount()}}%</span>
+                <span class="price-main">{{ (product.price_sale || product.price) | number }}đ</span>
+                <span class="price-old" *ngIf="product.price_sale">{{ product.price | number }}đ</span>
+                <span class="price-save" *ngIf="product.price_sale">Tiết kiệm {{getDiscount()}}%</span>
             </div>
 
             <div class="shades" *ngIf="product.colors?.length > 0">

@@ -30,8 +30,8 @@
         <span class="review-count">({{ product.review_count || 0 }})</span>
     </div>
     <div class="price-row">
-      <span class="price">{{ product.price | number }}đ</span>
-      <span class="original-price" *ngIf="product.original_price">{{ product.original_price | number }}đ</span>
+      <span class="price">{{ (product.price_sale || product.price) | number }}đ</span>
+      <span class="original-price" *ngIf="product.price_sale">{{ product.price | number }}đ</span>
     </div>
   </div>
 </div>

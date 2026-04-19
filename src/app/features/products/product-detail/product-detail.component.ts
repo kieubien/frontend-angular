@@ -59,8 +59,8 @@ export class ProductDetailComponent implements OnInit {
   }
 
   getDiscount(): number {
-    if (!this.product?.original_price) return 0;
-    return Math.round((1 - this.product.price / this.product.original_price) * 100);
+    if (!this.product?.price_sale || !this.product?.price) return 0;
+    return Math.round((1 - this.product.price_sale / this.product.price) * 100);
   }
 
   updateQuantity(val: number): void {

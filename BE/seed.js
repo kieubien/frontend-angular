@@ -75,6 +75,11 @@ async function seed() {
         console.log("Bat dau seed dữ liệu...");
         await sequelize.authenticate();
 
+        const OrderItem = require('./models/orderItem');
+        const Order = require('./models/order');
+        
+        await OrderItem.destroy({ where: {} });
+        await Order.destroy({ where: {} });
         await Product.destroy({ where: {} });
         await Category.destroy({ where: {} });
         await User.destroy({ where: {} });
