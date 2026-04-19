@@ -14,7 +14,6 @@ export class CartService {
     this.loadCart();
   }
 
-  /* ===== LOAD/SAVE ===== */
   private loadCart() {
     const data = localStorage.getItem(this.CART_KEY);
     if (data) {
@@ -27,7 +26,6 @@ export class CartService {
     this.cartItems.next(items);
   }
 
-  /* ===== ACTIONS ===== */
   addToCart(product: any, qty: number = 1, color?: string, size?: string) {
     const currentItems = this.cartItems.value;
     const existingIndex = currentItems.findIndex(i => 
@@ -82,7 +80,6 @@ export class CartService {
     this.saveCart([]);
   }
 
-  /* ===== CALCULATIONS ===== */
   getSubtotal() {
     return this.cartItems.value.reduce((sum, item) => sum + item.price * item.qty, 0);
   }

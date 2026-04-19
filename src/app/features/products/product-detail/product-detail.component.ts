@@ -42,7 +42,7 @@ export class ProductDetailComponent implements OnInit {
         this.product = res;
         this.loadRelatedProducts();
         this.isLoading = false;
-        // Scroll to top when product changes
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       error: () => {
@@ -52,7 +52,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   loadRelatedProducts(): void {
-    // Basic logic: get products from same category or just random ones
+
     this.productService.getProducts({ limit: 4 }).subscribe(products => {
       this.relatedProducts = products.filter(p => p.id !== this.product.id).slice(0, 4);
     });
@@ -78,8 +78,7 @@ export class ProductDetailComponent implements OnInit {
     if (this.product) {
       this.cartService.addToCart(this.product, this.quantity);
       console.log('Added to cart:', this.product.name, 'Qty:', this.quantity);
-      
-      // Hiển thị thông báo thành công (Có thể dùng thư viện Toast, ở đây tạm dùng alert)
+
       alert(`Đã thêm ${this.quantity} ${this.product.name} vào giỏ hàng thành công!`);
     }
   }

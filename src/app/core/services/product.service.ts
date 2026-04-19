@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -34,15 +34,21 @@ export class ProductService {
 
   addProduct(product: any): Observable<any> {
     const data = product instanceof FormData ? product : product;
-    return this.http.post(`${this.apiUrl}/add`, data);
+    return this.http.post(`${this.apiUrl}/add`, data).pipe(
+      tap(() => this.cache.clear())
+    );
   }
 
   updateProduct(id: number, product: any): Observable<any> {
     const data = product instanceof FormData ? product : product;
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+    return this.http.put(`${this.apiUrl}/${id}`, data).pipe(
+      tap(() => this.cache.clear())
+    );
   }
 
   deleteProduct(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`).pipe(
+      tap(() => this.cache.clear())
+    );
   }
 }

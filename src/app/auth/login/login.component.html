@@ -1,5 +1,5 @@
 <div class="auth-wrap">
-  <!-- LEFT PANEL -->
+  
   <div class="auth-left">
     <div class="auth-left__brand">Blush<span>&amp;</span>Bloom</div>
     <p class="auth-left__tagline">
@@ -19,11 +19,9 @@
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
   <div class="auth-right">
     <div class="auth-card">
 
-      <!-- TABS -->
       <div class="auth-tabs">
         <a class="auth-tab active" routerLink="/login">Đăng nhập</a>
         <a class="auth-tab" routerLink="/register">Đăng ký</a>
@@ -34,7 +32,6 @@
       </h2>
       <p class="auth-sub">Đăng nhập để tiếp tục mua sắm nhé!</p>
 
-      <!-- SOCIAL BUTTONS -->
       <div class="social-btns">
         <button class="social-btn">
           <i class="bi bi-google"></i> Google
@@ -44,22 +41,18 @@
         </button>
       </div>
 
-      <!-- DIVIDER -->
       <div class="divider">
         <span class="divider__line"></span>
         <span class="divider__text">hoặc đăng nhập với email</span>
         <span class="divider__line"></span>
       </div>
 
-      <!-- ERROR MESSAGE -->
       <div class="error-msg" *ngIf="errorMessage">
         <i class="bi bi-exclamation-circle-fill"></i> {{ errorMessage }}
       </div>
 
-      <!-- FORM -->
       <form [formGroup]="loginForm" (ngSubmit)="doLogin()">
 
-        <!-- Email -->
         <div class="form-group">
           <label class="form-label">
             <i class="bi bi-envelope"></i> Email
@@ -76,7 +69,6 @@
           </span>
         </div>
 
-        <!-- Mật khẩu -->
         <div class="form-group">
           <label class="form-label">
             <i class="bi bi-lock"></i> Mật khẩu
@@ -98,14 +90,12 @@
           </span>
         </div>
 
-        <!-- Quên mật khẩu -->
         <div class="forgot-wrap">
           <a class="forgot-link" href="#">
             <i class="bi bi-question-circle"></i> Quên mật khẩu?
           </a>
         </div>
 
-        <!-- Submit -->
         <button class="btn-submit" type="submit" [disabled]="loginForm.invalid">
           <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
         </button>

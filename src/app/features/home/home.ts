@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
         .slice(0, 8);
     } 
     else {
-      // Mặc định là Featured/Bán chạy
+
       this.featuredProducts = this.products.slice(0, 8);
     }
   }

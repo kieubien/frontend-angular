@@ -1,4 +1,4 @@
-/* ===== LAYOUT ===== */
+
 .cart-layout {
     display: grid;
     grid-template-columns: 1fr 380px;
@@ -6,7 +6,6 @@
     padding: 24px 48px 64px;
 }
 
-/* ===== STEP BAR ===== */
 .step-bar {
     background: #fff;
     border-bottom: 1px solid var(--pink-100);
@@ -51,7 +50,6 @@
     margin: 0 8px;
 }
 
-/* ===== CART BOX ===== */
 .cart-box {
     background: #fff;
     border-radius: var(--radius-lg);
@@ -79,7 +77,6 @@
     color: var(--text-muted);
 }
 
-/* ===== EMPTY ===== */
 .cart-empty {
     display: flex;
     flex-direction: column;
@@ -98,7 +95,6 @@
     color: var(--text-muted);
 }
 
-/* ===== ITEM ===== */
 .cart-item {
     display: grid;
     grid-template-columns: 80px 1fr auto;
@@ -161,7 +157,6 @@
     text-decoration: line-through;
 }
 
-/* ===== QTY ===== */
 .qty-ctrl {
     display: flex;
     align-items: center;
@@ -199,7 +194,6 @@
     font-weight: 600;
 }
 
-/* ===== DELETE ===== */
 .del-btn {
     border: none;
     background: none;
@@ -215,7 +209,6 @@
     color: var(--pink-400);
 }
 
-/* ===== COUPON ===== */
 .coupon-row {
     display: flex;
     gap: 10px;
@@ -266,7 +259,6 @@
     color: var(--red);
 }
 
-/* ===== FOOTER ===== */
 .cart-footer {
     display: flex;
     align-items: center;
@@ -288,7 +280,6 @@
     color: var(--text-soft);
 }
 
-/* ===== SUMMARY ===== */
 .summary-box {
     background: #fff;
     border-radius: var(--radius-lg);
@@ -370,7 +361,6 @@
     margin-right: 4px;
 }
 
-/* ===== PAYMENT ===== */
 .pay-icons {
     display: flex;
     gap: 8px;
@@ -387,7 +377,6 @@
     font-weight: 600;
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .cart-layout {
         grid-template-columns: 1fr;

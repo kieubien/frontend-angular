@@ -19,9 +19,6 @@ class ProductController {
                 whereClause.brand = brand;
             }
 
-            // Xử lý lọc giá (ví dụ)
-            // if (min_price || max_price) { ... }
-
             const products = await ProductModel.findAll({
                 where: whereClause,
                 include: [{ model: CategoryModel }]
@@ -91,7 +88,6 @@ class ProductController {
             const product = await ProductModel.findByPk(req.params.id);
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
 
-            // Xoá sản phẩm trong các đơn hàng trước (cascade delete thủ công) để tránh lỗi khoá ngoại
             await OrderItemModel.destroy({ where: { product_id: product.id } });
 
             await product.destroy();

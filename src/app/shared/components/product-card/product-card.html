@@ -6,13 +6,14 @@
     </div>
     
     <div class="badges">
-        <span class="badge sale" *ngIf="product.badge === 'sale'">SALE</span>
-        <span class="badge new" *ngIf="product.badge === 'new'">NEW</span>
-        <span class="badge hot" *ngIf="product.badge === 'hot'">HOT</span>
+        <span class="badge out-of-stock" *ngIf="product.stock === 0">HẾT HÀNG</span>
+        <span class="badge sale" *ngIf="product.badge === 'sale' && product.stock !== 0">SALE</span>
+        <span class="badge new" *ngIf="product.badge === 'new' && product.stock !== 0">NEW</span>
+        <span class="badge hot" *ngIf="product.badge === 'hot' && product.stock !== 0">HOT</span>
     </div>
 
     <div class="hover-actions">
-        <button class="action-btn" title="Thêm vào giỏ" (click)="$event.stopPropagation(); addToCart()">
+        <button class="action-btn" title="Thêm vào giỏ" *ngIf="product.stock !== 0" (click)="$event.stopPropagation(); addToCart()">
             <i class="bi bi-bag-plus"></i>
         </button>
         <button class="action-btn" title="Yêu thích">

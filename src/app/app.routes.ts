@@ -5,7 +5,7 @@ import { AdminLayoutComponent } from './shared/layouts/admin-layout/admin-layout
 import { HomeComponent } from './features/home/home';
 
 export const routes: Routes = [
-  // HỆ THỐNG CLIENT (CÓ HEADER/FOOTER)
+
   {
     path: '',
     component: ClientLayoutComponent,
@@ -61,7 +61,6 @@ export const routes: Routes = [
     ]
   },
 
-  // HỆ THỐNG ADMIN (CÓ SIDEBAR)
   {
     path: 'admin',
     component: AdminLayoutComponent,
@@ -94,6 +93,5 @@ export const routes: Routes = [
     ]
   },
 
-  // Fallback
   { path: '**', redirectTo: '' }
 ];

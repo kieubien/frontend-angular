@@ -25,8 +25,7 @@ class OrderController {
                     quantity: item.quantity,
                     price: item.price
                 }, { transaction });
-                
-                // Giảm tồn kho (tùy chọn)
+
                 const product = await Product.findByPk(item.product_id, { transaction });
                 if (product) {
                     product.stock -= item.quantity;

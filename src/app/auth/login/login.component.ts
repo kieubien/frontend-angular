@@ -44,8 +44,7 @@ export class LoginComponent {
     this.http.post<any>('http://localhost:3000/users/login', { email, password }).subscribe({
       next: (res: any) => {
         console.log('Login Response:', res);
-        
-        // Handle token in root or inside a data object
+
         const token = res.token || res.data?.token;
         
         if (!token) {
@@ -55,7 +54,7 @@ export class LoginComponent {
         }
 
         try {
-          // Tách Payload từ JWT ra để lấy role, email, name
+
           const base64Url = token.split('.')[1];
           const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
           const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
@@ -64,7 +63,6 @@ export class LoginComponent {
           const payload = JSON.parse(jsonPayload);
           console.log('Decoded Payload:', payload);
 
-          // Lấy tên: ưu tiên first_name/last_name, sau đó tới name, cuối cùng là phần trước @ của email
           const displayName = (payload.first_name || payload.last_name) 
             ? `${payload.first_name || ''} ${payload.last_name || ''}`.trim()
             : (payload.name || payload.email?.split('@')[0] || 'Người dùng');
@@ -76,7 +74,6 @@ export class LoginComponent {
             email: payload.email
           };
 
-          // Lưu vào Session thông qua Service để kích hoạt update giao diện
           this.authService.setSession(token, user);
 
           if (user.role === 'admin') {

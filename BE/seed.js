@@ -75,7 +75,6 @@ async function seed() {
         console.log("Bat dau seed dữ liệu...");
         await sequelize.authenticate();
 
-        // Xóa sạch bảng (theo thứ tự quan hệ)
         await Product.destroy({ where: {} });
         await Category.destroy({ where: {} });
         await User.destroy({ where: {} });

@@ -41,7 +41,7 @@ export class CategoryManagement implements OnInit {
 
   generateSlug() {
     if (!this.form.name) return;
-    // Simple Vietnamese slugify
+
     let slug = this.form.name.toLowerCase();
     slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Remove accents
     slug = slug.replace(/[đÐ]/g, 'd');

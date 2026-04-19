@@ -1,4 +1,4 @@
-// ── HERO ──
+
 
 body,
 * {
@@ -147,7 +147,6 @@ body,
     color: #9B7080;
 }
 
-// ── MARQUEE ──
 .marquee {
     background: #C95E85;
     padding: 11px 0;
@@ -187,7 +186,6 @@ body,
     }
 }
 
-// ── SECTION ──
 .section {
     padding: 64px 52px;
 }
@@ -235,7 +233,6 @@ body,
     gap: 4px;
 }
 
-// ── CATEGORIES ──
 .cat-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -269,9 +266,6 @@ body,
     color: #9B7080;
 }
 
-
-
-// ── TABS ──
 .tabs {
     display: flex;
     border-bottom: 1px solid #F9D5E5;
@@ -302,7 +296,6 @@ body,
     }
 }
 
-// ── LOADING ──
 .loading {
     display: flex;
     align-items: center;
@@ -328,7 +321,6 @@ body,
     }
 }
 
-// ── PRODUCTS ──
 .products-section {
     background: #fff;
 }
@@ -391,6 +383,11 @@ body,
 
 .badge-hot {
     background: #E24B4A;
+    color: #fff;
+}
+
+.badge-out-of-stock {
+    background: #6c757d;
     color: #fff;
 }
 
@@ -500,7 +497,6 @@ body,
     }
 }
 
-// ── BUTTONS ──
 .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -542,7 +538,6 @@ body,
     }
 }
 
-// ── SALE BANNER ──
 .sale-banner {
     margin: 0 52px 64px;
     border-radius: 16px;
@@ -630,7 +625,6 @@ body,
     gap: 5px;
 }
 
-// ── NEWSLETTER ──
 .newsletter {
     background: linear-gradient(135deg, #9B3060, #C95E85, #E88DAE);
     padding: 72px 52px;
@@ -704,7 +698,6 @@ body,
     gap: 5px;
 }
 
-// ── RESPONSIVE ──
 @media (max-width: 768px) {
     .hero {
         grid-template-columns: 1fr;

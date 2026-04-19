@@ -21,7 +21,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   items: CartItem[] = [];
   private cartSub!: Subscription;
 
-  // Form fields
   customerName = '';
   phone = '';
   email = '';
@@ -51,7 +50,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     if (this.cartSub) this.cartSub.unsubscribe();
   }
 
-  /* ===== CALCULATIONS ===== */
   get subtotal() {
     return this.cartService.getSubtotal();
   }
@@ -68,7 +66,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     return n.toLocaleString('vi-VN') + 'đ';
   }
 
-  /* ===== ACTIONS ===== */
   placeOrder() {
     if (this.items.length === 0) {
       alert('Giỏ hàng của bạn đang trống!');
@@ -80,7 +77,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Lấy tên province/district từ code
     const provinceName = this.provinces.find(p => p.code === this.selectedProvince)?.name || '';
     const districtName = this.districts.find(d => d.code === this.selectedDistrict)?.name || '';
     const fullAddress = `${this.address}, ${districtName}, ${provinceName}`;
@@ -112,7 +108,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
   }
 
-  /* ===== LOCATION API ===== */
   async loadProvince() {
     try {
       const res = await fetch('https://provinces.open-api.vn/api/p/');

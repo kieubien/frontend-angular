@@ -41,8 +41,6 @@ export class CartComponent implements OnInit, OnDestroy {
     if (this.cartSub) this.cartSub.unsubscribe();
   }
 
-  /* ===== ACTIONS ===== */
-  // Cập nhật số lượng sản phẩm trong giỏ hàng
   updateQty(id: number, delta: number, color?: string) {
     this.cartService.updateQty(id, delta, color);
   }
@@ -53,7 +51,6 @@ export class CartComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* ===== CALCULATIONS ===== */
   get subtotal() {
     return this.cartService.getSubtotal();
   }
@@ -63,11 +60,10 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   private updateTotal() {
-    // Miễn phí vận chuyển cho đơn hàng trên 299k
+
     this.shippingFee = this.subtotal >= 299000 ? 0 : 30000;
   }
 
-  /* ===== COUPON ===== */
   applyCoupon() {
     const code = this.couponCode.toUpperCase().trim();
 
@@ -82,7 +78,6 @@ export class CartComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* ===== NAVIGATION ===== */
   goToCheckout() {
     if (this.items.length === 0) {
       alert('Giỏ hàng của bạn đang trống!');
@@ -91,7 +86,6 @@ export class CartComponent implements OnInit, OnDestroy {
     this.router.navigate(['/checkout']);
   }
 
-  /* ===== FORMAT ===== */
   formatPrice(price: number) {
     return price.toLocaleString('vi-VN') + 'đ';
   }

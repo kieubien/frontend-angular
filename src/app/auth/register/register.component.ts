@@ -16,7 +16,6 @@ export class RegisterComponent {
   showPassword = false;
   errorMessage = '';
 
-  // Password strength
   strengthScore = 0;
   strengthPercent = '0%';
   strengthColor = '';

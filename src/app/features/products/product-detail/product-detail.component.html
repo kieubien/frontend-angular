@@ -1,5 +1,5 @@
 <div class="product-page" *ngIf="product">
-    <!-- Breadcrumb -->
+    
     <div class="bc">
         <a routerLink="/">Trang chủ</a> <span>/</span>
         <a routerLink="/products">Sản phẩm</a> <span>/</span>
@@ -7,7 +7,7 @@
     </div>
 
     <main class="pd">
-        <!-- LEFT - IMAGES -->
+        
         <div class="pd-left">
             <div class="main-img">
                 <div class="img-badge" *ngIf="product.badge">{{product.badge}}</div>
@@ -24,7 +24,6 @@
             </div>
         </div>
 
-        <!-- RIGHT - INFO -->
         <div class="pd-right">
             <div class="brand-row">
                 <span class="brand-name">{{product.brand || 'Blush & Bloom'}}</span>
@@ -68,18 +67,19 @@
             <div class="qty-row">
                 <span class="qty-label">Số lượng:</span>
                 <div class="qty-ctrl">
-                    <button class="qty-btn" (click)="updateQuantity(-1)"><i class="bi bi-dash"></i></button>
-                    <span class="qty-val">{{quantity}}</span>
-                    <button class="qty-btn" (click)="updateQuantity(1)"><i class="bi bi-plus"></i></button>
+                    <button class="qty-btn" [disabled]="product.stock === 0" (click)="updateQuantity(-1)"><i class="bi bi-dash"></i></button>
+                    <span class="qty-val">{{product.stock === 0 ? 0 : quantity}}</span>
+                    <button class="qty-btn" [disabled]="product.stock === 0" (click)="updateQuantity(1)"><i class="bi bi-plus"></i></button>
                 </div>
-                <span class="stock-info text-muted small" *ngIf="product.stock">Còn {{product.stock}} sản phẩm</span>
+                <span class="stock-info text-muted small" *ngIf="product.stock && product.stock > 0">Còn {{product.stock}} sản phẩm</span>
+                <span class="stock-info text-danger small fw-bold" *ngIf="product.stock === 0">Hết hàng</span>
             </div>
 
             <div class="action-row">
-                <button class="btn-cart" (click)="addToCart()">
+                <button class="btn-cart" [disabled]="product.stock === 0" [ngClass]="{'bg-secondary border-secondary text-white': product.stock === 0}" (click)="addToCart()">
                     <i class="bi bi-cart-plus me-2"></i> THÊM VÀO GIỎ
                 </button>
-                <button class="btn-buy" (click)="addToCart()">MUA NGAY</button>
+                <button class="btn-buy" [disabled]="product.stock === 0" [ngClass]="{'bg-light text-muted border-secondary': product.stock === 0}" (click)="addToCart()">MUA NGAY</button>
                 <div class="btn-share"><i class="bi bi-share"></i></div>
             </div>
 
@@ -102,7 +102,6 @@
                 </div>
             </div>
 
-            <!-- Tabs -->
             <div class="tabs">
                 <div class="tab" [class.on]="activeTab === 'desc'" (click)="setTab('desc')">MÔ TẢ</div>
                 <div class="tab" [class.on]="activeTab === 'usage'" (click)="setTab('usage')">HƯỚNG DẪN</div>
@@ -143,7 +142,6 @@
         </div>
     </main>
 
-    <!-- Related Products -->
     <section class="related" *ngIf="relatedProducts.length > 0">
         <h3 class="section-title mb-4">Sản Phẩm <em>Liên Quan</em></h3>
         <div class="rel-grid">
@@ -152,9 +150,6 @@
     </section>
 </div>
 
-
-
-<!-- Error state -->
 <div class="container my-5 py-5 text-center" *ngIf="!isLoading && !product">
     <i class="bi bi-exclamation-triangle display-1 text-muted mb-3" style="color: var(--pink-300) !important;"></i>
     <h3 style="font-family: var(--font-display);">Không tìm thấy sản phẩm</h3>

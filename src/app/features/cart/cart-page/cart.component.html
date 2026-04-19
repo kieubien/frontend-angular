@@ -1,4 +1,4 @@
-<!-- STEP BAR -->
+
 <div class="step-bar">
   <div class="step active">
     <div class="step-circle">1</div>
@@ -31,7 +31,6 @@
   <div>
     <div class="cart-box">
 
-      <!-- EMPTY -->
       <ng-container *ngIf="items.length === 0">
         <div class="cart-box__head">
           <div class="cart-box__title">Giỏ hàng của bạn</div>
@@ -47,7 +46,6 @@
         </div>
       </ng-container>
 
-      <!-- LIST -->
       <ng-container *ngIf="items.length > 0">
 
         <div class="cart-box__head">
@@ -87,7 +85,6 @@
               <i class="bi bi-trash"></i>
             </button>
 
-
             <div class="cart-item__price">
               {{ formatPrice(item.price * item.qty) }}
             </div>
@@ -98,7 +95,6 @@
           </div>
         </div>
 
-        <!-- COUPON -->
         <div class="coupon-row">
           <input
             class="coupon-input"
@@ -129,7 +125,6 @@
     </div>
   </div>
 
-  <!-- SUMMARY -->
   <div>
     <div class="summary-box">
       <div class="summary-box__title">Tóm tắt đơn hàng</div>

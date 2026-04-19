@@ -59,11 +59,11 @@ export class ProductManagement implements OnInit {
   }
 
   getActiveCount() {
-    return this.products.filter(p => p.status === 'active').length;
+    return this.products.filter(p => p.status === 'active' && p.stock > 0).length;
   }
 
   getLowStock() {
-    return this.products.filter(p => p.stock < 10).length;
+    return this.products.filter(p => p.stock > 0 && p.stock < 10).length;
   }
 
   resetFilters() {
@@ -90,31 +90,31 @@ export class ProductManagement implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-      // Tạo URL tạm thời để hiển thị preview (không tốn dung lượng lưu trữ)
+
       this.form.image = URL.createObjectURL(file);
     }
   }
 
-  saveProduct() {
-    // Tự tạo slug nếu chưa có
-    if (!this.form.slug && this.form.name) {
-        // Simple Vietnamese slugify
-        let slug = this.form.name.toLowerCase();
-        slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Remove accents
-        slug = slug.replace(/[đÐ]/g, 'd');
-        slug = slug.replace(/[^a-z0-9 ]/g, ''); // Remove special chars
-        slug = slug.trim().replace(/\s+/g, '-'); // Spaces to dashes
-        this.form.slug = slug;
-    }
+  generateSlug() {
+    if (!this.form.name || this.form.slug) return;
 
-    // Chuẩn bị FormData để gửi file
+    let slug = this.form.name.toLowerCase();
+    slug = slug.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    slug = slug.replace(/[đÐ]/g, 'd');
+    slug = slug.replace(/[^a-z0-9 ]/g, '');
+    slug = slug.trim().replace(/\s+/g, '-');
+    this.form.slug = slug;
+  }
+
+  saveProduct() {
+
     const formData = new FormData();
     Object.keys(this.form).forEach(key => {
-        // Nếu là trường image và có file được chọn, chúng ta sẽ đính kèm file ở bước dưới
+
         if (key !== 'image') {
             formData.append(key, this.form[key]);
         } else if (!this.selectedFile) {
-            // Nếu không có file mới, gửi URL hiện tại (nếu có)
+
             formData.append('image', this.form.image || '');
         }
     });

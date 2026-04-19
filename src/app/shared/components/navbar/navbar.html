@@ -10,7 +10,6 @@
                 Danh mục <i class="bi bi-chevron-down ms-1"></i>
             </a>
 
-            <!-- Dropdown for Categories -->
             <ul class="navbar__submenu">
                 <li *ngFor="let cat of getRootCategories(allCats)" class="navbar__subitem">
                     <a [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
@@ -18,7 +17,6 @@
                         <i class="bi bi-chevron-right float-end mt-1" *ngIf="getChildren(allCats, cat.id).length > 0"></i>
                     </a>
 
-                    <!-- Third level if needed -->
                     <ul class="navbar__nested-menu" *ngIf="getChildren(allCats, cat.id).length > 0">
                         <li *ngFor="let sub of getChildren(allCats, cat.id)">
                             <a [routerLink]="['/products']" [queryParams]="{category: sub.slug}">{{ sub.name }}</a>
@@ -31,15 +29,13 @@
 
     <div class="navbar__actions">
         <button class="navbar__icon-btn" title="Tìm kiếm"><i class="bi bi-search"></i></button>
-        
-        <!-- Nếu là Admin thì hiện nút Quản trị -->
+
         <button class="navbar__icon-btn text-primary" *ngIf="isLoggedIn && userRole === 'admin'" 
                 routerLink="/admin" title="Trang quản trị">
             <i class="bi bi-shield-lock-fill"></i>
             <span class="ms-1 d-none d-md-inline" style="font-size: 14px;"></span>
         </button>
 
-        <!-- Nút tài khoản / Giỏ hàng -->
         <button class="navbar__icon-btn" routerLink="/login" title="Tài khoản" *ngIf="!isLoggedIn">
             <i class="bi bi-person"></i>
         </button>

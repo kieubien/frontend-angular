@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('NavbarComponent: Subscription init');
-    // Theo dõi trạng thái đăng nhập
+
     this.subs.add(
       this.authService.currentUser$.subscribe(user => {
         console.log('NavbarComponent: User state changed:', user);
@@ -52,7 +52,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Theo dõi giỏ hàng
     this.subs.add(
       this.cartService.cartItems$.subscribe(items => {
         this.cartCount = items.reduce((sum, item) => sum + item.qty, 0);

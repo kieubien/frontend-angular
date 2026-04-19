@@ -1,4 +1,4 @@
-<!-- HERO -->
+
 <section class="hero">
     <div class="hero__left">
         <div class="hero__pill"><i class="bi bi-flower1"></i> Bộ sưu tập Xuân 2025</div>
@@ -28,7 +28,6 @@
     </div>
 </section>
 
-<!-- MARQUEE -->
 <div class="marquee">
     <div class="marquee__inner">
         <span *ngFor="let item of marqueeItems" class="marquee__item">
@@ -37,7 +36,6 @@
     </div>
 </div>
 
-<!-- CATEGORIES -->
 <section class="section">
     <div class="section-header">
         <div>
@@ -53,15 +51,14 @@
 
     <div class="cat-grid">
         <ng-container *ngFor="let cat of categories">
-            <div class="cat-card" *ngIf="!cat.parentId" [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
+            <div class="cat-card" *ngIf="!cat.parent_id && !cat.parentId" [routerLink]="['/products']" [queryParams]="{category: cat.slug}">
                 <div class="cat-card__name">{{ cat.name }}</div>
-                <div class="cat-card__count" *ngIf="cat.productCount">{{ cat.productCount }} sản phẩm</div>
+                <div class="cat-card__count">{{ (cat.product_count || cat.productCount || 0) }} sản phẩm</div>
             </div>
         </ng-container>
     </div>
 </section>
 
-<!-- FEATURED PRODUCTS -->
 <section class="section products-section">
     <div class="section-header">
         <div>
@@ -81,9 +78,10 @@
             <div class="product-card__img-wrap">
                 <img *ngIf="p.image" [src]="p.image" [alt]="p.name" class="product-card__img">
                 <div *ngIf="!p.image" class="product-card__placeholder"><i class="bi bi-image"></i></div>
-                <span class="product-card__badge badge-sale" *ngIf="p.badge==='sale'">-{{ getDiscount(p) }}%</span>
-                <span class="product-card__badge badge-new" *ngIf="p.badge==='new'">Mới</span>
-                <span class="product-card__badge badge-hot" *ngIf="p.badge==='hot'">Hot</span>
+                <span class="product-card__badge badge-out-of-stock" *ngIf="p.stock === 0">Hết hàng</span>
+                <span class="product-card__badge badge-sale" *ngIf="p.badge==='sale' && p.stock !== 0">-{{ getDiscount(p) }}%</span>
+                <span class="product-card__badge badge-new" *ngIf="p.badge==='new' && p.stock !== 0">Mới</span>
+                <span class="product-card__badge badge-hot" *ngIf="p.badge==='hot' && p.stock !== 0">Hot</span>
                 <button class="product-card__wish"><i class="bi bi-heart"></i></button>
             </div>
             <div class="product-card__body">
@@ -96,7 +94,7 @@
                     </span>
                     <span class="review-count">({{ p.review_count || p.reviewCount || 0 }})</span>
                 </div>
-                <!-- Màu sắc (Ẩn nếu không có dữ liệu thực) -->
+                
                 <div class="product-card__colors" *ngIf="p.colors && p.colors.length > 0">
                     <span class="color-dot" *ngFor="let c of p.colors.slice(0,4)" [style.background]="c.hex"></span>
                 </div>
@@ -105,14 +103,14 @@
                         <span class="price-current">{{ p.price | number }}đ</span>
                         <span class="price-old" *ngIf="p.original_price || p.originalPrice">{{ (p.original_price || p.originalPrice) | number }}đ</span>
                     </div>
-                    <button class="add-btn" (click)="addToCart(p, $event)"><i class="bi bi-plus"></i></button>
+                    <button class="add-btn" *ngIf="p.stock !== 0" (click)="addToCart(p, $event)"><i class="bi bi-plus"></i></button>
+                    <button class="add-btn bg-secondary border-secondary text-white" style="opacity:0.5" *ngIf="p.stock === 0" disabled><i class="bi bi-x"></i></button>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- SALE BANNER -->
 <div class="sale-banner">
     <div>
         <h2 class="sale-banner__title">Flash Sale <em>Cuối tuần</em></h2>
@@ -132,7 +130,6 @@
     </div>
 </div>
 
-<!-- NEWSLETTER -->
 <div class="newsletter">
     <div class="section-label" style="color:rgba(255,255,255,.7)">
         <i class="bi bi-people-fill"></i> Cộng đồng làm đẹp

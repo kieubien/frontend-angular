@@ -90,7 +90,6 @@ const Product = sequelize.define('Product', {
     underscored: true
 });
 
-// Thiết lập quan hệ
 Product.belongsTo(Category, { foreignKey: 'category_id' });
 Category.hasMany(Product, { foreignKey: 'category_id' });
 

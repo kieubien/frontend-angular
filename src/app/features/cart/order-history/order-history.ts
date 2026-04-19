@@ -21,7 +21,7 @@ export class OrderHistoryComponent implements OnInit {
   }
 
   loadHistory() {
-    // Giả sử userId = 1 cho demo, thực tế lấy từ AuthService
+
     const userId = 1; 
     
     this.orderService.getUserOrders(userId).subscribe({

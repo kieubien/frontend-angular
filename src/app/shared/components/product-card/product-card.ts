@@ -17,6 +17,6 @@ export class ProductCardComponent {
 
   addToCart() {
     this.cartService.addToCart(this.product, 1);
-    // Có thể thêm toast thông báo ở đây
+
   }
 }
