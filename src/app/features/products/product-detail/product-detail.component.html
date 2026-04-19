@@ -1,4 +1,9 @@
-<div class="product-page" *ngIf="product">
+<div *ngIf="isLoading" class="container text-center py-5">
+    <div class="spinner-border text-pink" role="status"></div>
+    <p class="text-muted mt-2">Đang tải thông tin sản phẩm...</p>
+</div>
+
+<div class="product-page" *ngIf="!isLoading && product">
     
     <div class="bc">
         <a routerLink="/">Trang chủ</a> <span>/</span>
