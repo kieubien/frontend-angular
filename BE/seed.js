@@ -79,8 +79,15 @@ async function seed() {
         await Product.destroy({ where: {} });
         await Category.destroy({ where: {} });
         await User.destroy({ where: {} });
+        const bcrypt = require('bcryptjs');
         for (const user of usersData) {
-            try { await User.upsert(user); } catch (e) {}
+            try { 
+                const salt = await bcrypt.genSalt(10);
+                const hashedUser = { ...user, password: await bcrypt.hash(user.password, salt) };
+                await User.upsert(hashedUser); 
+            } catch (e) {
+                console.error("Error seeding user:", e);
+            }
         }
         console.log("Đã tạo Users thành công.");
 

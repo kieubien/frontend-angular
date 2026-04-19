@@ -33,11 +33,13 @@ export class ProductService {
   }
 
   addProduct(product: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add`, product);
+    const data = product instanceof FormData ? product : product;
+    return this.http.post(`${this.apiUrl}/add`, data);
   }
 
   updateProduct(id: number, product: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, product);
+    const data = product instanceof FormData ? product : product;
+    return this.http.put(`${this.apiUrl}/${id}`, data);
   }
 
   deleteProduct(id: number): Observable<any> {

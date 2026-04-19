@@ -54,7 +54,11 @@ class ProductController {
 
     static async create(req, res) {
         try {
-            const product = await ProductModel.create(req.body);
+            const data = { ...req.body };
+            if (req.file) {
+                data.image = `http://localhost:3000/uploads/${req.file.filename}`;
+            }
+            const product = await ProductModel.create(data);
             res.status(201).json({ status: 201, message: 'Thêm sản phẩm thành công', data: product });
         } catch (error) {
             console.error('Error creating product:', error);
@@ -67,7 +71,13 @@ class ProductController {
         try {
             const product = await ProductModel.findByPk(req.params.id);
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
-            await product.update(req.body);
+            
+            const data = { ...req.body };
+            if (req.file) {
+                data.image = `http://localhost:3000/uploads/${req.file.filename}`;
+            }
+            
+            await product.update(data);
             res.status(200).json({ status: 200, message: 'Cập nhật thành công', data: product });
         } catch (error) {
             console.error('Error updating product:', error);

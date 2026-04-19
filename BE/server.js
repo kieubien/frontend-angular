@@ -25,6 +25,10 @@ app.use('/users', userRoutes);
 app.use(productRoutes);
 app.use(orderRoutes);
 
+// Phục vụ ảnh từ thư mục public/uploads
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 app.listen(port, () => {
     console.log('running http://localhost:3000');
 })

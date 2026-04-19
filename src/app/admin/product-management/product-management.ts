@@ -24,6 +24,7 @@ export class ProductManagement implements OnInit {
   form: any = {};
   products: any[] = [];
   categories: Category[] = [];
+  selectedFile: File | null = null;
 
   constructor(
     private productService: ProductService,
@@ -73,12 +74,14 @@ export class ProductManagement implements OnInit {
 
   openModal() {
     this.form = { status: 'active' };
+    this.selectedFile = null;
     this.editing = false;
     this.showModal = true;
   }
 
   editProduct(p: any) {
     this.form = { ...p };
+    this.selectedFile = null;
     this.editing = true;
     this.showModal = true;
   }
@@ -86,11 +89,9 @@ export class ProductManagement implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.form.image = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      this.selectedFile = file;
+      // Tạo URL tạm thời để hiển thị preview (không tốn dung lượng lưu trữ)
+      this.form.image = URL.createObjectURL(file);
     }
   }
 
@@ -106,13 +107,24 @@ export class ProductManagement implements OnInit {
         this.form.slug = slug;
     }
 
-    if (!this.form.name || !this.form.price || !this.form.category_id) {
-        alert('Vui lòng điền đầy đủ các thông tin bắt buộc (*)');
-        return;
+    // Chuẩn bị FormData để gửi file
+    const formData = new FormData();
+    Object.keys(this.form).forEach(key => {
+        // Nếu là trường image và có file được chọn, chúng ta sẽ đính kèm file ở bước dưới
+        if (key !== 'image') {
+            formData.append(key, this.form[key]);
+        } else if (!this.selectedFile) {
+            // Nếu không có file mới, gửi URL hiện tại (nếu có)
+            formData.append('image', this.form.image || '');
+        }
+    });
+
+    if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
     }
 
     if (this.editing) {
-      this.productService.updateProduct(this.form.id, this.form).subscribe({
+      this.productService.updateProduct(this.form.id, formData).subscribe({
         next: () => {
           alert('Cập nhật thành công!');
           this.loadProducts();
@@ -121,7 +133,7 @@ export class ProductManagement implements OnInit {
         error: (err) => alert(err.error?.error || err.error?.message || 'Có lỗi xảy ra')
       });
     } else {
-      this.productService.addProduct(this.form).subscribe({
+      this.productService.addProduct(formData).subscribe({
         next: () => {
           alert('Thêm sản phẩm thành công!');
           this.loadProducts();

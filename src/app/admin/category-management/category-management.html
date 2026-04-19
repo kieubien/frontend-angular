@@ -51,14 +51,19 @@
       <div class="modal-body p-4">
         <form #catForm="ngForm">
           <div class="mb-3">
-            <label class="form-label">Tên danh mục</label>
-            <input type="text" class="form-control" name="name" [(ngModel)]="form.name" required (blur)="generateSlug()" placeholder="Ví dụ: Son lì">
+            <label class="form-label fw-bold small text-muted">TÊN DANH MỤC (*)</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="form.name" required (blur)="generateSlug()" placeholder="Ví dụ: Son lì" #catNameCtrl="ngModel" [ngClass]="{'is-invalid': catNameCtrl.invalid && catNameCtrl.touched}">
+            <div class="text-danger small mt-1" *ngIf="catNameCtrl.invalid && catNameCtrl.touched">
+              <i class="bi bi-exclamation-circle"></i> Vui lòng nhập tên danh mục.
+            </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Slug</label>
-            <input type="text" class="form-control" name="slug" [(ngModel)]="form.slug" required placeholder="son-li">
-          </div>
-          <div class="mb-3">
+            <label class="form-label fw-bold small text-muted">SLUG (*)</label>
+            <input type="text" class="form-control" name="slug" [(ngModel)]="form.slug" required placeholder="son-li" #catSlugCtrl="ngModel" [ngClass]="{'is-invalid': catSlugCtrl.invalid && catSlugCtrl.touched}">
+            <div class="text-danger small mt-1" *ngIf="catSlugCtrl.invalid && catSlugCtrl.touched">
+              <i class="bi bi-exclamation-circle"></i> Vui lòng nhập đường dẫn (slug) cho danh mục.
+            </div>
+          </div>          <div class="mb-3">
             <label class="form-label">Danh mục cha</label>
             <select class="form-select" name="parent_id" [(ngModel)]="form.parent_id">
               <option [ngValue]="undefined">-- Không có (Danh mục gốc) --</option>
