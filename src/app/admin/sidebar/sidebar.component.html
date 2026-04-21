@@ -21,43 +21,33 @@
 
     <div class="nav-section">Tổng quan</div>
 
-    <a class="nav-link"
-       routerLink="/admin"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{ exact: true }">
+    <a class="nav-link" routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <i class="bi bi-speedometer2"></i> Dashboard
     </a>
 
-    <a class="nav-link d-flex justify-content-between align-items-center"
-       routerLink="/admin/orders"
-       routerLinkActive="active">
+    <a class="nav-link d-flex justify-content-between align-items-center" routerLink="/admin/orders"
+      routerLinkActive="active">
       <span><i class="bi bi-box-seam"></i> Đơn hàng</span>
     </a>
 
     <div class="nav-section">Quản lý</div>
 
-    <a class="nav-link"
-       routerLink="/admin/products"
-       routerLinkActive="active">
+    <a class="nav-link" routerLink="/admin/products" routerLinkActive="active">
       <i class="bi bi-bag"></i> Sản phẩm
     </a>
 
-    <a class="nav-link"
-       routerLink="/admin/categories"
-       routerLinkActive="active">
+    <a class="nav-link" routerLink="/admin/categories" routerLinkActive="active">
       <i class="bi bi-grid"></i> Danh mục
     </a>
 
     <div class="nav-section">Cá nhân</div>
 
-    <a class="nav-link text-primary" routerLink="/">
-      <i class="bi bi-shop"></i> Quay lại cửa hàng
+    <a class="nav-link" routerLink="/admin/users" routerLinkActive="active">
+      <i class="bi bi-people"></i> Khách hàng
     </a>
 
-    <a class="nav-link"
-       routerLink="/admin/users"
-       routerLinkActive="active">
-      <i class="bi bi-people"></i> Khách hàng
+    <a class="nav-link text-primary" routerLink="/">
+      <i class="bi bi-shop"></i> Quay lại cửa hàng
     </a>
 
   </nav>
