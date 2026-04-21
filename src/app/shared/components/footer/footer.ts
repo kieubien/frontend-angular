@@ -2,7 +2,7 @@ import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.model';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-footer',
@@ -39,14 +39,12 @@ export class FooterComponent implements OnInit {
 
   paymentMethods = ['VISA','MasterCard','MoMo','ZaloPay','COD'];
 
-  constructor(private categoryService: CategoryService) {}
+  constructor(private categoryService: CategoryService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.categoryService.getCategories().subscribe(cats => {
-      // Defer assignment to avoid NG0100 when cache returns synchronously
-      setTimeout(() => {
-        this.categories = cats.filter(c => !(c.parent_id || c.parentId)).slice(0, 5);
-      });
+      this.categories = cats.filter(c => !(c.parent_id || c.parentId)).slice(0, 5);
+      this.cdr.detectChanges();
     });
   }
 }

@@ -70,4 +70,10 @@ export class OrderService {
       catchError(this.handleError)
     );
   }
+
+  userCancelOrder(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/user-cancel/${id}`, {}, this.getAuthHeaders()).pipe(
+      catchError(this.handleError)
+    );
+  }
 }

@@ -87,7 +87,19 @@ const Product = sequelize.define('Product', {
 }, {
     tableName: 'products',
     timestamps: true,
-    underscored: true
+    underscored: true,
+    validate: {
+        priceLowerThanOriginal() {
+            if (!this.isNewRecord && !this.changed('price') && !this.changed('original_price')) {
+                return; // Bỏ qua nếu chỉ cập nhật stock hoặc field khác
+            }
+            const p = parseFloat(this.price);
+            const op = parseFloat(this.original_price);
+            if (!isNaN(op) && op > 0 && p > op) {
+                throw new Error('Giá bán không được lớn hơn giá gốc');
+            }
+        }
+    }
 });
 
 // Thiết lập quan hệ

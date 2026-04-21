@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class SidebarComponent implements OnInit {
   userName = 'Admin';
+  userRole = 'admin';
 
   constructor(private router: Router) {}
 
@@ -19,6 +20,7 @@ export class SidebarComponent implements OnInit {
     if (userJson) {
       const user = JSON.parse(userJson);
       this.userName = user.name || 'Admin';
+      this.userRole = user.role || 'admin';
     }
   }
 

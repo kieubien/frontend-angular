@@ -23,7 +23,7 @@ export class CartComponent implements OnInit, OnDestroy {
   couponStatus = '';
 
   discount = 0;
-  shippingFee = 30000;
+  shippingFee = 0;
 
   constructor(
     private cartService: CartService,
@@ -63,8 +63,7 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   private updateTotal() {
-    // Miễn phí vận chuyển cho đơn hàng trên 299k
-    this.shippingFee = this.subtotal >= 299000 ? 0 : 30000;
+    this.shippingFee = 0;
   }
 
   /* ===== COUPON ===== */

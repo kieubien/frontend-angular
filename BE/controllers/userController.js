@@ -108,6 +108,45 @@ class UserController {
         }
     }
 
+    static async updateProfile(req, res) {
+        try {
+            const { id } = req.params;
+            const { first_name, last_name, phone, password } = req.body;
+            const user = await User.findByPk(id);
+            if (!user) {
+                return res.status(404).json({ message: "Không tìm thấy người dùng" });
+            }
+
+            const updates = {
+                first_name: first_name || user.first_name,
+                last_name: last_name || user.last_name,
+                phone: phone || user.phone
+            };
+
+            if (password && password.trim() !== '') {
+                updates.password = await bcrypt.hash(password, 10);
+            }
+
+            await user.update(updates);
+
+            // Return updated info
+            res.status(200).json({
+                message: "Cập nhật thông tin thành công",
+                user: {
+                    id: user.id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    phone: user.phone,
+                    role: user.role
+                }
+            });
+        } catch (error) {
+            console.error("Lỗi cập nhật thông tin cá nhân:", error);
+            res.status(500).json({ message: "Lỗi server" });
+        }
+    }
+
     static async updateStatus(req, res) {
         try {
             const { id } = req.params;

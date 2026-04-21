@@ -80,7 +80,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   get shippingFee() {
-    return this.subtotal >= 299000 ? 0 : 30000;
+    return 0;
   }
 
   get total() {
@@ -133,7 +133,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']); 
       },
       error: (err: any) => {
-        alert(err.error?.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
+        const errorMsg = err.error?.error || err.error?.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!';
+        alert('Lỗi đặt hàng: ' + errorMsg);
+        console.error('Checkout error details:', err);
       }
     });
   }

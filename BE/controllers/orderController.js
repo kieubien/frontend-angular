@@ -37,7 +37,13 @@ class OrderController {
             await transaction.commit();
             res.status(201).json({ status: 201, message: 'Đặt hàng thành công', order_id: order.id });
         } catch (error) {
-            await transaction.rollback();
+            try {
+                if (!transaction.finished) {
+                    await transaction.rollback();
+                }
+            } catch (rbError) {
+                console.error('Lỗi khi rollback transaction:', rbError);
+            }
             console.error('Error during checkout:', error);
             const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
             res.status(500).json({ error: message });
@@ -46,13 +52,37 @@ class OrderController {
 
     static async list(req, res) {
         try {
+            const { user_id } = req.query;
+            let whereClause = {};
+
+            if (user_id) {
+                whereClause.user_id = user_id;
+            }
+
             const orders = await Order.findAll({
+                where: whereClause,
                 include: [{ model: OrderItem, include: [Product] }],
                 order: [['created_at', 'DESC']]
             });
             res.status(200).json({ status: 200, data: orders });
         } catch (error) {
             console.error('Error fetching orders:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
+        }
+    }
+
+    static async listByUser(req, res) {
+        try {
+            const userId = req.params.userId;
+            const orders = await Order.findAll({
+                where: { user_id: userId },
+                include: [{ model: OrderItem, include: [Product] }],
+                order: [['created_at', 'DESC']]
+            });
+            res.status(200).json({ status: 200, data: orders });
+        } catch (error) {
+            console.error('Error fetching user orders:', error);
             const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
             res.status(500).json({ error: message });
         }
@@ -94,6 +124,25 @@ class OrderController {
             res.status(200).json({ status: 200, message: 'Cập nhật trạng thái thành công' });
         } catch (error) {
             console.error('Error updating order status:', error);
+            const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
+            res.status(500).json({ error: message });
+        }
+    }
+
+    static async userCancel(req, res) {
+        try {
+            const order = await Order.findByPk(req.params.id);
+            if (!order) return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+
+            if (order.status !== 'pending') {
+                return res.status(400).json({ message: 'Chỉ có thể huỷ đơn hàng khi đang chờ xử lý!' });
+            }
+
+            order.status = 'cancelled';
+            await order.save();
+            res.status(200).json({ status: 200, message: 'Đã huỷ đơn hàng thành công' });
+        } catch (error) {
+            console.error('Error cancelling order:', error);
             const message = error.errors ? error.errors.map(e => e.message).join(', ') : error.message;
             res.status(500).json({ error: message });
         }
