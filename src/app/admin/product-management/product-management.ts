@@ -25,6 +25,8 @@ export class ProductManagement implements OnInit {
   products: any[] = [];
   categories: Category[] = [];
 
+  submitted = false;
+
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
@@ -72,14 +74,16 @@ export class ProductManagement implements OnInit {
   }
 
   openModal() {
-    this.form = { status: 'active' };
+    this.form = { status: 'active', stock: 0, price: 0, original_price: 0 };
     this.editing = false;
+    this.submitted = false;
     this.showModal = true;
   }
 
   editProduct(p: any) {
     this.form = { ...p };
     this.editing = true;
+    this.submitted = false;
     this.showModal = true;
   }
 
@@ -94,7 +98,19 @@ export class ProductManagement implements OnInit {
     }
   }
 
+  isFormInvalid() {
+    // Check required fields
+    if (!this.form.name || !this.form.price || !this.form.category_id) return true;
+    // Check price logic (giá bán không được > giá gốc nếu giá gốc > 0)
+    const p = parseFloat(this.form.price);
+    const op = parseFloat(this.form.original_price);
+    if (!isNaN(op) && op > 0 && p > op) return true;
+    return false;
+  }
+
   saveProduct() {
+     this.submitted = true;
+
     // Tự tạo slug nếu chưa có
     if (!this.form.slug && this.form.name) {
         // Simple Vietnamese slugify
@@ -107,13 +123,16 @@ export class ProductManagement implements OnInit {
     }
 
     // Xử lý logic giá: Nếu giá bán = 0 thì lấy giá gốc
-    if ((!this.form.price || Number(this.form.price) === 0) && this.form.original_price) {
+    if ((!this.form.price || parseFloat(this.form.price) === 0) && parseFloat(this.form.original_price) > 0) {
       this.form.price = this.form.original_price;
     }
 
-    // Bắt lỗi: Giá bán không được lớn hơn giá gốc
-    if (this.form.original_price && Number(this.form.price) > Number(this.form.original_price)) {
-      alert('Lỗi: Giá bán (giá hiện tại) không được lớn hơn giá gốc!');
+    // Bắt lỗi triệt để: Giá bán không được lớn hơn giá gốc
+    const currentPrice = parseFloat(this.form.price);
+    const currentOriginal = parseFloat(this.form.original_price);
+
+    if (!isNaN(currentOriginal) && currentOriginal > 0 && currentPrice > currentOriginal) {
+      alert(`Lỗi: Giá bán (${currentPrice.toLocaleString()}đ) không được lớn hơn giá gốc (${currentOriginal.toLocaleString()}đ)!`);
       return;
     }
 

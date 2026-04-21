@@ -86,4 +86,27 @@ export class AuthService {
   updateUserStatus(id: string | number, status: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/update-status/${id}`, { status });
   }
+
+  updateProfile(id: string | number, data: any): Observable<any> {
+    return this.http.put<{ message: string, user: any }>(`${this.apiUrl}/update-profile/${id}`, data).pipe(
+      map(res => {
+        if (res.user && isPlatformBrowser(this.platformId)) {
+          // Merge updated data into session
+          const currentUser = this.currentUserValue;
+          if (currentUser) {
+            const updatedUser = { 
+              ...currentUser, 
+              first_name: res.user.first_name, 
+              last_name: res.user.last_name,
+              name: (res.user.first_name || '') + ' ' + (res.user.last_name || ''),
+              phone: res.user.phone
+            };
+            localStorage.setItem('bb_user', JSON.stringify(updatedUser));
+            this.currentUserSubject.next(updatedUser);
+          }
+        }
+        return res;
+      })
+    );
+  }
 }

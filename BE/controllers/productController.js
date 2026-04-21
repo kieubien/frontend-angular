@@ -71,6 +71,10 @@ class ProductController {
 
     static async create(req, res) {
         try {
+            const { price, original_price } = req.body;
+            if (original_price && Number(original_price) > 0 && Number(price) > Number(original_price)) {
+                return res.status(400).json({ status: 400, error: 'Giá bán không được lớn hơn giá gốc' });
+            }
             const product = await ProductModel.create(req.body);
             res.status(201).json({ status: 201, message: 'Thêm sản phẩm thành công', data: product });
         } catch (error) {
@@ -82,6 +86,10 @@ class ProductController {
 
     static async update(req, res) {
         try {
+            const { price, original_price } = req.body;
+            if (original_price && Number(original_price) > 0 && Number(price) > Number(original_price)) {
+                return res.status(400).json({ status: 400, error: 'Giá bán không được lớn hơn giá gốc' });
+            }
             const product = await ProductModel.findByPk(req.params.id);
             if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
             await product.update(req.body);

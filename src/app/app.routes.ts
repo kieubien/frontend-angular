@@ -43,6 +43,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/user-profile.component').then(
+            (m) => m.UserProfileComponent,
+          ),
+      },
+      {
         path: 'order-history',
         loadComponent: () =>
           import('./features/cart/order-history/order-history').then(

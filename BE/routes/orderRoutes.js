@@ -5,7 +5,9 @@ const { checkJWT, isAdmin } = require('../controllers/authCheck');
 
 router.post('/orders/checkout', OrderController.create);
 router.get('/orders/list', checkJWT, isAdmin, OrderController.list);
+router.get('/orders/user/:userId', checkJWT, OrderController.listByUser);
 router.get('/orders/:id', checkJWT, OrderController.getById);
 router.put('/orders/:id/status', checkJWT, isAdmin, OrderController.updateStatus);
+router.put('/orders/user-cancel/:id', checkJWT, OrderController.userCancel);
 
 module.exports = router;
