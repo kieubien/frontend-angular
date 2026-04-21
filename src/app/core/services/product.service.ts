@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +13,11 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   getProducts(params?: any): Observable<any[]> {
-    const cacheKey = JSON.stringify(params || {});
-    if (this.cache.has(cacheKey)) {
-      return of(this.cache.get(cacheKey)!);
-    }
-
     return this.http.get<{data: any[]}>(`${this.apiUrl}/list`, { params }).pipe(
-      map(res => {
-        this.cache.set(cacheKey, res.data);
-        return res.data;
+      map(res => res?.data || []),
+      catchError(err => {
+        console.error('ProductService Error:', err);
+        return of([]);
       })
     );
   }
@@ -42,5 +38,11 @@ export class ProductService {
 
   deleteProduct(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  getPublicStats(): Observable<any> {
+    return this.http.get<{ data: any }>('http://localhost:3000/api/public/stats').pipe(
+      map(res => res.data)
+    );
   }
 }

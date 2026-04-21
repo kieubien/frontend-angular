@@ -35,54 +35,74 @@
   <div>
 
     <!-- SHIPPING -->
-    <div class="checkout-box">
+    <div class="checkout-box" [formGroup]="checkoutForm">
       <div class="checkout-title">Thông tin giao hàng</div>
 
       <div class="form-group">
-        <input type="text" placeholder="Họ và tên" [(ngModel)]="customerName">
+        <input type="text" placeholder="Họ và tên" formControlName="customerName" [class.invalid]="checkoutForm.get('customerName')?.touched && checkoutForm.get('customerName')?.invalid">
+        <div class="error-msg" *ngIf="checkoutForm.get('customerName')?.touched && checkoutForm.get('customerName')?.errors?.['required']">
+          Vui lòng nhập họ tên
+        </div>
       </div>
 
       <div class="row-2">
         <div class="form-group">
-          <input type="text" placeholder="Số điện thoại" [(ngModel)]="phone">
+          <input type="text" placeholder="Số điện thoại" formControlName="phone" [class.invalid]="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid">
+          <div class="error-msg" *ngIf="checkoutForm.get('phone')?.touched">
+            <span *ngIf="checkoutForm.get('phone')?.errors?.['required']">Vui lòng nhập số điện thoại</span>
+            <span *ngIf="checkoutForm.get('phone')?.errors?.['pattern']">Số điện thoại phải có 10 chữ số</span>
+          </div>
         </div>
         <div class="form-group">
-          <input type="email" placeholder="Email" [(ngModel)]="email">
+          <input type="email" placeholder="Email" formControlName="email" [class.invalid]="checkoutForm.get('email')?.touched && checkoutForm.get('email')?.invalid">
+          <div class="error-msg" *ngIf="checkoutForm.get('email')?.touched">
+            <span *ngIf="checkoutForm.get('email')?.errors?.['required']">Vui lòng nhập email</span>
+            <span *ngIf="checkoutForm.get('email')?.errors?.['email']">Email không đúng định dạng</span>
+          </div>
         </div>
       </div>
 
       <div class="form-group">
-        <input type="text" placeholder="Địa chỉ (Số nhà, Tên đường)" [(ngModel)]="address">
+        <input type="text" placeholder="Địa chỉ (Số nhà, Tên đường)" formControlName="address" [class.invalid]="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid">
+        <div class="error-msg" *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.errors?.['required']">
+          Vui lòng nhập địa chỉ
+        </div>
       </div>
 
       <div class="row-2">
         <div class="form-group">
-          <select [(ngModel)]="selectedProvince" (change)="loadDistrict(selectedProvince)">
+          <select formControlName="province" [class.invalid]="checkoutForm.get('province')?.touched && checkoutForm.get('province')?.invalid">
             <option value="">-- Chọn Tỉnh/Thành --</option>
             <option *ngFor="let p of provinces" [value]="p.code">
               {{ p.name }}
             </option>
           </select>
+          <div class="error-msg" *ngIf="checkoutForm.get('province')?.touched && checkoutForm.get('province')?.errors?.['required']">
+            Vui lòng chọn tỉnh thành
+          </div>
         </div>
 
         <div class="form-group">
-          <select [(ngModel)]="selectedDistrict">
+          <select formControlName="district" [class.invalid]="checkoutForm.get('district')?.touched && checkoutForm.get('district')?.invalid">
             <option value="">-- Chọn Quận/Huyện --</option>
             <option *ngFor="let d of districts" [value]="d.code">
               {{ d.name }}
             </option>
           </select>
+          <div class="error-msg" *ngIf="checkoutForm.get('district')?.touched && checkoutForm.get('district')?.errors?.['required']">
+            Vui lòng chọn quận huyện
+          </div>
         </div>
       </div>
 
     </div>
 
     <!-- PAYMENT -->
-    <div class="checkout-box">
+    <div class="checkout-box" [formGroup]="checkoutForm">
       <div class="checkout-title">Phương thức thanh toán</div>
 
       <!-- COD -->
-      <label class="payment-method">
+      <label class="payment-method" [class.active]="checkoutForm.get('paymentMethod')?.value === 'COD'">
         <div class="payment-left">
           <span class="payment-icon">
             <svg width="18" height="18" fill="none" stroke="currentColor">
@@ -90,26 +110,26 @@
               <circle cx="9" cy="9" r="2"/>
             </svg>
           </span>
-          COD
+          COD (Thanh toán khi nhận hàng)
         </div>
-        <input type="radio" name="pay" [(ngModel)]="paymentMethod" value="cod">
+        <input type="radio" name="paymentMethod" formControlName="paymentMethod" value="COD">
       </label>
 
       <!-- MOMO -->
-      <label class="payment-method">
+      <label class="payment-method" [class.active]="checkoutForm.get('paymentMethod')?.value === 'MOMO'">
         <div class="payment-left">
           <span class="payment-icon">
             <svg width="18" height="18" fill="none" stroke="currentColor">
               <rect x="2" y="4" width="14" height="10" rx="2"/>
             </svg>
           </span>
-          MoMo
+          Ví MoMo
         </div>
-        <input type="radio" name="pay" [(ngModel)]="paymentMethod" value="momo">
+        <input type="radio" name="paymentMethod" formControlName="paymentMethod" value="MOMO">
       </label>
 
       <!-- ZALO -->
-      <label class="payment-method">
+      <label class="payment-method" [class.active]="checkoutForm.get('paymentMethod')?.value === 'ZALO'">
         <div class="payment-left">
           <span class="payment-icon">
             <svg width="18" height="18" fill="none" stroke="currentColor">
@@ -118,7 +138,7 @@
           </span>
           ZaloPay
         </div>
-        <input type="radio" name="pay" [(ngModel)]="paymentMethod" value="zalo">
+        <input type="radio" name="paymentMethod" formControlName="paymentMethod" value="ZALO">
       </label>
 
     </div>

@@ -7,5 +7,6 @@ export interface Category {
   icon?: string;
   description?: string;
   product_count?: number;
-  productCount?: number; // Giữ lại để tránh break code cũ nếu có
+  productCount?: number;
+  status?: 'active' | 'inactive';
 }

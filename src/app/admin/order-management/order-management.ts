@@ -28,6 +28,8 @@ export class OrderManagement implements OnInit {
     { key: 'cancelled', label: 'Huỷ' }
   ];
 
+  isModalOpen = false;
+
   constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {
@@ -66,7 +68,7 @@ export class OrderManagement implements OnInit {
     if (currentStatus === 'pending') {
       return this.statusList.filter(s => ['shipping', 'done', 'cancelled'].includes(s.key));
     } else if (currentStatus === 'shipping') {
-      return this.statusList.filter(s => ['done', 'cancelled'].includes(s.key));
+      return this.statusList.filter(s => ['done'].includes(s.key)); // Can only complete or cancel? Usually shipping to cancelled is rare but possible. 
     }
     return [];
   }
@@ -84,8 +86,19 @@ export class OrderManagement implements OnInit {
   }
 
   selectOrder(order: any) {
-    this.selectedOrder = order;
-    this.selectedStatusTemp = order.status;
+    this.orderService.getOrderById(order.id).subscribe({
+      next: (res) => {
+        this.selectedOrder = res;
+        this.selectedStatusTemp = res.status;
+        this.isModalOpen = true;
+      },
+      error: (err) => alert('Không thể tải chi tiết đơn hàng')
+    });
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.selectedOrder = null;
   }
 
   updateStatus() {

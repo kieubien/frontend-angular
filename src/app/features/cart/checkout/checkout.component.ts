@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../../core/services/cart.service';
@@ -14,21 +14,13 @@ import { CartItem } from '../../../shared/models/cart.model';
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
+  checkoutForm!: FormGroup;
 
   items: CartItem[] = [];
   private cartSub!: Subscription;
-
-  // Form fields
-  customerName = '';
-  phone = '';
-  email = '';
-  address = '';
-  selectedProvince = '';
-  selectedDistrict = '';
-  paymentMethod = 'cod';
 
   provinces: any[] = [];
   districts: any[] = [];
@@ -37,14 +29,45 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private orderService: OrderService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit() {
+    this.initForm();
     this.cartSub = this.cartService.cartItems$.subscribe(items => {
       this.items = items;
     });
     this.loadProvince();
+  }
+
+  initForm() {
+    const user = this.authService.currentUserValue;
+    // Fallback logic for name
+    let fullName = '';
+    if (user) {
+      if (user.first_name && user.last_name) {
+        fullName = `${user.first_name} ${user.last_name}`;
+      } else {
+        fullName = user.name;
+      }
+    }
+
+    this.checkoutForm = this.fb.group({
+      customerName: [fullName, Validators.required],
+      phone: [user?.phone || '', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      email: [user?.email || '', [Validators.required, Validators.email]],
+      address: ['', Validators.required],
+      province: ['', Validators.required],
+      district: ['', Validators.required],
+      paymentMethod: ['COD', Validators.required]
+    });
+
+    // Listen to province changes to load districts
+    this.checkoutForm.get('province')?.valueChanges.subscribe(code => {
+      this.loadDistrict(code);
+      this.checkoutForm.get('district')?.setValue('');
+    });
   }
 
   ngOnDestroy() {
@@ -75,21 +98,24 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.customerName || !this.phone || !this.address || !this.selectedProvince) {
-      alert('Vui lòng điền đầy đủ thông tin giao hàng!');
+    if (this.checkoutForm.invalid) {
+      this.checkoutForm.markAllAsTouched();
+      alert('Vui lòng điền đúng và đầy đủ thông tin giao hàng!');
       return;
     }
 
+    const formVal = this.checkoutForm.value;
+
     // Lấy tên province/district từ code
-    const provinceName = this.provinces.find(p => p.code === this.selectedProvince)?.name || '';
-    const districtName = this.districts.find(d => d.code === this.selectedDistrict)?.name || '';
-    const fullAddress = `${this.address}, ${districtName}, ${provinceName}`;
+    const provinceName = this.provinces.find(p => p.code === formVal.province)?.name || '';
+    const districtName = this.districts.find(d => d.code === formVal.district)?.name || '';
+    const fullAddress = `${formVal.address}, ${districtName}, ${provinceName}`;
 
     const orderPayload: Order = {
-      customer_name: this.customerName,
-      phone: this.phone,
+      customer_name: formVal.customerName,
+      phone: formVal.phone,
       shipping_address: fullAddress,
-      payment_method: this.paymentMethod.toUpperCase(),
+      payment_method: formVal.paymentMethod,
       total_price: this.total,
       status: 'pending',
       user_id: this.authService.currentUserValue?.id || null,
@@ -104,7 +130,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       next: (res) => {
         alert('Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại Blush & Bloom 💖');
         this.cartService.clearCart();
-        this.router.navigate(['/']); // Hoặc trang lịch sử/thành công
+        this.router.navigate(['/']); 
       },
       error: (err) => {
         alert(err.error?.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');

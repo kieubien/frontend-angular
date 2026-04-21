@@ -100,6 +100,14 @@ export class CategoryManagement implements OnInit {
     }
   }
 
+  toggleStatus(cat: Category) {
+    const newStatus = cat.status === 'inactive' ? 'active' : 'inactive';
+    this.categoryService.updateCategory({ ...cat, status: newStatus }).subscribe({
+      next: () => this.loadCategories(),
+      error: (err) => alert('Lỗi cập nhật trạng thái')
+    });
+  }
+
   closeModal() {
     this.showModal = false;
   }

@@ -24,6 +24,13 @@
     padding: 10px;
     border-radius: 20px;
     border: 1px solid var(--pink-200);
+    outline: none;
+    transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--pink-400);
 }
 
 .row-2 {
@@ -40,6 +47,12 @@
     display: flex;
     justify-content: space-between;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.payment-method.active {
+    border-color: var(--pink-400);
+    background: #FFF0F5;
 }
 
 .payment-left {
@@ -62,6 +75,15 @@
     justify-content: space-between;
     margin-top: 12px;
     font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--pink-500);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: var(--text-muted);
 }
 
 .btn-place {
@@ -73,6 +95,11 @@
     border-radius: 999px;
     margin-top: 16px;
     cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-place:hover {
+    background: var(--pink-500);
 }
 
 /* STEP BAR */
@@ -116,6 +143,26 @@
     height: 1px;
     background: var(--pink-100);
     margin: 0 8px;
+}
+
+/* VALIDATION */
+.form-group {
+    position: relative;
+    margin-bottom: 22px;
+}
+
+input.invalid, select.invalid {
+    border-color: #E24B4A !important;
+    background: #FFF8F8;
+}
+
+.error-msg {
+    position: absolute;
+    bottom: -18px;
+    left: 14px;
+    font-size: 11px;
+    color: #E24B4A;
+    font-weight: 500;
 }
 
 @media(max-width:1024px) {

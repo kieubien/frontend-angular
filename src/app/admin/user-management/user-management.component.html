@@ -118,6 +118,30 @@
                 {{ selectedUser.createdAt ? (selectedUser.createdAt | date:'dd/MM/yyyy HH:mm') : 'N/A' }}
               </div>
             </div>
+            
+            <div class="col-12 mt-4 pt-2 border-top">
+              <label class="small text-muted text-uppercase fw-bold mb-2 d-block" style="font-size: 0.65rem;">Thao tác quản trị</label>
+              <div class="d-flex gap-2">
+                <!-- Role Toggle -->
+                <button *ngIf="selectedUser.role === 'user'" 
+                        class="btn btn-sm btn-outline-primary flex-grow-1" 
+                        (click)="updateRole(selectedUser, 'admin')">
+                   Lên Admin
+                </button>
+                <button *ngIf="selectedUser.role === 'admin'" 
+                        class="btn btn-sm btn-outline-secondary flex-grow-1" 
+                        (click)="updateRole(selectedUser, 'user')">
+                   Bỏ Admin
+                </button>
+
+                <!-- Status Toggle -->
+                <button class="btn btn-sm flex-grow-1"
+                        [ngClass]="selectedUser.status === 'banned' ? 'btn-success' : 'btn-danger'"
+                        (click)="toggleStatus(selectedUser)">
+                  {{ selectedUser.status === 'banned' ? 'Mở khoá' : 'Khoá tài khoản' }}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer border-0 p-3">

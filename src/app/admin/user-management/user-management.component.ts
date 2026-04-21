@@ -53,4 +53,32 @@ export class UserManagementComponent implements OnInit {
   getBannedCount(): number {
     return this.users.filter(u => u.status === 'banned').length;
   }
+
+  updateRole(user: User, newRole: 'admin' | 'user') {
+    if (confirm(`Xác nhận đổi quyền sang ${newRole}?`)) {
+      this.authService.updateUserRole(user.id, newRole).subscribe({
+        next: () => {
+          alert('Cập nhật quyền thành công!');
+          this.loadUsers();
+          this.closeModal();
+        },
+        error: (err) => alert('Có lỗi xảy ra: ' + (err.error?.message || err.message))
+      });
+    }
+  }
+
+  toggleStatus(user: User) {
+    const newStatus = user.status === 'banned' ? 'active' : 'banned';
+    const action = newStatus === 'banned' ? 'Ban' : 'Unban';
+    if (confirm(`Bạn có chắc chắn muốn ${action} người dùng này?`)) {
+      this.authService.updateUserStatus(user.id, newStatus).subscribe({
+        next: () => {
+          alert(`${action} thành công!`);
+          this.loadUsers();
+          this.closeModal();
+        },
+        error: (err) => alert('Có lỗi xảy ra: ' + (err.error?.message || err.message))
+      });
+    }
+  }
 }

@@ -70,10 +70,12 @@
             </div>
 
             <ul class="list-group list-group-flush">
-              <li class="list-group-item" *ngFor="let p of topProducts">
-                <div class="fw-semibold">{{p.name}}</div>
-                <small class="text-muted">{{p.brand}}</small>
-                <div class="text-pink small">{{p.sales}}</div>
+              <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let p of topProducts">
+                <div>
+                  <div class="fw-semibold">{{p.name}}</div>
+                  <small class="text-muted">{{p.brand}}</small>
+                </div>
+                <div class="text-pink small">{{ (p.price).toLocaleString('vi-VN') }}đ</div>
               </li>
             </ul>
           </div>
@@ -100,14 +102,16 @@
             </thead>
 
             <tbody>
-              <tr *ngFor="let o of orders">
+              <tr *ngFor="let o of recentOrders">
                 <td>#{{o.id}}</td>
-                <td>{{o.customer}}</td>
-                <td>{{o.total}}</td>
+                <td>{{o.customer_name}}</td>
+                <td>{{ (o.total_price).toLocaleString('vi-VN') }}đ</td>
                 <td>
                   <span class="badge" [ngClass]="{
                       'bg-success': o.status === 'done',
-                      'bg-warning': o.status === 'pending'
+                      'bg-warning': o.status === 'pending',
+                      'bg-primary': o.status === 'shipping',
+                      'bg-danger': o.status === 'cancelled'
                     }">
                     {{o.status}}
                   </span>

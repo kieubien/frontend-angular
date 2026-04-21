@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { OrderService } from '../../core/services/order.service';
+import { ProductService } from '../../core/services/product.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,16 +12,17 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./dashboard.scss'],
   imports: [CommonModule]
 })
-export class Dashboard {
-
-  constructor(private router: Router) {}
+export class Dashboard implements OnInit {
 
   stats = [
-    { label: 'Doanh thu', value: '128M', change: 18 },
-    { label: 'Đơn hàng', value: '342', change: 9 },
-    { label: 'Khách hàng', value: '1,284', change: 24 },
-    { label: 'Sản phẩm', value: '5,620', change: -3 }
+    { label: 'Doanh thu', value: '0', change: 0, icon: 'bi-cash-stack' },
+    { label: 'Đơn hàng', value: '0', change: 0, icon: 'bi-cart-check' },
+    { label: 'Khách hàng', value: '0', change: 0, icon: 'bi-people' },
+    { label: 'Sản phẩm', value: '0', change: 0, icon: 'bi-box-seam' }
   ];
+
+  recentOrders: any[] = [];
+  topProducts: any[] = [];
 
   chart = [
     { label: 'T1', value: 80 },
@@ -27,15 +31,48 @@ export class Dashboard {
     { label: 'T4', value: 120 }
   ];
 
-  topProducts = [
-    { name: 'MAC Ruby Woo', brand: 'MAC', sales: '2.8K' },
-    { name: 'Dior 999', brand: 'Dior', sales: '1.9K' }
-  ];
+  constructor(
+    private router: Router,
+    private orderService: OrderService,
+    private productService: ProductService
+  ) {}
 
-  orders = [
-    { id: '001', customer: 'Nguyễn A', total: '1.200.000đ', status: 'done' },
-    { id: '002', customer: 'Trần B', total: '800.000đ', status: 'pending' }
-  ];
+  ngOnInit() {
+    this.loadStats();
+  }
+
+  loadStats() {
+    forkJoin({
+      orders: this.orderService.getOrders(),
+      pubStats: this.productService.getPublicStats(),
+      products: this.productService.getProducts()
+    }).subscribe({
+      next: (res) => {
+        // Calculate Revenue
+        const revenue = res.orders
+          .filter(o => o.status === 'done')
+          .reduce((sum, o) => sum + Number(o.total_price), 0);
+
+        this.stats = [
+          { label: 'Doanh thu', value: this.formatCurrency(revenue), change: 0, icon: 'bi-cash-stack' },
+          { label: 'Đơn hàng', value: res.orders.length.toString(), change: 0, icon: 'bi-cart-check' },
+          { label: 'Khách hàng', value: res.pubStats.customers.toString(), change: 0, icon: 'bi-people' },
+          { label: 'Sản phẩm', value: res.pubStats.products.toString(), change: 0, icon: 'bi-box-seam' }
+        ];
+
+        this.recentOrders = res.orders.slice(0, 5);
+        
+        // Mocking top products from real list for now
+        this.topProducts = res.products.slice(0, 5);
+      },
+      error: (err) => console.error('Error loading dashboard stats:', err)
+    });
+  }
+
+  formatCurrency(val: number) {
+    if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M';
+    return val.toLocaleString('vi-VN') + 'đ';
+  }
 
   goToProducts() {
     this.router.navigate(['/admin/products']);

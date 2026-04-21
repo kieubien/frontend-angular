@@ -25,15 +25,15 @@
     <!-- Content -->
     <div class="p-3">
 
-      <!-- Status -->
-      <div class="row g-3 mb-3">
-        <div class="col-md-2" *ngFor="let s of statusList">
-          <div class="card text-center p-2 cursor"
-               (click)="filterStatus = s.key">
-            <div class="fw-bold text-pink">{{getCountByStatus(s.key)}}</div>
-            <small class="text-muted">{{s.label}}</small>
-          </div>
-        </div>
+      <!-- Status Tabs -->
+      <div class="status-tabs mb-4">
+        <button *ngFor="let s of statusList"
+                class="status-tab"
+                [class.active]="filterStatus === s.key"
+                (click)="filterStatus = s.key">
+          {{s.label}}
+          <span class="count">{{getCountByStatus(s.key)}}</span>
+        </button>
       </div>
 
       <!-- Filter -->
@@ -100,65 +100,80 @@
         </div>
       </div>
 
-      <!-- Detail -->
-      <div class="card mt-3 shadow-sm border-0" *ngIf="selectedOrder">
-        <div class="card-header bg-white fw-bold py-3 shadow-sm">
-          Chi tiết đơn hàng #{{selectedOrder.id}}
-        </div>
+      <!-- Detail Modal -->
+      <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h5 class="mb-0">Chi tiết đơn hàng #{{selectedOrder?.id}}</h5>
+            <button class="btn-close" (click)="closeModal()"></button>
+          </div>
 
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6">
-              <p><strong>Khách hàng:</strong> {{selectedOrder.customer_name || 'N/A'}}</p>
-              <p><strong>Điện thoại:</strong> {{selectedOrder.phone || 'N/A'}}</p>
-              <p><strong>Địa chỉ:</strong> {{selectedOrder.shipping_address || 'N/A'}}</p>
-              <p><strong>Tổng tiền:</strong> <span class="text-pink fw-bold fs-5">{{selectedOrder.total_price | number}}đ</span></p>
-            </div>
-            <div class="col-md-6 border-start">
-              <p><strong>Phương thức:</strong> {{selectedOrder.payment_method}}</p>
-              <p><strong>Trạng thái hiện tại:</strong> <span [ngClass]="getStatusClass(selectedOrder.status)" class="badge">{{getStatusLabel(selectedOrder.status)}}</span></p>
-              
-              <div class="mt-4">
-                <label class="form-label small fw-bold">Cập nhật trạng thái:</label>
-                <div class="d-flex gap-2" *ngIf="['pending', 'shipping'].includes(selectedOrder.status); else lockedTemplate">
-                  <select class="form-select form-select-sm w-auto" [(ngModel)]="selectedStatusTemp">
-                    <option *ngFor="let s of getAvailableStatuses(selectedOrder.status)" [value]="s.key">{{s.label}}</option>
-                  </select>
-                  <button class="btn btn-pink btn-sm px-4" (click)="updateStatus()">Xác nhận</button>
+          <div class="modal-body" *ngIf="selectedOrder">
+            <div class="row">
+              <div class="col-md-6">
+                <h6 class="fw-bold border-bottom pb-2 mb-3">Thông tin khách hàng</h6>
+                <p><strong>Người nhận:</strong> {{selectedOrder.customer_name}}</p>
+                <p><strong>Điện thoại:</strong> {{selectedOrder.phone}}</p>
+                <p><strong>Địa chỉ:</strong> {{selectedOrder.shipping_address}}</p>
+                <p><strong>Thanh toán:</strong> {{selectedOrder.payment_method}}</p>
+              </div>
+              <div class="col-md-6 border-start">
+                <h6 class="fw-bold border-bottom pb-2 mb-3">Trạng thái & Tổng tiền</h6>
+                <div class="mb-3">
+                  <span [ngClass]="getStatusClass(selectedOrder.status)" class="badge fs-6">
+                    {{getStatusLabel(selectedOrder.status)}}
+                  </span>
                 </div>
-                <ng-template #lockedTemplate>
-                  <div class="text-success small fw-bold mt-1" *ngIf="selectedOrder.status === 'done'">
-                    <i class="bi bi-check-circle-fill me-1"></i> Đơn hàng đã hoàn thành, không thể thay đổi.
+                <div class="total-display mb-4">
+                  <small class="text-muted d-block">Tổng cộng:</small>
+                  <span class="text-pink fw-bold fs-3">{{selectedOrder.total_price | number}}đ</span>
+                </div>
+
+                <div class="status-update-box p-3 bg-light rounded" *ngIf="['pending', 'shipping'].includes(selectedOrder.status)">
+                  <label class="small fw-bold mb-2 d-block">Cập nhật trạng thái:</label>
+                  <div class="d-flex gap-2">
+                    <select class="form-select form-select-sm" [(ngModel)]="selectedStatusTemp">
+                      <option *ngFor="let s of getAvailableStatuses(selectedOrder.status)" [value]="s.key">{{s.label}}</option>
+                    </select>
+                    <button class="btn btn-pink btn-sm" (click)="updateStatus()">Cập nhật</button>
                   </div>
-                  <div class="text-danger small fw-bold mt-1" *ngIf="selectedOrder.status === 'cancelled'">
-                    <i class="bi bi-x-circle-fill me-1"></i> Đơn hàng đã bị huỷ, không thể thay đổi.
-                  </div>
-                </ng-template>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="mt-4">
+              <h6 class="fw-bold border-bottom pb-2 mb-3">Danh sách sản phẩm</h6>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr class="text-muted small">
+                      <th>Sản phẩm</th>
+                      <th class="text-center">Số lượng</th>
+                      <th class="text-end">Đơn giá</th>
+                      <th class="text-end">Thành tiền</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of selectedOrder.OrderItems">
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <img [src]="item.Product?.image" width="40" height="40" class="rounded" style="object-fit: cover;">
+                          <span>{{item.Product?.name || 'Sản phẩm đã xoá'}}</span>
+                        </div>
+                      </td>
+                      <td class="text-center">x{{item.quantity}}</td>
+                      <td class="text-end">{{item.price | number}}đ</td>
+                      <td class="text-end fw-bold">{{item.price * item.quantity | number}}đ</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
 
-          <!-- Order Items -->
-          <div class="mt-4" *ngIf="selectedOrder.OrderItems">
-              <h6 class="fw-bold mb-3 border-bottom pb-2">Sản phẩm đã đặt:</h6>
-              <table class="table table-sm table-borderless">
-                  <thead>
-                      <tr class="text-muted small">
-                          <th>Sản phẩm</th>
-                          <th class="text-center">SL</th>
-                          <th class="text-end">Đơn giá</th>
-                          <th class="text-end">Tiền</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr *ngFor="let item of selectedOrder.OrderItems">
-                          <td>{{item.Product?.name || 'Sản phẩm đã xoá'}}</td>
-                          <td class="text-center">x{{item.quantity}}</td>
-                          <td class="text-end">{{item.price | number}}đ</td>
-                          <td class="text-end fw-bold">{{item.price * item.quantity | number}}đ</td>
-                      </tr>
-                  </tbody>
-              </table>
+          <div class="modal-footer">
+            <button class="btn btn-light" (click)="closeModal()">Đóng</button>
           </div>
         </div>
       </div>

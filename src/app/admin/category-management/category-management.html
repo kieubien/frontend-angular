@@ -17,6 +17,7 @@
             <th>Slug</th>
             <th>Danh mục cha</th>
             <th>Số SP</th>
+            <th>Trạng thái</th>
             <th class="text-end">Thao tác</th>
           </tr>
         </thead>
@@ -26,11 +27,18 @@
             <td><code class="text-pink">{{ cat.slug }}</code></td>
             <td><span class="badge bg-light text-dark border">{{ getCategoryName(cat.parent_id) }}</span></td>
             <td>{{ cat.product_count || 0 }}</td>
+            <td>
+              <span class="badge cursor" 
+                    [ngClass]="cat.status === 'inactive' ? 'bg-secondary' : 'bg-success'"
+                    (click)="toggleStatus(cat)">
+                {{ cat.status === 'inactive' ? 'Ẩn' : 'Hiện' }}
+              </span>
+            </td>
             <td class="text-end">
-              <button class="btn btn-sm btn-outline-secondary me-2" (click)="editCategory(cat)">
+              <button class="btn btn-sm btn-outline-secondary me-2" (click)="editCategory(cat)" title="Sửa">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(cat.id)">
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(cat.id)" title="Xoá">
                 <i class="bi bi-trash"></i>
               </button>
             </td>

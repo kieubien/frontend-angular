@@ -17,6 +17,12 @@ export class ProductCardComponent {
 
   addToCart() {
     this.cartService.addToCart(this.product, 1);
-    // Có thể thêm toast thông báo ở đây
+  }
+
+  getDiscount(): number | null {
+    if (!this.product || !this.product.original_price || this.product.original_price <= this.product.price) {
+      return null;
+    }
+    return Math.round(((this.product.original_price - this.product.price) / this.product.original_price) * 100);
   }
 }

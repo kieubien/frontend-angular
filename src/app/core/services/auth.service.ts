@@ -8,6 +8,9 @@ import { User } from '../models/user.model';
 export interface AuthUser {
   id?: number;
   name: string;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
   role: 'admin' | 'user';
   email: string;
 }
@@ -48,7 +51,7 @@ export class AuthService {
   setSession(token: string, user: AuthUser): void {
     console.log('AuthService: Setting session:', user);
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('bb_token', token);
+      localStorage.setItem('token', token);
       localStorage.setItem('bb_user', JSON.stringify(user));
       this.currentUserSubject.next(user);
     }
@@ -56,7 +59,7 @@ export class AuthService {
 
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('bb_token');
+      localStorage.removeItem('token');
       localStorage.removeItem('bb_user');
       this.currentUserSubject.next(null);
     }

@@ -76,27 +76,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:14px 4
 
 /* PRODUCT GRID */
 .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-.pc{cursor:pointer;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #f5e8ee;transition:box-shadow .2s;}
-.pc:hover{box-shadow:0 6px 24px rgba(201,94,133,.1);}
-.pc-img{height:200px;display:flex;align-items:center;justify-content:center;position:relative;}
-.pc-badge{position:absolute;top:10px;left:10px;font-size:10px;font-weight:600;padding:4px 10px;border-radius:10px;}
-.sale-b{background:var(--p4);color:#fff;}
-.new-b{background:var(--gold);color:#fff;}
-.hot-b{background:#E24B4A;color:#fff;}
-.pc-wish{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:13px;}
-.pc-body{padding:14px 16px 16px;}
-.pc-brand{font-size:10px;color:var(--soft);text-transform:uppercase;letter-spacing:1px;}
-.pc-name{font-size:14px;font-weight:600;color:var(--text);margin:3px 0 4px;line-height:1.4;}
-.pc-stars{color:var(--gold);font-size:11px;}
-.pc-rev{font-size:11px;color:var(--muted);margin-left:3px;}
-.swatches{display:flex;gap:4px;margin:8px 0;}
-.sw{width:13px;height:13px;border-radius:50%;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.1);}
-.pc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
-.pc-price{font-family:var(--ff);font-size:17px;font-weight:600;color:var(--p5);}
-.pc-old{font-size:11px;color:var(--soft);text-decoration:line-through;margin-left:4px;}
-.add-btn{width:30px;height:30px;border-radius:50%;background:var(--p4);color:#fff;border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.add-btn:hover{background:var(--p5);}
-
 /* PAGINATION */
 .pag{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:40px;}
 .pag-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--p1);background:#fff;color:var(--muted);}

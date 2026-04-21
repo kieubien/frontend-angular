@@ -10,4 +10,5 @@ export interface CartItem {
   colorHex?: string;
   size?: string;
   emoji?: string;
+  stock?: number;
 }
