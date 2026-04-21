@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
 import { CartService } from '../../../core/services/cart.service';
 
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -22,9 +23,24 @@ export class ProductDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    public authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) { }
+
+  get canBuy(): boolean {
+    return this.authService.isLoggedIn() && !this.authService.isAdmin();
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -37,16 +53,31 @@ export class ProductDetailComponent implements OnInit {
 
   loadProduct(id: number): void {
     this.isLoading = true;
+    console.log('ProductDetail: Loading ID', id);
     this.productService.getProductById(id).subscribe({
       next: (res) => {
-        this.product = res;
-        this.loadRelatedProducts();
+        console.log('ProductDetail: Response received', res);
+        
+        // Handle potential nesting (though service should have handled it)
+        if (res && res.data) {
+          this.product = res.data;
+        } else if (Array.isArray(res)) {
+          this.product = res[0];
+        } else {
+          this.product = res;
+        }
+
+        if (this.product) {
+          this.loadRelatedProducts();
+        }
         this.isLoading = false;
-        // Scroll to top when product changes
+        this.cdr.detectChanges();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
-      error: () => {
+      error: (err) => {
+        console.error('ProductDetail Error:', err);
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -75,12 +106,23 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(): void {
-    if (this.product) {
-      this.cartService.addToCart(this.product, this.quantity);
-      console.log('Added to cart:', this.product.name, 'Qty:', this.quantity);
-      
-      // Hiển thị thông báo thành công (Có thể dùng thư viện Toast, ở đây tạm dùng alert)
-      alert(`Đã thêm ${this.quantity} ${this.product.name} vào giỏ hàng thành công!`);
+    if (!this.product) return;
+
+    if (!this.authService.isLoggedIn()) {
+      alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
+      this.router.navigate(['/login']);
+      return;
     }
+
+    if (this.isAdmin) {
+      alert('Tài khoản Admin không hỗ trợ tính năng mua hàng.');
+      return;
+    }
+
+    this.cartService.addToCart(this.product, this.quantity);
+    console.log('Added to cart:', this.product.name, 'Qty:', this.quantity);
+    
+    // Hiển thị thông báo thành công
+    alert(`Đã thêm ${this.quantity} ${this.product.name} vào giỏ hàng thành công!`);
   }
 }

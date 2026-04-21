@@ -1,10 +1,5 @@
 <div class="product-page" *ngIf="product">
-    <!-- Breadcrumb -->
-    <div class="bc">
-        <a routerLink="/">Trang chủ</a> <span>/</span>
-        <a routerLink="/products">Sản phẩm</a> <span>/</span>
-        {{product.name}}
-    </div>
+
 
     <main class="pd">
         <!-- LEFT - IMAGES -->
@@ -96,6 +91,12 @@
                 </button>
                 <button class="btn-buy" (click)="addToCart()" [disabled]="product.status === 'inactive' || product.stock <= 0" *ngIf="product.status !== 'inactive' && product.stock > 0">MUA NGAY</button>
                 <div class="btn-share"><i class="bi bi-share"></i></div>
+            </div>
+
+            <div class="admin-notice mt-3" *ngIf="isAdmin">
+                <div class="alert alert-info">
+                   <i class="bi bi-info-circle me-2"></i> Tài khoản Admin không hỗ trợ tính năng mua hàng.
+                </div>
             </div>
 
             <div class="perks">

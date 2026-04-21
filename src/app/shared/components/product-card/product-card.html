@@ -37,7 +37,7 @@
 
       <div class="card-actions">
           <button class="btn-view" [routerLink]="['/products', product.id]">Xem chi tiết</button>
-          <button class="btn-add-cart" [disabled]="product.status === 'inactive' || product.stock <= 0" (click)="addToCart()">
+          <button *ngIf="canBuy" class="btn-add-cart" [disabled]="product.status === 'inactive' || product.stock <= 0" (click)="addToCart()">
               <i class="bi bi-cart-plus" *ngIf="product.status !== 'inactive' && product.stock > 0"></i>
               {{ product.status === 'inactive' ? 'Dừng bán' : (product.stock <= 0 ? 'Tạm hết' : 'Thêm giỏ hàng') }}
           </button>

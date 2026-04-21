@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const ProductModel = require('../models/product');
 const CategoryModel = require('../models/category');
 const OrderItemModel = require('../models/orderItem');
@@ -5,9 +6,15 @@ const OrderItemModel = require('../models/orderItem');
 class ProductController {
     static async list(req, res) {
         try {
-            const { category, brand, min_price, max_price, sort, is_admin } = req.query;
+            const { category, brand, min_price, max_price, sort, is_admin, search } = req.query;
             let whereClause = {};
             let categoryWhere = {};
+
+            if (search) {
+                whereClause.name = {
+                    [Op.like]: `%${search}%`
+                };
+            }
 
             if (category) {
                 const cat = await CategoryModel.findOne({ where: { slug: category } });

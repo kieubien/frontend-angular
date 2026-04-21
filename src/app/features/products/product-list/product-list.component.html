@@ -40,27 +40,13 @@
       <div class="result-txt" *ngIf="products$ | async as products">
         Hiển thị <strong>{{ products.length }}</strong> sản phẩm
       </div>
-      <div class="search-wrap ms-md-auto me-3">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Tìm tên sản phẩm..." 
+      <div class="search-wrap ms-md-auto">
+        <div class="custom-search">
+          <input type="text" placeholder="Tìm tên sản phẩm..." 
                  [(ngModel)]="searchTerm" (keyup.enter)="applyFilters()">
-          <button class="btn btn-outline-secondary" (click)="applyFilters()">
+          <button (click)="applyFilters()">
             <i class="bi bi-search"></i>
           </button>
-        </div>
-      </div>
-      <div class="sort-row">
-        <span class="sort-label">Sắp xếp:</span>
-        <select class="sort-sel">
-          <option>Bán chạy nhất</option>
-          <option>Mới nhất</option>
-          <option>Giá tăng dần</option>
-          <option>Giá giảm dần</option>
-          <option>Đánh giá cao nhất</option>
-        </select>
-        <div class="view-btns">
-          <div class="vbtn on">⊞</div>
-          <div class="vbtn">☰</div>
         </div>
       </div>
     </div>
