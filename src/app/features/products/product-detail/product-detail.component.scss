@@ -81,6 +81,34 @@
     box-shadow: 0 4px 12px rgba(201, 94, 133, 0.3);
     z-index: 2;
   }
+
+  &.is-unavailable {
+    img {
+      filter: grayscale(0.8);
+      opacity: 0.6;
+    }
+  }
+}
+
+.status-alert {
+  .alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    
+    &.alert-secondary {
+      background: #f0f0f0;
+      color: #666;
+    }
+    
+    &.alert-warning {
+      background: #fff8e1;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+  }
 }
 
 .thumb-row {

@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
   loadData() {
     this.isLoading = true;
     this.categoryService.getCategories().subscribe(res => {
-      this.categories = res;
+      this.categories = res.filter(cat => cat.status !== 'inactive');
     });
 
     this.productService.getProducts().subscribe({

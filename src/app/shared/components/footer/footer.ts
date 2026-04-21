@@ -2,7 +2,7 @@ import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.model';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-footer',
@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
   templateUrl: './footer.html',
   styleUrls: ['./footer.scss']
 })
-export class FooterComponent {
+export class FooterComponent implements OnInit {
   currentYear = new Date().getFullYear();
   categories: Category[] = [];
 
@@ -39,9 +39,14 @@ export class FooterComponent {
 
   paymentMethods = ['VISA','MasterCard','MoMo','ZaloPay','COD'];
 
-  constructor(private categoryService: CategoryService) {
+  constructor(private categoryService: CategoryService) {}
+
+  ngOnInit() {
     this.categoryService.getCategories().subscribe(cats => {
-      this.categories = cats.filter(c => !(c.parent_id || c.parentId)).slice(0, 5);
+      // Defer assignment to avoid NG0100 when cache returns synchronously
+      setTimeout(() => {
+        this.categories = cats.filter(c => !(c.parent_id || c.parentId)).slice(0, 5);
+      });
     });
   }
 }

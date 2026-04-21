@@ -61,7 +61,7 @@ class UserController {
                 last_name: user.last_name, 
                 email: user.email, 
                 role: user.role 
-            }, JWT_SECRET, { expiresIn: "1h" });
+            }, JWT_SECRET, { expiresIn: "24h" });
             return res.status(200).json({
                 message: "Đăng nhập thành công!",
                 token

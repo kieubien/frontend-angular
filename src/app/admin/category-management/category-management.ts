@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-category-management',
@@ -12,32 +12,33 @@ import { Observable } from 'rxjs';
   templateUrl: './category-management.html',
   styleUrls: ['./category-management.scss']
 })
-export class CategoryManagement implements OnInit {
-  categories$: Observable<Category[]>;
+export class CategoryManagement implements OnInit, OnDestroy {
+  private categoriesSubject = new BehaviorSubject<Category[]>([]);
+  categories$ = this.categoriesSubject.asObservable();
   allCategories: Category[] = [];
   showModal = false;
   editing = false;
   form: any = {};
+  private sub = new Subscription();
 
-  constructor(private categoryService: CategoryService) {
-    this.categories$ = this.categoryService.getCategories();
-  }
+  constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.loadCategories();
   }
 
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
   loadCategories() {
-    this.categories$ = this.categoryService.getCategories();
-    this.categories$.subscribe(cats => {
+    this.categoryService.getCategories().subscribe((cats: Category[]) => {
       this.allCategories = cats;
+      this.categoriesSubject.next(cats);
     });
   }
 
-  getCategoryName(id?: number): string {
-    if (!id) return '-';
-    return this.allCategories.find(c => c.id === id)?.name || '-';
-  }
+
 
   generateSlug() {
     if (!this.form.name) return;
@@ -51,39 +52,54 @@ export class CategoryManagement implements OnInit {
   }
 
   openModal() {
-    this.form = { name: '', slug: '', icon: 'bi-bookmark', parent_id: null };
+    this.form = { name: '', slug: '', icon: 'bi-bookmark', status: 'active' };
     this.editing = false;
     this.showModal = true;
   }
 
   editCategory(cat: Category) {
     this.form = { ...cat };
+    if (!this.form.status) this.form.status = 'active';
     this.editing = true;
     this.showModal = true;
   }
 
   saveCategory() {
+    if (!this.form.name) return;
+
+    // Bắt trùng danh mục (Check for duplicate names)
+    const isDuplicate = this.allCategories.some(c => 
+      c.name.toLowerCase() === this.form.name.toLowerCase() && c.id !== this.form.id
+    );
+
+    if (isDuplicate) {
+      alert('Danh mục đã tồn tại');
+      return;
+    }
+
+    // Tự động tạo slug nếu backend cần
+    this.generateSlug();
+
     if (this.editing) {
       this.categoryService.updateCategory(this.form).subscribe({
         next: () => {
+          alert('Cập nhật danh mục thành công!');
           this.loadCategories();
           this.closeModal();
         },
-        error: (err) => {
+        error: (err: any) => {
           const msg = err.error?.error || err.error?.message || 'Lỗi cập nhật danh mục';
           alert('Lỗi: ' + msg);
         }
       });
     } else {
-      if (!this.form.slug) {
-        this.generateSlug();
-      }
       this.categoryService.addCategory(this.form).subscribe({
         next: () => {
+          alert('Đã thêm danh mục mới thành công!');
           this.loadCategories();
           this.closeModal();
         },
-        error: (err) => {
+        error: (err: any) => {
           const msg = err.error?.error || err.error?.message || 'Lỗi thêm mới danh mục';
           alert('Lỗi: ' + msg);
         }
@@ -92,19 +108,40 @@ export class CategoryManagement implements OnInit {
   }
 
   deleteCategory(id: number) {
+    const category = this.allCategories.find(c => c.id === id);
+    
+    // Bắt lỗi khi danh mục có sp ko xoá được
+    if (category && (category.product_count || 0) > 0) {
+      alert(`Không thể xoá! Danh mục "${category.name}" đang có ${category.product_count} sản phẩm. Vui lòng chuyển hoặc xoá sản phẩm trước.`);
+      return;
+    }
+
     if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
       this.categoryService.deleteCategory(id).subscribe({
-        next: () => this.loadCategories(),
-        error: (err) => alert('Lỗi: ' + JSON.stringify(err))
+        next: () => {
+          alert('Xoá danh mục thành công!');
+          this.loadCategories();
+        },
+        error: (err: any) => {
+           const msg = err.error?.error || err.error?.message || 'Lỗi khi xoá danh mục';
+           alert('Lỗi: ' + msg);
+        }
       });
     }
   }
 
   toggleStatus(cat: Category) {
     const newStatus = cat.status === 'inactive' ? 'active' : 'inactive';
+    
+    if (newStatus === 'inactive' && (cat.product_count || 0) > 0) {
+      if (!confirm(`Danh mục này đang có ${cat.product_count} sản phẩm. Ẩn danh mục sẽ ẩn luôn toàn bộ sản phẩm bên trong khỏi khách hàng. Bạn có chắc chắn muốn ẩn?`)) {
+        return;
+      }
+    }
+    
     this.categoryService.updateCategory({ ...cat, status: newStatus }).subscribe({
       next: () => this.loadCategories(),
-      error: (err) => alert('Lỗi cập nhật trạng thái')
+      error: (err: any) => alert('Lỗi cập nhật trạng thái')
     });
   }
 

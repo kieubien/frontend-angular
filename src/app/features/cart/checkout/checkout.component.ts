@@ -127,12 +127,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     };
 
     this.orderService.checkout(orderPayload).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         alert('Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại Blush & Bloom 💖');
         this.cartService.clearCart();
         this.router.navigate(['/']); 
       },
-      error: (err) => {
+      error: (err: any) => {
         alert(err.error?.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
       }
     });

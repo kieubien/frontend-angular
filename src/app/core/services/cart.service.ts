@@ -29,14 +29,22 @@ export class CartService {
 
   /* ===== ACTIONS ===== */
   addToCart(product: any, qty: number = 1) {
-    // Note: Admin check and Login check should be handled in the component or a guard, 
-    // but we can add safeguards here too.
+    // 1. Kiểm tra trạng thái tạm ngưng bán
+    if (product.status === 'inactive') {
+      alert(`Sản phẩm "${product.name}" hiện đang tạm ngưng bán. Xin lỗi vì sự bất tiện này!`);
+      return;
+    }
+
+    // 2. Kiểm tra tồn kho đã hết hẳn chưa
+    if (product.stock <= 0) {
+      alert(`Sản phẩm "${product.name}" hiện đang tạm hết hàng. Vui lòng quay lại sau!`);
+      return;
+    }
     
     const currentItems = this.cartItems.value;
     const existingIndex = currentItems.findIndex(i => i.id === product.id);
 
     // Calculate effective price (same as React logic)
-    const hasSale = product.original_price && Number(product.original_price) > Number(product.price);
     const effectivePrice = Number(product.price);
 
     if (existingIndex > -1) {

@@ -5,8 +5,9 @@ const OrderItemModel = require('../models/orderItem');
 class ProductController {
     static async list(req, res) {
         try {
-            const { category, brand, min_price, max_price, sort } = req.query;
+            const { category, brand, min_price, max_price, sort, is_admin } = req.query;
             let whereClause = {};
+            let categoryWhere = {};
 
             if (category) {
                 const cat = await CategoryModel.findOne({ where: { slug: category } });
@@ -19,12 +20,21 @@ class ProductController {
                 whereClause.brand = brand;
             }
 
+            // Nếu không phải là từ admin dashboard truyền lên, thì mặc định chỉ hiển thị sp thuộc danh mục active
+            if (is_admin !== 'true') {
+                categoryWhere.status = 'active';
+            }
+
             // Xử lý lọc giá (ví dụ)
             // if (min_price || max_price) { ... }
 
             const products = await ProductModel.findAll({
                 where: whereClause,
-                include: [{ model: CategoryModel }]
+                include: [{ 
+                    model: CategoryModel,
+                    where: categoryWhere,
+                    required: is_admin !== 'true' // INNER JOIN nếu public, LEFT JOIN nếu admin (hoặc ngược lại, tuỳ nhu cầu)
+                }]
             });
 
             res.status(200).json({

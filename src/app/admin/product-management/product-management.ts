@@ -37,20 +37,20 @@ export class ProductManagement implements OnInit {
   }
 
   loadProducts() {
-    this.productService.getProducts().subscribe(res => {
+    this.productService.getProducts({ is_admin: 'true' }).subscribe((res: any[]) => {
       this.products = res;
       this.cdr.detectChanges();
     });
   }
 
   loadCategories() {
-    this.categoryService.getCategories().subscribe(res => {
+    this.categoryService.getCategories().subscribe((res: Category[]) => {
       this.categories = res;
     });
   }
 
   filteredProducts() {
-    return this.products.filter(p =>
+    return this.products.filter((p: any) =>
       (!this.filterCategory || p.category_id == Number(this.filterCategory)) &&
       (!this.filterStatus || p.status === this.filterStatus) &&
       (!this.searchText || p.name.toLowerCase().includes(this.searchText.toLowerCase()))
@@ -58,11 +58,11 @@ export class ProductManagement implements OnInit {
   }
 
   getActiveCount() {
-    return this.products.filter(p => p.status === 'active').length;
+    return this.products.filter((p: any) => p.status === 'active').length;
   }
 
   getLowStock() {
-    return this.products.filter(p => p.stock < 10).length;
+    return this.products.filter((p: any) => p.stock < 10).length;
   }
 
   resetFilters() {
@@ -106,6 +106,17 @@ export class ProductManagement implements OnInit {
         this.form.slug = slug;
     }
 
+    // Xử lý logic giá: Nếu giá bán = 0 thì lấy giá gốc
+    if ((!this.form.price || Number(this.form.price) === 0) && this.form.original_price) {
+      this.form.price = this.form.original_price;
+    }
+
+    // Bắt lỗi: Giá bán không được lớn hơn giá gốc
+    if (this.form.original_price && Number(this.form.price) > Number(this.form.original_price)) {
+      alert('Lỗi: Giá bán (giá hiện tại) không được lớn hơn giá gốc!');
+      return;
+    }
+
     if (!this.form.name || !this.form.price || !this.form.category_id) {
         alert('Vui lòng điền đầy đủ các thông tin bắt buộc (*)');
         return;
@@ -118,7 +129,7 @@ export class ProductManagement implements OnInit {
           this.loadProducts();
           this.closeModal();
         },
-        error: (err) => alert(err.error?.error || err.error?.message || 'Có lỗi xảy ra')
+        error: (err: any) => alert(err.error?.error || err.error?.message || 'Có lỗi xảy ra')
       });
     } else {
       this.productService.addProduct(this.form).subscribe({
@@ -127,7 +138,7 @@ export class ProductManagement implements OnInit {
           this.loadProducts();
           this.closeModal();
         },
-        error: (err) => alert(err.error?.error || err.error?.message || 'Có lỗi xảy ra')
+        error: (err: any) => alert(err.error?.error || err.error?.message || 'Có lỗi xảy ra')
       });
     }
   }

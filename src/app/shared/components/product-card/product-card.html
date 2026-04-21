@@ -1,14 +1,16 @@
 <div class="product-card">
   <ng-container *ngIf="product">
-    <div class="card-img-wrap" [routerLink]="['/products', product.id]">
+    <div class="card-img-wrap" [routerLink]="['/products', product.id]" [class.is-unavailable]="product.status === 'inactive' || product.stock <= 0">
       <img *ngIf="product.image" [src]="product.image" [alt]="product.name" class="product-img">
       <div *ngIf="!product.image" class="no-img">
           <i class="bi bi-image"></i>
       </div>
       
       <div class="badges">
-          <span class="badge sale" *ngIf="product.badge === 'sale'">SALE</span>
-          <span class="badge hot" *ngIf="product.badge === 'hot'">HOT</span>
+          <span class="badge inactive" *ngIf="product.status === 'inactive'">DỪNG BÁN</span>
+          <span class="badge out-of-stock" *ngIf="product.status !== 'inactive' && product.stock <= 0">HẾT HÀNG</span>
+          <span class="badge sale" *ngIf="product.badge === 'sale' && product.status !== 'inactive' && product.stock > 0">SALE</span>
+          <span class="badge hot" *ngIf="product.badge === 'hot' && product.status !== 'inactive' && product.stock > 0">HOT</span>
       </div>
     </div>
 
@@ -30,13 +32,14 @@
       <div class="price-row">
         <span class="price">{{ product.price | number }}đ</span>
         <span class="original-price" *ngIf="product.original_price">{{ product.original_price | number }}đ</span>
-        <span class="discount-badge" *ngIf="getDiscount()">-{{ getDiscount() }}%</span>
+        <span class="discount-badge" *ngIf="getDiscount() && product.status !== 'inactive' && product.stock > 0">-{{ getDiscount() }}%</span>
       </div>
 
       <div class="card-actions">
           <button class="btn-view" [routerLink]="['/products', product.id]">Xem chi tiết</button>
-          <button class="btn-add-cart" (click)="addToCart()">
-              <i class="bi bi-cart-plus"></i> Thêm giỏ hàng
+          <button class="btn-add-cart" [disabled]="product.status === 'inactive' || product.stock <= 0" (click)="addToCart()">
+              <i class="bi bi-cart-plus" *ngIf="product.status !== 'inactive' && product.stock > 0"></i>
+              {{ product.status === 'inactive' ? 'Dừng bán' : (product.stock <= 0 ? 'Tạm hết' : 'Thêm giỏ hàng') }}
           </button>
       </div>
     </div>

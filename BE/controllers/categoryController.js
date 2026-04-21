@@ -6,10 +6,19 @@ class CategoryController {
     static async get(req, res) {
         try {
             const categories = await CategoryModel.findAll();
+            
+            // Tính toán số lượng sản phẩm thực tế cho từng danh mục
+            const data = await Promise.all(categories.map(async (cat) => {
+                const count = await ProductModel.count({ where: { category_id: cat.id } });
+                const categoryJson = cat.toJSON();
+                categoryJson.product_count = count; // Ghi đè bằng con số thực tế
+                return categoryJson;
+            }));
+
             res.status(200).json({
                 "status": 200,
                 "message": "Lấy danh sách thành công",
-                "data": categories,  
+                "data": data,  
             });
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -60,8 +69,8 @@ class CategoryController {
 
     static async create(req, res) {
         try {
-            const { name, slug, parent_id, icon, description, product_count } = req.body;
-            const category = await CategoryModel.create({ name, slug, parent_id, icon, description, product_count });
+            const { name, slug, parent_id, icon, description, product_count, status } = req.body;
+            const category = await CategoryModel.create({ name, slug, parent_id, icon, description, product_count, status });
 
             res.status(201).json({
                 message: "Thêm mới thành công",
@@ -77,8 +86,8 @@ class CategoryController {
     static async update(req, res) {
         try {
             const { id } = req.params;
-            const { name, slug, parent_id, icon, description, product_count } = req.body;
-
+            const { name, slug, parent_id, icon, description, product_count, status } = req.body;
+            
             const category = await CategoryModel.findByPk(id);
             if (!category) {
                 return res.status(404).json({ message: "Id không tồn tại" });
@@ -90,6 +99,7 @@ class CategoryController {
             if (icon !== undefined) category.icon = icon;
             category.description = description;
             if (product_count !== undefined) category.product_count = product_count;
+            if (status !== undefined) category.status = status;
 
             await category.save();
 

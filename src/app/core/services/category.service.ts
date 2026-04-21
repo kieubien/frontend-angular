@@ -14,13 +14,13 @@ export class CategoryService {
 
   getCategories(): Observable<Category[]> {
     return this.http.get<{data: Category[]}>(`${this.apiUrl}/list`).pipe(
-      map(response => response.data)
+      map((response: { data: Category[] }) => response.data)
     );
   }
 
   getCategoryBySlug(slug: string): Observable<Category> {
     return this.http.get<{data: Category}>(`${this.apiUrl}/slug/${slug}`).pipe(
-      map(response => response.data)
+      map((response: { data: Category }) => response.data)
     );
   }
 

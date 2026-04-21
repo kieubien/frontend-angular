@@ -81,9 +81,8 @@
   </div>
 
   <!-- Detail Modal -->
-  <div class="modal fade show d-block" *ngIf="showDetailModal" style="background: rgba(0,0,0,0.5)">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg" *ngIf="selectedUser">
+  <div class="admin-modal-overlay" *ngIf="showDetailModal" (click)="closeModal()">
+    <div class="modal-content-custom w-100" style="max-width: 650px;" *ngIf="selectedUser" (click)="$event.stopPropagation()">
         <div class="modal-header bg-light border-0">
           <h5 class="modal-title fw-bold">Thông tin khách hàng</h5>
           <button type="button" class="btn-close" (click)="closeModal()"></button>
@@ -118,28 +117,42 @@
                 {{ selectedUser.createdAt ? (selectedUser.createdAt | date:'dd/MM/yyyy HH:mm') : 'N/A' }}
               </div>
             </div>
-            
             <div class="col-12 mt-4 pt-2 border-top">
-              <label class="small text-muted text-uppercase fw-bold mb-2 d-block" style="font-size: 0.65rem;">Thao tác quản trị</label>
-              <div class="d-flex gap-2">
-                <!-- Role Toggle -->
-                <button *ngIf="selectedUser.role === 'user'" 
-                        class="btn btn-sm btn-outline-primary flex-grow-1" 
-                        (click)="updateRole(selectedUser, 'admin')">
-                   Lên Admin
-                </button>
-                <button *ngIf="selectedUser.role === 'admin'" 
-                        class="btn btn-sm btn-outline-secondary flex-grow-1" 
-                        (click)="updateRole(selectedUser, 'user')">
-                   Bỏ Admin
-                </button>
+              <label class="small text-muted text-uppercase fw-bold mb-3 d-block" style="font-size: 0.65rem;">Lịch sử đơn hàng</label>
+              
+              <div *ngIf="userOrders.length === 0" class="text-center py-4 bg-light rounded-3">
+                <i class="bi bi-cart-x fs-1 text-muted mb-2 d-block"></i>
+                <span class="text-muted small">Khách hàng này chưa có đơn hàng nào.</span>
+              </div>
 
-                <!-- Status Toggle -->
-                <button class="btn btn-sm flex-grow-1"
-                        [ngClass]="selectedUser.status === 'banned' ? 'btn-success' : 'btn-danger'"
-                        (click)="toggleStatus(selectedUser)">
-                  {{ selectedUser.status === 'banned' ? 'Mở khoá' : 'Khoá tài khoản' }}
-                </button>
+              <div *ngIf="userOrders.length > 0" class="table-responsive">
+                <table class="table table-sm align-middle mb-0" style="font-size: 0.85rem">
+                  <thead class="bg-light">
+                    <tr>
+                      <th class="ps-2 border-0">Mã ĐH</th>
+                      <th class="border-0">Ngày tạo</th>
+                      <th class="border-0">Tổng tiền</th>
+                      <th class="border-0 text-end pe-2">Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let order of userOrders">
+                      <td class="ps-2 fw-semibold text-primary">#{{ order.id }}</td>
+                      <td>{{ order.created_at ? (order.created_at | date:'dd/MM/yy') : 'N/A' }}</td>
+                      <td class="fw-medium text-pink">{{ (order.total_price)?.toLocaleString('vi-VN') }}đ</td>
+                      <td class="text-end pe-2">
+                        <span class="badge" [ngClass]="{
+                          'bg-success': order.status === 'done',
+                          'bg-warning': order.status === 'pending',
+                          'bg-primary': order.status === 'shipping',
+                          'bg-danger': order.status === 'cancelled'
+                        }">
+                          {{ order.status }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -147,7 +160,6 @@
         <div class="modal-footer border-0 p-3">
           <button type="button" class="btn btn-dark w-100 py-2 rounded-2" (click)="closeModal()">Đóng cửa sổ</button>
         </div>
-      </div>
     </div>
   </div>
 </div>

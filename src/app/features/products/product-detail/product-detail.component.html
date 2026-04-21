@@ -52,7 +52,21 @@
             <div class="price-row">
                 <span class="price-main">{{product.price | number}}đ</span>
                 <span class="price-old" *ngIf="product.original_price">{{product.original_price | number}}đ</span>
-                <span class="price-save" *ngIf="product.original_price">Tiết kiệm {{getDiscount()}}%</span>
+                <span class="price-save" *ngIf="product.original_price && product.status !== 'inactive' && product.stock > 0">Tiết kiệm {{getDiscount()}}%</span>
+            </div>
+
+            <!-- Alerts for Status -->
+            <div class="status-alert mb-3" *ngIf="product.status === 'inactive'">
+                <div class="alert alert-secondary d-flex align-items-center">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Sản phẩm này hiện đang tạm ngưng kinh doanh.
+                </div>
+            </div>
+            <div class="status-alert mb-3" *ngIf="product.status !== 'inactive' && product.stock <= 0">
+                <div class="alert alert-warning d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Sản phẩm này hiện tại đã hết hàng.
+                </div>
             </div>
 
             <div class="shades" *ngIf="product.colors?.length > 0">
@@ -65,21 +79,22 @@
                 </div>
             </div>
 
-            <div class="qty-row">
+            <div class="qty-row" [class.disabled]="product.status === 'inactive' || product.stock <= 0">
                 <span class="qty-label">Số lượng:</span>
                 <div class="qty-ctrl">
-                    <button class="qty-btn" (click)="updateQuantity(-1)"><i class="bi bi-dash"></i></button>
+                    <button class="qty-btn" (click)="updateQuantity(-1)" [disabled]="product.status === 'inactive' || product.stock <= 0"><i class="bi bi-dash"></i></button>
                     <span class="qty-val">{{quantity}}</span>
-                    <button class="qty-btn" (click)="updateQuantity(1)"><i class="bi bi-plus"></i></button>
+                    <button class="qty-btn" (click)="updateQuantity(1)" [disabled]="product.status === 'inactive' || product.stock <= 0"><i class="bi bi-plus"></i></button>
                 </div>
                 <span class="stock-info text-muted small" *ngIf="product.stock">Còn {{product.stock}} sản phẩm</span>
             </div>
 
             <div class="action-row">
-                <button class="btn-cart" (click)="addToCart()">
-                    <i class="bi bi-cart-plus me-2"></i> THÊM VÀO GIỎ
+                <button class="btn-cart" (click)="addToCart()" [disabled]="product.status === 'inactive' || product.stock <= 0">
+                    <i class="bi bi-cart-plus me-2" *ngIf="product.status !== 'inactive' && product.stock > 0"></i> 
+                    {{ product.status === 'inactive' ? 'DỪNG BÁN' : (product.stock <= 0 ? 'TẠM HẾT' : 'THÊM VÀO GIỎ') }}
                 </button>
-                <button class="btn-buy" (click)="addToCart()">MUA NGAY</button>
+                <button class="btn-buy" (click)="addToCart()" [disabled]="product.status === 'inactive' || product.stock <= 0" *ngIf="product.status !== 'inactive' && product.stock > 0">MUA NGAY</button>
                 <div class="btn-share"><i class="bi bi-share"></i></div>
             </div>
 

@@ -14,8 +14,6 @@
         <thead>
           <tr>
             <th>Tên danh mục</th>
-            <th>Slug</th>
-            <th>Danh mục cha</th>
             <th>Số SP</th>
             <th>Trạng thái</th>
             <th class="text-end">Thao tác</th>
@@ -24,8 +22,6 @@
         <tbody>
           <tr *ngFor="let cat of categories$ | async">
             <td><strong>{{ cat.name }}</strong></td>
-            <td><code class="text-pink">{{ cat.slug }}</code></td>
-            <td><span class="badge bg-light text-dark border">{{ getCategoryName(cat.parent_id) }}</span></td>
             <td>{{ cat.product_count || 0 }}</td>
             <td>
               <span class="badge cursor" 
@@ -49,30 +45,23 @@
 </main>
 
 <!-- Modal -->
-<div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content shadow-lg border-0">
+<div class="admin-modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content-custom w-100" style="max-width: 600px;" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h5 class="modal-title">{{ editing ? 'Cập nhật' : 'Thêm mới' }} danh mục</h5>
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
       <div class="modal-body p-4">
-        <form #catForm="ngForm">
+        <form #catForm="ngForm" (ngSubmit)="$event.preventDefault()">
           <div class="mb-3">
-            <label class="form-label">Tên danh mục</label>
-            <input type="text" class="form-control" name="name" [(ngModel)]="form.name" required (blur)="generateSlug()" placeholder="Ví dụ: Son lì">
+            <label class="form-label">Tên danh mục (*)</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="form.name" required placeholder="Ví dụ: Son lì">
           </div>
           <div class="mb-3">
-            <label class="form-label">Slug</label>
-            <input type="text" class="form-control" name="slug" [(ngModel)]="form.slug" required placeholder="son-li">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Danh mục cha</label>
-            <select class="form-select" name="parent_id" [(ngModel)]="form.parent_id">
-              <option [ngValue]="undefined">-- Không có (Danh mục gốc) --</option>
-              <ng-container *ngFor="let c of allCategories">
-                <option *ngIf="c.id !== form.id" [ngValue]="c.id">{{ c.name }}</option>
-              </ng-container>
+            <label class="form-label">Trạng thái (*)</label>
+            <select class="form-select" name="status" [(ngModel)]="form.status" required>
+              <option value="active">Hiển thị (Active)</option>
+              <option value="inactive">Ẩn (Inactive)</option>
             </select>
           </div>
         </form>
@@ -83,7 +72,6 @@
           {{ editing ? 'Lưu thay đổi' : 'Thêm danh mục' }}
         </button>
       </div>
-    </div>
   </div>
 </div>
-<div class="modal-backdrop fade show" *ngIf="showModal"></div>
+

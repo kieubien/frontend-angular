@@ -61,6 +61,17 @@
 
         &.sale { background: #ff4b4b; }
         &.hot { background: #ff9f00; }
+        &.inactive { background: #666; }
+        &.out-of-stock { background: #444; }
+    }
+}
+
+.card-img-wrap {
+    &.is-unavailable {
+        .product-img {
+            filter: grayscale(0.8);
+            opacity: 0.6;
+        }
     }
 }
 

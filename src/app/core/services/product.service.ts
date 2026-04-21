@@ -14,8 +14,8 @@ export class ProductService {
 
   getProducts(params?: any): Observable<any[]> {
     return this.http.get<{data: any[]}>(`${this.apiUrl}/list`, { params }).pipe(
-      map(res => res?.data || []),
-      catchError(err => {
+      map((res: { data: any[] }) => res?.data || []),
+      catchError((err: any) => {
         console.error('ProductService Error:', err);
         return of([]);
       })
@@ -24,7 +24,7 @@ export class ProductService {
 
   getProductById(id: number): Observable<any> {
     return this.http.get<{data: any}>(`${this.apiUrl}/${id}`).pipe(
-      map(res => res.data)
+      map((res: { data: any }) => res.data)
     );
   }
 
@@ -42,7 +42,7 @@ export class ProductService {
 
   getPublicStats(): Observable<any> {
     return this.http.get<{ data: any }>('http://localhost:3000/api/public/stats').pipe(
-      map(res => res.data)
+      map((res: { data: any }) => res.data)
     );
   }
 }

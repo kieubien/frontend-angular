@@ -5,7 +5,7 @@ import { CategoryService } from '../../../core/services/category.service';
 import { ProductService } from '../../../core/services/product.service';
 import { Category } from '../../../core/models/category.model';
 import { Observable, of } from 'rxjs';
-import { switchMap, tap, catchError } from 'rxjs/operators';
+import { switchMap, tap, catchError, map } from 'rxjs/operators';
 import { ProductCardComponent } from '../../../shared/components/product-card/product-card';
 import { FormsModule } from '@angular/forms';
 
@@ -32,7 +32,9 @@ export class ProductListComponent implements OnInit {
     private categoryService: CategoryService,
     private productService: ProductService
   ) {
-    this.categories$ = this.categoryService.getCategories();
+    this.categories$ = this.categoryService.getCategories().pipe(
+      map((cats: any[]) => cats.filter((cat: { status: string; }) => cat.status !== 'inactive'))
+    );
     this.products$ = this.productService.getProducts();
   }
 
