@@ -27,6 +27,13 @@ app.use(productRoutes);
 app.use(orderRoutes);
 app.use(statsRoutes);
 
-app.listen(port, () => {
+const sequelize = require('./database');
+app.listen(port, async () => {
+    try {
+        await sequelize.sync({ alter: true });
+        console.log('Database schema updated successfully');
+    } catch (err) {
+        console.error('Failed to sync database:', err);
+    }
     console.log('running http://localhost:3000');
-})
+});

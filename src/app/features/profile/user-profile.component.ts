@@ -22,7 +22,9 @@ export class UserProfileComponent implements OnInit {
     first_name: '',
     last_name: '',
     phone: '',
-    password: '' // optional
+    address: '',
+    password: '', // new password
+    old_password: '' // required if changing password
   };
   updatingProfile = false;
 
@@ -41,9 +43,36 @@ export class UserProfileComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       if (user) {
         this.user = user;
+        // Pre-fill from session first
         this.profileForm.first_name = user.first_name || '';
         this.profileForm.last_name = user.last_name || '';
         this.profileForm.phone = user.phone || '';
+        this.profileForm.address = user.address || '';
+
+        // Fetch full profile from DB to get latest data including phone
+        this.authService.getProfile(user.id!).subscribe({
+          next: (userData) => {
+            if (userData) {
+              console.log('Profile Data Loaded:', userData);
+              
+              // Map fields carefully
+              this.profileForm.first_name = userData.first_name || '';
+              this.profileForm.last_name = userData.last_name || '';
+              this.profileForm.phone = userData.phone || userData.phone_number || userData.sdt || '';
+              this.profileForm.address = userData.address || '';
+              
+              // Sync this.user as well
+              this.user = { 
+                ...this.user!, 
+                ...userData,
+                phone: userData.phone || userData.phone_number || userData.sdt,
+                name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim() || this.user?.name
+              };
+              this.cdr.detectChanges();
+            }
+          },
+          error: (err) => console.error('Error fetching profile:', err)
+        });
         
         if (this.activeTab === 'orders') {
           this.loadOrders();
@@ -63,18 +92,30 @@ export class UserProfileComponent implements OnInit {
 
   updateProfile() {
     if (!this.user || !this.user.id) return;
+
+    // Frontend validation for password change
+    if (this.profileForm.password && this.profileForm.password.trim() !== '') {
+      if (!this.profileForm.old_password || this.profileForm.old_password.trim() === '') {
+        alert('Vui lòng nhập mật khẩu cũ để xác nhận việc thay đổi mật khẩu.');
+        return;
+      }
+    }
+
     this.updatingProfile = true;
     this.authService.updateProfile(this.user.id, this.profileForm).subscribe({
       next: (res) => {
-        alert('Cập nhật thông tin thành công!');
         this.updatingProfile = false;
         this.isEditing = false;
-        this.profileForm.password = ''; // clear password
+        this.profileForm.password = '';
+        this.profileForm.old_password = '';
+        this.cdr.detectChanges();
+        alert('Cập nhật thông tin thành công!');
       },
       error: (err) => {
-        console.error(err);
-        alert('Có lỗi xảy ra khi cập nhật thông tin.');
         this.updatingProfile = false;
+        this.cdr.detectChanges();
+        console.error(err);
+        alert(err.error?.message || 'Có lỗi xảy ra khi cập nhật thông tin.');
       }
     });
   }

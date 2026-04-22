@@ -13,6 +13,7 @@ export interface AuthUser {
   phone?: string;
   role: 'admin' | 'user';
   email: string;
+  address?: string;
 }
 
 @Injectable({
@@ -87,6 +88,12 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/update-status/${id}`, { status });
   }
 
+  getProfile(id: string | number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/profile/${id}`).pipe(
+      map(res => res.data)
+    );
+  }
+
   updateProfile(id: string | number, data: any): Observable<any> {
     return this.http.put<{ message: string, user: any }>(`${this.apiUrl}/update-profile/${id}`, data).pipe(
       map(res => {
@@ -99,7 +106,8 @@ export class AuthService {
               first_name: res.user.first_name, 
               last_name: res.user.last_name,
               name: (res.user.first_name || '') + ' ' + (res.user.last_name || ''),
-              phone: res.user.phone
+              phone: res.user.phone,
+              address: res.user.address
             };
             localStorage.setItem('bb_user', JSON.stringify(updatedUser));
             this.currentUserSubject.next(updatedUser);

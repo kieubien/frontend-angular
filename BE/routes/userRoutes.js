@@ -8,6 +8,7 @@ router.post('/login', UserController.login);
 router.get('/list', UserController.getAllUsers);
 router.put('/update-role/:id', UserController.updateRole);
 router.put('/update-status/:id', UserController.updateStatus);
+router.get('/profile/:id', UserController.getProfile);
 router.put('/update-profile/:id', UserController.updateProfile);
 
 module.exports = router;

@@ -81,7 +81,7 @@
   </div>
 
   <!-- Detail Modal -->
-  <div class="admin-modal-overlay" *ngIf="showDetailModal" (click)="closeModal()">
+  <div class="admin-modal-overlay" *ngIf="showDetailModal">
     <div class="modal-content-custom w-100" style="max-width: 650px;" *ngIf="selectedUser" (click)="$event.stopPropagation()">
         <div class="modal-header bg-light border-0">
           <h5 class="modal-title fw-bold">Thông tin khách hàng</h5>

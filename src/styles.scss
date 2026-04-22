@@ -222,9 +222,16 @@ input, select, textarea { font-family: inherit; outline: none; }
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   position: relative;
   z-index: 10000;
+}
+
+.modal-content-custom .modal-body,
+.modal-content .modal-body {
+  overflow-y: auto;
 }
 
 @keyframes slideUp {
@@ -234,12 +241,12 @@ input, select, textarea { font-family: inherit; outline: none; }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; align-items: center; justify-content: center; z-index: 999; }
 .modal-overlay.show { display: flex; }
-.modal { background: #fff; border-radius: var(--radius-lg); width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
+.modal { background: #fff; border-radius: var(--radius-lg); width: 600px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
 .modal__head { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--admin-border); }
 .modal__title { font-family: var(--font-display); font-size: 20px; color: var(--text-dark); }
 .modal__close { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--admin-border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-muted); }
 .modal__close:hover { background: var(--admin-bg); }
-.modal__body { padding: 22px 24px; }
+.modal__body { padding: 22px 24px; overflow-y: auto; }
 .modal__foot { display: flex; gap: 10px; padding: 16px 24px; border-top: 1px solid var(--admin-border); justify-content: flex-end; }
 .btn-cancel { padding: 10px 22px; border: 1.5px solid var(--admin-border); border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; background: #fff; color: var(--text-muted); }
 .btn-save { padding: 10px 26px; background: var(--pink-400); color: #fff; border: none; border-radius: var(--radius-pill); font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; }

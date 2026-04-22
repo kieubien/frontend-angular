@@ -9,7 +9,7 @@
 
   <!-- Profile -->
   <div class="d-flex align-items-center gap-2 p-3 border-bottom" routerLink="/profile" style="cursor: pointer;" title="Xem hồ sơ dự nhân">
-    <div class="avatar">{{ userName?.charAt(0) }}</div>
+    <div class="avatar">{{ userName.charAt(0) }}</div>
     <div>
       <div class="fw-semibold">{{ userName }}</div>
       <small class="text-muted">{{ userRole === 'admin' ? 'Quản trị viên' : 'Nhân viên' }}</small>

@@ -108,10 +108,26 @@ class UserController {
         }
     }
 
+    static async getProfile(req, res) {
+        try {
+            const { id } = req.params;
+            const user = await User.findByPk(id, {
+                attributes: { exclude: ['password'] }
+            });
+            if (!user) {
+                return res.status(404).json({ message: "Không tìm thấy người dùng" });
+            }
+            res.status(200).json({ data: user.get({ plain: true }) });
+        } catch (error) {
+            console.error("Lỗi lấy thông tin cá nhân:", error);
+            res.status(500).json({ message: "Lỗi server" });
+        }
+    }
+
     static async updateProfile(req, res) {
         try {
             const { id } = req.params;
-            const { first_name, last_name, phone, password } = req.body;
+            const { first_name, last_name, phone, address, password, old_password } = req.body;
             const user = await User.findByPk(id);
             if (!user) {
                 return res.status(404).json({ message: "Không tìm thấy người dùng" });
@@ -120,10 +136,19 @@ class UserController {
             const updates = {
                 first_name: first_name || user.first_name,
                 last_name: last_name || user.last_name,
-                phone: phone || user.phone
+                phone: phone || user.phone,
+                address: address !== undefined ? address : user.address
             };
 
+            // Verify old password if a new password is provided
             if (password && password.trim() !== '') {
+                if (!old_password) {
+                    return res.status(400).json({ message: "Vui lòng nhập mật khẩu cũ để thay đổi mật khẩu mới." });
+                }
+                const isMatch = await bcrypt.compare(old_password, user.password);
+                if (!isMatch) {
+                    return res.status(400).json({ message: "Mật khẩu cũ không chính xác." });
+                }
                 updates.password = await bcrypt.hash(password, 10);
             }
 
@@ -138,6 +163,7 @@ class UserController {
                     last_name: user.last_name,
                     email: user.email,
                     phone: user.phone,
+                    address: user.address,
                     role: user.role
                 }
             });

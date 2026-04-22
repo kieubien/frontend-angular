@@ -57,7 +57,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       customerName: [fullName, Validators.required],
       phone: [user?.phone || '', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       email: [user?.email || '', [Validators.required, Validators.email]],
-      address: ['', Validators.required],
+      address: [user?.address || '', Validators.required],
       province: ['', Validators.required],
       district: ['', Validators.required],
       paymentMethod: ['COD', Validators.required]
@@ -107,8 +107,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     const formVal = this.checkoutForm.value;
 
     // Lấy tên province/district từ code
-    const provinceName = this.provinces.find(p => p.code === formVal.province)?.name || '';
-    const districtName = this.districts.find(d => d.code === formVal.district)?.name || '';
+    const provinceName = this.provinces.find(p => p.code == formVal.province)?.name || '';
+    const districtName = this.districts.find(d => d.code == formVal.district)?.name || '';
     const fullAddress = `${formVal.address}, ${districtName}, ${provinceName}`;
 
     const orderPayload: Order = {
@@ -128,6 +128,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     this.orderService.checkout(orderPayload).subscribe({
       next: (res: any) => {
+        // Cập nhật địa chỉ mặc định vào profile người dùng luôn
+        if (this.authService.currentUserValue?.id) {
+          this.authService.updateProfile(this.authService.currentUserValue.id, { 
+            address: fullAddress 
+          }).subscribe();
+        }
+        
         alert('Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại Blush & Bloom 💖');
         this.cartService.clearCart();
         this.router.navigate(['/']); 

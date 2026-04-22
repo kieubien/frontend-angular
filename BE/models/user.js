@@ -42,6 +42,10 @@ const User = sequelize.define('User', {
     newsletter: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    address: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
 }, {
     tableName: 'users',

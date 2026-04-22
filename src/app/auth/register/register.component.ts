@@ -83,7 +83,7 @@ export class RegisterComponent {
 
     this.http.post<any>('http://localhost:3000/users/register', body).subscribe({
       next: (res: any) => {
-        alert('Đăng ký thành công! Mời bạn đăng nhập.');
+        alert(res.message || 'Đăng ký thành công! Mời bạn đăng nhập.');
         this.router.navigate(['/login']);
       },
       error: (err: any) => {

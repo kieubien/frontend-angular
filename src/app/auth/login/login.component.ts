@@ -72,12 +72,16 @@ export class LoginComponent {
           const user: AuthUser = {
             id: payload.id,
             name: displayName,
+            first_name: payload.first_name,
+            last_name: payload.last_name,
             role: payload.role === 1 || payload.role === 'admin' ? 'admin' : 'user',
             email: payload.email
           };
 
           // Lưu vào Session thông qua Service để kích hoạt update giao diện
           this.authService.setSession(token, user);
+
+          alert(res.message || 'Đăng nhập thành công!');
 
           if (user.role === 'admin') {
             this.router.navigate(['/admin']);

@@ -45,7 +45,7 @@
 </main>
 
 <!-- Modal -->
-<div class="admin-modal-overlay" *ngIf="showModal" (click)="closeModal()">
+<div class="admin-modal-overlay" *ngIf="showModal">
   <div class="modal-content-custom w-100" style="max-width: 600px;" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h5 class="modal-title">{{ editing ? 'Cập nhật' : 'Thêm mới' }} danh mục</h5>
